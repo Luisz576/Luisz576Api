@@ -1,0 +1,24 @@
+{
+  "name": "luisz576api",
+  "version": "1.0.0",
+  "description": "Luisz576 Api",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luisz576/Luisz576Api.git"
+  },
+  "keywords": [
+    "luisz576",
+    "api",
+    "luisz576api"
+  ],
+  "author": "luisz576",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Luisz576/Luisz576Api/issues"
+  },
+  "homepage": "https://github.com/Luisz576/Luisz576Api#readme"
+}
