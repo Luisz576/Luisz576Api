@@ -1,7 +1,7 @@
-package com.luisz.luisz576api.domain.games.thebridge;
+package com.luisz.luisz576api.domain.game.games.thebridge;
 
-import com.luisz.luisz576api.domain.games.GameID;
-import com.luisz.luisz576api.domain.games.IGameProfile;
+import com.luisz.luisz576api.domain.game.GameID;
+import com.luisz.luisz576api.domain.game.IGameProfile;
 
 import java.util.UUID;
 

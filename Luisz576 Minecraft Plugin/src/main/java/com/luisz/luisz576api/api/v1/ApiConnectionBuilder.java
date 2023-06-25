@@ -1,8 +1,8 @@
-package com.luisz.luisz576api.api.connection.builder;
+package com.luisz.luisz576api.api.v1;
 
 import com.luisz.lapi.LPlugin;
 import com.luisz.lapi.config.LConfig;
-import com.luisz.luisz576api.api.connection.ApiConnection;
+import com.luisz.luisz576api.api.connection.builder.IApiConnectionBuilder;
 
 public class ApiConnectionBuilder extends IApiConnectionBuilder<ApiConnection> {
     private final String URL_API_KEY = "url_api", TOKEN_API_KEY = "token_api";

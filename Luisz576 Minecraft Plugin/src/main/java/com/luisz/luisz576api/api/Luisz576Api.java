@@ -4,8 +4,10 @@ import com.luisz.lapi.LPlugin;
 import com.luisz.lapi.player.skin.Skin;
 import com.luisz.luisz576api.api.connection.IApiConnection;
 import com.luisz.luisz576api.api.connection.builder.IApiConnectionBuilder;
-import com.luisz.luisz576api.domain.games.GameID;
-import com.luisz.luisz576api.domain.games.IGameStatistcs;
+import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameProfileData;
+import com.luisz.luisz576api.domain.game.GameID;
+import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameData;
+import com.luisz.luisz576api.domain.game.IGameStatistcs;
 import com.luisz.luisz576api.api.exceptions.ApiAlreadySetupedException;
 import com.luisz.luisz576api.api.exceptions.ApiNotLoadedException;
 import com.luisz.luisz576api.domain.playerprofile.PlayerProfile;
@@ -14,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 public class Luisz576Api implements IApi {
-    public static Luisz576Api instance = null;
+    private static Luisz576Api instance = null;
     public static Luisz576Api getInstance(){
         return instance;
     }
@@ -26,11 +28,6 @@ public class Luisz576Api implements IApi {
 
     private Luisz576Api(IApiConnection apiConnection){
         this.apiConnection = apiConnection;
-    }
-
-    @Override
-    public boolean updateGameWithNewStatistics(IGameStatistcs gameStatistcs) {
-        return apiConnection.updateGameWithNewStatistics(gameStatistcs);
     }
 
     @Override
@@ -55,6 +52,16 @@ public class Luisz576Api implements IApi {
             return null;
         }
         return Skin.fromName(profile.skin);
+    }
+
+    @Override
+    public boolean updateGameWithNewStatistics(IUpdateGameData gameStatistcs) {
+        return apiConnection.updateGameWithNewStatistics(gameStatistcs);
+    }
+
+    @Override
+    public boolean updateGamePlayerStatistics(IUpdateGameProfileData updateData) {
+        return apiConnection.updateGamePlayerStatistics(updateData);
     }
 
     @Override

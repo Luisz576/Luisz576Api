@@ -2,7 +2,7 @@ package com.luisz.luisz576api;
 
 import com.luisz.lapi.LApi;
 import com.luisz.lapi.LPlugin;
-import com.luisz.luisz576api.api.connection.builder.ApiConnectionBuilder;
+import com.luisz.luisz576api.api.v1.ApiConnectionBuilder;
 import com.luisz.luisz576api.api.Luisz576Api;
 import com.luisz.luisz576api.api.exceptions.ApiAlreadySetupedException;
 import com.luisz.luisz576api.api.exceptions.ApiNotLoadedException;

@@ -1,4 +1,4 @@
-package com.luisz.luisz576api.domain.games;
+package com.luisz.luisz576api.domain.game;
 
 public enum GameID {
     BLOCK_PARTY(5),

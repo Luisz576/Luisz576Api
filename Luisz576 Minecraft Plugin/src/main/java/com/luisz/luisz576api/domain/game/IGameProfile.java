@@ -1,4 +1,4 @@
-package com.luisz.luisz576api.domain.games;
+package com.luisz.luisz576api.domain.game;
 
 import java.util.UUID;
 

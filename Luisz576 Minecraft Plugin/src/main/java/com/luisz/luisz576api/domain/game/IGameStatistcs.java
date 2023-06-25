@@ -1,4 +1,4 @@
-package com.luisz.luisz576api.domain.games;
+package com.luisz.luisz576api.domain.game;
 
 public abstract class IGameStatistcs {
     public final GameID gameID;
@@ -6,6 +6,4 @@ public abstract class IGameStatistcs {
     public IGameStatistcs(GameID gameID){
         this.gameID = gameID;
     }
-
-    public abstract IGameStatistcs createUpdateWithValues(IGameStatistcs other);
 }
