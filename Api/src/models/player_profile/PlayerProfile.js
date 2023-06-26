@@ -2,8 +2,18 @@ const { PlayerProfileDb } = require('../../services/database')
 const mongoose = require('mongoose')
 
 const PlayerProfileSchema = new mongoose.Schema({
-    uuid: String,
-    username: String,
+    // DATA
+    uuid: {
+        type: String,
+        unique: true,
+        require: true
+    },
+    username: {
+        type: String,
+        unique: true,
+        require: true
+    },
+    // CONFIGS
     language: {
         type: Number,
         default: 0
@@ -12,10 +22,20 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
+    account_actived: {
+        type: Boolean,
+        default: true
+    },
+    block_list: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BlockList'
+    },
+    // XP
     network_xp: {
         type: Number,
         default: 0
     },
+    // SHOP
     cash: {
         type: Number,
         default: 0
@@ -24,6 +44,11 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: Number,
         default: 1000
     },
+    products_list: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ProductsList'
+    },
+    // INFO
     created: {
         type: Date,
         default: Date.now
@@ -36,22 +61,33 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    account_actived: {
-        type: Boolean,
-        default: true
+    // SOCIAL
+    email: {
+        type: String,
+        default: '',
     },
-    products_list: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProductsList'
+    discord: {
+        type: String,
+        default: ''
+    },
+    twitch: {
+        type: String,
+        default: ''
+    },
+    youtube: {
+        type: String,
+        default: ''
+    },
+    // Friends
+    friend_invites_prefference: {
+        type: Number,
+        default: 0
     },
     friends_list: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FriendsList'
     },
-    block_list: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BlockList'
-    },
+    // Flags
     punishiment: {
         type: Boolean,
         default: false

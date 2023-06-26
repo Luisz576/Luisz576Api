@@ -1,0 +1,6 @@
+{
+    "friend_invite_request_not_allowed": {
+        "pt": "Voce nao pode enviar um pedido de amizade para este jogador",
+        "en": "You can't send a friend invite for this player"
+    }
+}

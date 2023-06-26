@@ -2,7 +2,9 @@ const BlockList = require('../models/player_profile/BlockList')
 const FriendsList = require('../models/friends/FriendsList')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const ProductsList = require('../models/player_profile/ProductsList')
-const FriendInvite = require('../models/friends/FriendInvite')
+
+const { validateEmail, validateDiscord, validateTwitch, validateYoutube } = require('../services/validator')
+const { getJsonError } = require('../domain/errors/errors')
 
 module.exports = {
     async store(req, res){
@@ -34,59 +36,80 @@ module.exports = {
             if(profile){
                 return res.json(profile)
             }
+            return res.json(getJsonError(10, {values: { uuid }}))
         }
         return res.sendStatus(400)
     },
     async skin(req, res){
         const { uuid, skin } = req.body
-        if(!uuid || !skin){
-            return res.sendStatus(400)
-        }
-        let profile = await PlayerProfile.findOne({ uuid })
-        if(profile){
-            profile.skin = skin
-            await profile.save()
-            return res.sendStatus(200)
+        if(uuid){
+            let profile = await PlayerProfile.findOne({ uuid })
+            if(profile){
+                profile.skin = skin
+                await profile.save()
+                return res.sendStatus(200)
+            }
+            return res.json(getJsonError(10, {values: { uuid }}))
         }
         return res.sendStatus(400)
     },
     async session(req, res){
         const { uuid } = req.body
-        let profile = await PlayerProfile.findOne({ uuid })
-        if(profile){
-            profile.last_login = Date.now()
-            await profile.save()
-            return res.sendStatus(200)
-        }
-        return res.sendStatus(400)
-    },
-    async addFriend(req, res){
-        const { new_friend_uuid } = req.body
-        const { uuid } = req.params
-        if(uuid && new_friend_uuid){
+        if(uuid){
             let profile = await PlayerProfile.findOne({ uuid })
-            let friend_profile = await PlayerProfile.findOne({ uuid: new_friend_uuid })
             if(profile){
-                if(friend_profile){
-                    await FriendInvite.create({
-                        sender_profile: profile._id,
-                        receiver_profile: friend_profile._id,
-                    })
-                    return res.sendStatus(201)
-                }
-                return res.json({
-                    "error": "Invalid 'new_friend_uuid'",
-                    "error_id": 10
-                })
+                profile.last_login = Date.now()
+                await profile.save()
+                return res.sendStatus(200)
             }
+            return res.json(getJsonError(10, {values: { uuid }}))
         }
         return res.sendStatus(400)
     },
-    async acceptFriendInvite(req, res){
-        const { uuid, friend_uuid } = req.params
-        return res.sendStatus(404)
-    },
-    async removeFriend(req, res){
-        return res.sendStatus(404)
+    // SOCIAL
+    async updateSocialMedia(req, res){
+        const { uuid } = req.params
+        const { email, discord, twitch, youtube } = req.body
+        if(uuid){
+            let profile = await PlayerProfile.findOne({ uuid })
+            if(profile){
+                let validInfo = true
+                if(email){
+                    if(validateEmail(email)){
+                        profile.email = email.toLowerCase()
+                    }else{
+                        validInfo = false
+                    }
+                }
+                if(discord){
+                    if(validateDiscord(discord)){
+                        profile.discord = discord.toLowerCase()
+                    }else{
+                        validInfo = false
+                    }
+                }
+                if(twitch){
+                    if(validateTwitch(twitch)){
+                        profile.twitch = twitch.toLowerCase()
+                    }else{
+                        validInfo = false
+                    }
+                }
+                if(youtube){
+                    if(validateYoutube(youtube)){
+                        profile.youtube = youtube.toLowerCase()
+                    }else{
+                        validInfo = false
+                    }
+                }
+                if(validInfo){
+                    await profile.save()
+                    return res.sendStatus(200)
+                }
+                return res.sendStatus(304) //not modified
+            }
+            return res.json(getJsonError(10, {values: { uuid }}))
+        }
+        return res.sendStatus(400)
     }
 }
