@@ -49,6 +49,11 @@ const errors = [
         id: 120,
         error_name: "Friend invite already sent",
         // message_error: messages.friend_invite_already_sent
+    }),
+    new Error({
+        id: 125,
+        error_name: "No friend invite founded",
+        // message_error: messages.no_friend_invite_from_this_player
     })
 ]
 

@@ -1,5 +1,5 @@
 const { FriendsDb } = require('../../services/database')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const FriendInviteSchema = new mongoose.Schema({
     sender_profile: {
@@ -18,6 +18,22 @@ const FriendInviteSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+}, {
+    methods: {
+        stillValid(){
+            if(this.accepted){
+                return {
+                    isValid: false,
+                    remainingTimeInSeconds: 0
+                }
+            }
+            //TODO
+            return {
+                isValid: true,
+                remainingTimeInSeconds: 100
+            }
+        }
+    }
 })
 
 module.exports = FriendsDb.model('FriendInvite', FriendInviteSchema)

@@ -2,7 +2,11 @@ const { TheBridgeDb } = require('../../../services/database')
 const mongoose = require('mongoose')
 
 const TheBridgeProfileSchema = new mongoose.Schema({
-    uuid: String,
+    player_profile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'PlayerProfile',
+        require: true
+    },
     total_placed_blocks: {
         type: Number,
         default: 0

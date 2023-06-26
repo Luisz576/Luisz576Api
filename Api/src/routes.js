@@ -13,10 +13,12 @@ routes.patch('/api/playerprofile/skin', PlayerProfileController.skin)
 //social
 routes.patch('/api/playerprofile/:uuid/updatesocialmedia', PlayerProfileController.updateSocialMedia)
 //friends
+routes.patch('/api/playerprofile/:uuid/changefriendinviteprefferences', PlayerProfileController.changeFriendInvitePrefferences)
+// TODO is friend
+// TODO load friends
 routes.patch('/api/playerprofile/:uuid/newfriend', FriendsController.addFriend)
-routes.patch('/api/playerprofile/:uuid/accept/:friend_uuid', FriendsController.acceptFriendInvite)
+routes.patch('/api/playerprofile/:uuid/acceptfriendinvite/:friend_uuid', FriendsController.acceptFriendInvite)
 routes.patch('/api/playerprofile/:uuid/removefriend', FriendsController.removeFriend)
-routes.patch('/api/playerprofile/:uuid/changefriendinviteprefferences', FriendsController.changeFriendInvitePrefferences)
 
 // <Punishments>
 

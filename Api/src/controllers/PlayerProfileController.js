@@ -66,6 +66,21 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
+    async changeFriendInvitePrefferences(req, res){
+        const { uuid } = req.params
+        const { friend_invite_prefference } = req.body
+        if(uuid && friend_invite_prefference != undefined){
+            let profile = await PlayerProfile.findOne({ uuid })
+            if(profile){
+                // TODO se decidir manter os ids ao inves de ativo e nao ativo, criar um validador
+                profile.friend_invites_prefference = friend_invite_prefference
+                await profile.save()
+                return res.sendStatus(200)
+            }
+            return res.json(getJsonError(10, {values: { uuid }}))
+        }
+        return res.sendStatus(400)
+    },
     // SOCIAL
     async updateSocialMedia(req, res){
         const { uuid } = req.params

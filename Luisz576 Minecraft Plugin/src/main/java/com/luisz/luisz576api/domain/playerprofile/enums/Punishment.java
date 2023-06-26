@@ -11,13 +11,11 @@ public enum Punishment {
     }
 
     public static Punishment getById(int id){
-        switch (id){
-            case 1:
-                return MUTE;
-            case 2:
-                return TEMPORARY_BAN;
-            case 3:
-                return BAN;
+        Punishment[] values = values();
+        for(Punishment punishment : values){
+            if(punishment.ID == id){
+                return punishment;
+            }
         }
         return null;
     }

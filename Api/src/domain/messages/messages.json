@@ -13,5 +13,10 @@
         "pt": "Voce ja enviou um pedido de amizade para este jogador",
         "en": "You already sent a friend invite for this player",
         "es": "Ya has enviado una solicitud de amistad a este jugador"
+    },
+    "no_friend_invite_from_this_player": {
+        "pt": "Nenhum convite de amizade deste jogador",
+        "en": "No friend invite from this player",
+        "es": "No hay invitaciones de amigos de este jugador"
     }
 }
