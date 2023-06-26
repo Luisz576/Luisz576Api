@@ -16,7 +16,7 @@ public class Main extends LPlugin {
         }catch (ApiNotLoadedException e) {
             LApi.sendConsoleMessage("[Luisz576Api] Can't load! Reason:\n" + e.reason);
         } catch (ApiAlreadySetupedException e) {
-            LApi.sendConsoleMessage("[Luisz576Api] Error: Aready loaded!");
+            LApi.sendConsoleMessage("[Luisz576Api] Error: Still loaded!");
         }
     }
 

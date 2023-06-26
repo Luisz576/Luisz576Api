@@ -7,7 +7,7 @@ import com.luisz.luisz576api.api.connection.builder.IApiConnectionBuilder;
 import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameProfileData;
 import com.luisz.luisz576api.domain.game.GameID;
 import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameData;
-import com.luisz.luisz576api.domain.game.IGameStatistcs;
+import com.luisz.luisz576api.domain.game.IGameStatistics;
 import com.luisz.luisz576api.api.exceptions.ApiAlreadySetupedException;
 import com.luisz.luisz576api.api.exceptions.ApiNotLoadedException;
 import com.luisz.luisz576api.domain.playerprofile.PlayerProfile;
@@ -31,18 +31,13 @@ public class Luisz576Api implements IApi {
     }
 
     @Override
-    public IGameStatistcs loadGameStatistics(GameID gameID) {
+    public IGameStatistics loadGameStatistics(GameID gameID) {
         return apiConnection.loadGameStatistics(gameID);
     }
 
     @Override
     public PlayerProfile loadPlayerProfileOrCreateNew(UUID uuid) {
         return apiConnection.loadPlayerProfileOrCreateNew(uuid);
-    }
-
-    @Override
-    public boolean giveXPToPlayerProfile(int amount) {
-        return apiConnection.giveXPToPlayerProfile(amount);
     }
 
     @Override
@@ -70,7 +65,7 @@ public class Luisz576Api implements IApi {
     }
 
     @Override
-    public IGameStatistcs loadPlayerGameStatistics(GameID gameID, UUID uuid) {
+    public IGameStatistics loadPlayerGameStatistics(GameID gameID, UUID uuid) {
         return apiConnection.loadPlayerGameStatistics(gameID, uuid);
     }
 
