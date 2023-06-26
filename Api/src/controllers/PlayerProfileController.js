@@ -16,6 +16,16 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
+    async searsh(req, res){
+        const { uuid } = req.params
+        if(uuid){
+            let profile = await PlayerProfile.findOne({ uuid })
+            if(profile){
+                return res.json(profile)
+            }
+        }
+        return res.sendStatus(400)
+    },
     async skin(req, res){
         const { uuid, skin } = req.body
         if(!uuid || !skin){

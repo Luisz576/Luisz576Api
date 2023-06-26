@@ -1,18 +1,15 @@
 package com.luisz.luisz576api.api.connection;
 
-import com.luisz.luisz576api.domain.game.GameID;
-import com.luisz.luisz576api.domain.game.IGameStatistics;
-import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameData;
-import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameProfileData;
+import com.luisz.luisz576api.domain.game.GameModel;
 import com.luisz.luisz576api.domain.playerprofile.PlayerProfile;
+import com.luisz.luisz576api.domain.product.ProductId;
 
 import java.util.UUID;
 
 public interface IApiConnection {
-    boolean updateGameWithNewStatistics(IUpdateGameData gameStatistcs);
-    boolean updateGamePlayerStatistics(IUpdateGameProfileData updateData);
-    IGameStatistics loadGameStatistics(GameID gameID);
+    boolean uploadGameData(GameModel game);
     PlayerProfile loadPlayerProfileOrCreateNew(UUID uuid);
     boolean updatePlayerProfileSkin(String skin);
-    IGameStatistics loadPlayerGameStatistics(GameID gameID, UUID uuid);
+    boolean _playerInitSession(UUID uuid);
+    boolean buyUsingCash(ProductId product, UUID uuid);
 }

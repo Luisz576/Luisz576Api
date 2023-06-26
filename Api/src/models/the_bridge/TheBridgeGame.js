@@ -2,11 +2,11 @@ const { TheBridgeDb } = require('../../services/database')
 const mongoose = require('mongoose')
 
 const TheBridgeGame = mongoose.Schema({
-    players: Array,
     timestamp: Date,
-    winners: Array,
-    mode_name: Number,
+    game_mode: Number,
     map_name: String,
+    players: [mongoose.Schema.Types.ObjectId],
+    winners: [mongoose.Schema.Types.ObjectId],
 })
 
 module.exports = TheBridgeDb.model('TheBridgeGame', TheBridgeGame)

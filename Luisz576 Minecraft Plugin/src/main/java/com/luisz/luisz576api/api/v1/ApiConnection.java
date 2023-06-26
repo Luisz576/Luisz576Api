@@ -1,11 +1,9 @@
 package com.luisz.luisz576api.api.v1;
 
 import com.luisz.luisz576api.api.connection.IApiConnection;
-import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameProfileData;
-import com.luisz.luisz576api.domain.game.GameID;
-import com.luisz.luisz576api.api.connection.updatedata.IUpdateGameData;
-import com.luisz.luisz576api.domain.game.IGameStatistics;
+import com.luisz.luisz576api.domain.game.GameModel;
 import com.luisz.luisz576api.domain.playerprofile.PlayerProfile;
+import com.luisz.luisz576api.domain.product.ProductId;
 
 import java.util.UUID;
 
@@ -21,18 +19,18 @@ public class ApiConnection implements IApiConnection {
     }
 
     @Override
-    public boolean updateGameWithNewStatistics(IUpdateGameData gameStatistcs) {
+    public boolean _playerInitSession(UUID uuid) {
         return false;
     }
 
     @Override
-    public boolean updateGamePlayerStatistics(IUpdateGameProfileData updateData) {
+    public boolean uploadGameData(GameModel game) {
         return false;
     }
 
     @Override
-    public IGameStatistics loadGameStatistics(GameID gameID) {
-        return null;
+    public boolean buyUsingCash(ProductId product, UUID uuid) {
+        return false;
     }
 
     @Override
@@ -43,10 +41,5 @@ public class ApiConnection implements IApiConnection {
     @Override
     public boolean updatePlayerProfileSkin(String skin) {
         return false;
-    }
-
-    @Override
-    public IGameStatistics loadPlayerGameStatistics(GameID gameID, UUID uuid) {
-        return null;
     }
 }

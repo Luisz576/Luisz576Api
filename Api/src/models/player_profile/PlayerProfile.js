@@ -4,6 +4,10 @@ const mongoose = require('mongoose')
 const PlayerProfileSchema = new mongoose.Schema({
     uuid: String,
     username: String,
+    language: {
+        type: Number,
+        default: 0
+    },
     skin: {
         type: String,
         default: ""
@@ -32,10 +36,12 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    ban: {
+    punishiment: {
         type: Boolean,
         default: true
-    }
+    },
+    //TODO products_list: mongoose.Schema.Types.ObjectId,
+    //TODO friends_list: mongoose.Schema.Types.ObjectId,
 })
 
 module.exports = PlayerProfileDb.model('PlayerProfile', PlayerProfileSchema)
