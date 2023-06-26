@@ -1,4 +1,4 @@
-const { TheBridgeDb } = require('../../services/database')
+const { TheBridgeDb } = require('../../../services/database')
 const mongoose = require('mongoose')
 
 const TheBridgeProfileSchema = new mongoose.Schema({

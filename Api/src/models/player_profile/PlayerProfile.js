@@ -36,12 +36,26 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    punishiment: {
+    account_actived: {
         type: Boolean,
         default: true
     },
-    products_list: mongoose.Schema.Types.ObjectId,
-    friends_list: mongoose.Schema.Types.ObjectId,
+    products_list: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ProductsList'
+    },
+    friends_list: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'FriendsList'
+    },
+    block_list: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BlockList'
+    },
+    punishiment: {
+        type: Boolean,
+        default: false
+    },
 })
 
 module.exports = PlayerProfileDb.model('PlayerProfile', PlayerProfileSchema)
