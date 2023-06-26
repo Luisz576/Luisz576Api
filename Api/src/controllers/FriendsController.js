@@ -1,6 +1,5 @@
 const FriendInvite = require('../models/friends/FriendInvite')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
-const FriendsList = require('../models/friends/FriendsList')
 const { getJsonError } = require('../domain/errors/errors')
 
 module.exports = {
@@ -77,8 +76,7 @@ module.exports = {
                         if(validateResult.isValid){
                             // adiciona amigo
                             friendInvites[i].accepted = true
-                            let resultInsertion = await profile.acceptNewFriend(friend_profile)
-                            if(resultInsertion){
+                            if(await profile.acceptNewFriend(friend_profile)){
                                 // salva
                                 await friendInvites[i].save()
                                 await profile.save()
@@ -102,6 +100,7 @@ module.exports = {
         return res.sendStatus(400)
     },
     async removeFriend(req, res){
+        //TODO
         return res.sendStatus(404)
     }
 }

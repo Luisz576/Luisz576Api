@@ -1,4 +1,4 @@
-const { PlayerProfileDb } = require('../../services/database')
+const { Luisz576Db } = require('../../services/database')
 const mongoose = require('mongoose')
 
 const BlockListSchema = new mongoose.Schema({
@@ -14,4 +14,4 @@ const BlockListSchema = new mongoose.Schema({
     }
 })
 
-module.exports = PlayerProfileDb.model('BlockList', BlockListSchema)
+module.exports = Luisz576Db.model('BlockList', BlockListSchema)

@@ -7,8 +7,13 @@ const FriendsListSchema = new mongoose.Schema({
         ref: 'PlayerProfile'
     },
     friends: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Friendship',
+        type: [{
+            player_profile: mongoose.Schema.Types.ObjectId,
+            timestamp: {
+                type: Date,
+                default: Date.now
+            }
+        }],
         default: []
     }
 })

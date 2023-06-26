@@ -1,14 +1,14 @@
 const { mongodb_connection_uri } = require('../../configs/configs.json')
 const mongoose = require('mongoose')
 
-const PlayerProfileDb = mongoose.createConnection(mongodb_connection_uri, {
+const Luisz576Db = mongoose.createConnection(mongodb_connection_uri, {
     dbName: "Luisz576",
     serverSelectionTimeoutMS: 10000
 })
 .on('open', () => {
-    console.log("[Luisz576Api] Conectado ao PlayerProfileDb!")
+    console.log("[Luisz576Api] Conectado ao Luisz576Db!")
 }).on('error', () => {
-    console.log("[Luisz576Api] Erro ao conectar ao PlayerProfileDb!")
+    console.log("[Luisz576Api] Erro ao conectar ao Luisz576Db!")
 })
 
 const FriendsDb = mongoose.createConnection(mongodb_connection_uri, {
@@ -19,16 +19,6 @@ const FriendsDb = mongoose.createConnection(mongodb_connection_uri, {
     console.log("[Luisz576Api] Conectado ao FriendsDb!")
 }).on('error', () => {
     console.log("[Luisz576Api] Erro ao conectar ao FriendsDb!")
-})
-
-const PunishmentsDb = mongoose.createConnection(mongodb_connection_uri, {
-    dbName: "Punishments",
-    serverSelectionTimeoutMS: 10000
-})
-.on('open', () => {
-    console.log("[Luisz576Api] Conectado ao PunishmentsDb!")
-}).on('error', () => {
-    console.log("[Luisz576Api] Erro ao conectar ao PunishmentsDb!")
 })
 
 const TheBridgeDb = mongoose.createConnection(mongodb_connection_uri, {
@@ -42,8 +32,7 @@ const TheBridgeDb = mongoose.createConnection(mongodb_connection_uri, {
 })
 
 module.exports = {
-    PlayerProfileDb,
-    PunishmentsDb,
+    Luisz576Db,
     FriendsDb,
     TheBridgeDb
 }

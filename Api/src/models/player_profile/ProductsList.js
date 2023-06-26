@@ -1,4 +1,4 @@
-const { PlayerProfileDb } = require('../../services/database')
+const { Luisz576Db } = require('../../services/database')
 const mongoose = require('mongoose')
 
 const ProductsListSchema = new mongoose.Schema({
@@ -8,9 +8,18 @@ const ProductsListSchema = new mongoose.Schema({
         require: true
     },
     products: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [{
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product'
+            },
+            timestamp: {
+                type: Date,
+                default: Date.now
+            }
+        }],
         default: []
     }
 })
 
-module.exports = PlayerProfileDb.model('ProductsList', ProductsListSchema)
+module.exports = Luisz576Db.model('ProductsList', ProductsListSchema)

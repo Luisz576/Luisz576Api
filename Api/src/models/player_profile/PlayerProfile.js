@@ -1,7 +1,6 @@
-const { PlayerProfileDb } = require('../../services/database')
+const { Luisz576Db } = require('../../services/database')
 const mongoose = require('mongoose')
 const FriendsList = require('../friends/FriendsList')
-const Friendship = require('../friends/Friendship')
 
 const PlayerProfileSchema = new mongoose.Schema({
     // DATA
@@ -98,51 +97,29 @@ const PlayerProfileSchema = new mongoose.Schema({
     methods: {
         areFriends: async function(friendProfileId){
             const friendList = await FriendsList.findById(this.friends_list)
-            if(!friendList){
-                // TODO tenta criar uma lista? ou melhor nn?
-                return false
-            }
-            const friendship = await Friendship.findOne({
-                player_profile: this._id,
-                friend_profile: friendProfileId
-            })
-            if(friendship != null){
-                return true
-            }
-            return false
+            return friendList.friends.includes(friendProfileId)
         },
-        acceptNewFriend: async function(friendProfile, friendInviteId){
+        acceptNewFriend: async function(friendProfile){
             if(await this.areFriends(friendProfile._id)){
                 return false;
             }
-            //ja sabe que existe pois chamou a funcao areFriends()
+
             const friendList = await FriendsList.findById(this.friends_list)
             const friendFriendList = await FriendsList.findById(friendProfile.friends_list)
 
-            // cria relacao de amizade
-            const friendshipProfile = await Friendship.create({
-                player_profile: this._id,
-                friend_profile: friendProfile._id,
-                friend_invite: friendInviteId
-            })
-            const friendshipFriendProfile = await Friendship.create({
+            //salve
+            friendList.friends.push({
                 player_profile: friendProfile._id,
-                friend_profile: this._id,
-                friend_invite: friendInviteId
             })
+            friendFriendList.friends.push({
+                player_profile: this._id
+            })
+            await friendList.save()
+            await friendFriendList.save()
 
-            if(friendshipProfile && friendshipFriendProfile){
-                //salve
-                friendList.friends.push(friendshipProfile._id)
-                friendFriendList.friends.push(friendshipFriendProfile._id)
-                await friendList.save()
-                await friendFriendList.save()
-
-                return true
-            }
-            return false
+            return true
         }
     }
 })
 
-module.exports = PlayerProfileDb.model('PlayerProfile', PlayerProfileSchema)
+module.exports = Luisz576Db.model('PlayerProfile', PlayerProfileSchema)

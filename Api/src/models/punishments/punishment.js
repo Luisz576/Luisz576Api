@@ -1,4 +1,4 @@
-const { PunishmentsDb } = require('../../services/database')
+const { Luisz576Db } = require('../../services/database')
 const mongoose = require('mongoose')
 
 const PunishmentSchema = new mongoose.Schema({
@@ -23,4 +23,4 @@ const PunishmentSchema = new mongoose.Schema({
     duration: Date
 })
 
-module.exports = PunishmentsDb.model('Punishment', PunishmentSchema)
+module.exports = Luisz576Db.model('Punishment', PunishmentSchema)
