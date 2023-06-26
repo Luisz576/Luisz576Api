@@ -40,19 +40,6 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async skin(req, res){
-        const { uuid, skin } = req.body
-        if(uuid){
-            let profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                profile.skin = skin
-                await profile.save()
-                return res.sendStatus(200)
-            }
-            return res.json(getJsonError(10, {values: { uuid }}))
-        }
-        return res.sendStatus(400)
-    },
     async session(req, res){
         const { uuid } = req.body
         if(uuid){

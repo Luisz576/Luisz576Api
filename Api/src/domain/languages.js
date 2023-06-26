@@ -1,5 +1,5 @@
 module.exports = {
-    getLanguageById(id){
+    getLanguageById(id, defaultReturn = 'en'){
         switch(id){
             case 0:
                 return 'en'
@@ -8,6 +8,6 @@ module.exports = {
             case 2:
                 return 'es'
         }
-        return 'en'
+        return defaultReturn
     }
 }
