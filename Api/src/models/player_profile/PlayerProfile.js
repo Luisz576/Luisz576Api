@@ -40,8 +40,8 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    //TODO products_list: mongoose.Schema.Types.ObjectId,
-    //TODO friends_list: mongoose.Schema.Types.ObjectId,
+    products_list: mongoose.Schema.Types.ObjectId,
+    friends_list: mongoose.Schema.Types.ObjectId,
 })
 
 module.exports = PlayerProfileDb.model('PlayerProfile', PlayerProfileSchema)
