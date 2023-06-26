@@ -1,6 +1,17 @@
 {
     "friend_invite_request_not_allowed": {
         "pt": "Voce nao pode enviar um pedido de amizade para este jogador",
-        "en": "You can't send a friend invite for this player"
+        "en": "You can't send a friend invite for this player",
+        "es": "No puedes enviar una solicitud de amistad a este jugador"
+    },
+    "player_already_are_friends": {
+        "pt": "Voce ja e amigo deste jogador",
+        "en": "You are already friend of this player",
+        "es": "Ya eres amigo de este jugador"
+    },
+    "friend_invite_already_sent": {
+        "pt": "Voce ja enviou um pedido de amizade para este jogador",
+        "en": "You already sent a friend invite for this player",
+        "es": "Ya has enviado una solicitud de amistad a este jugador"
     }
 }

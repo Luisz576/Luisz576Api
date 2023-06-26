@@ -1,20 +1,20 @@
-const { getLanguageById } = require('../languages')
-const messages = require('../messages/messages.json')
+// const { getLanguageById } = require('../languages')
+// const messages = require('../messages/messages.json')
 
 class Error{
     constructor({id, error_name, message_error}){
         this.id = id
         this.error_name = error_name
-        this.message_error = message_error
+        // this.message_error = message_error
     }
     toJson(options = {values, languageId}){
         let json = {
             error_id: this.id,
             error_name: this.error_name,
         }
-        if(this.message_error){
-            json['message_error'] = this.message_error[options ? getLanguageById(options.languageId) : 0]
-        }
+        // if(this.message_error){
+        //     json['message_error'] = this.message_error[options ? getLanguageById(options.languageId) : 0]
+        // }
         if(options && options.values){
             for(let i in options.values){
                 json[i] = options.values[i]
@@ -38,7 +38,17 @@ const errors = [
     new Error({
         id: 110,
         error_name: "Incompatible friend invite prefference",
-        message_error: messages.friend_invite_request_not_allowed
+        // message_error: messages.friend_invite_request_not_allowed
+    }),
+    new Error({
+        id: 115,
+        error_name: "Players are already friends",
+        // message_error: messages.player_already_are_friends
+    }),
+    new Error({
+        id: 120,
+        error_name: "Friend invite already sent",
+        // message_error: messages.friend_invite_already_sent
     })
 ]
 

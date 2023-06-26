@@ -5,6 +5,8 @@ module.exports = {
                 return 'en'
             case 1:
                 return 'pt'
+            case 2:
+                return 'es'
         }
         return 'en'
     }
