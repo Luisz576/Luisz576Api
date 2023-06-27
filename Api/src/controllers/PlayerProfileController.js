@@ -31,14 +31,11 @@ module.exports = {
     },
     async searsh(req, res){
         const { uuid } = req.params
-        if(uuid){
-            let profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                return res.json(profile)
-            }
-            return res.json(getJsonError(10, {values: { uuid }}))
+        let profile = await PlayerProfile.findOne({ uuid })
+        if(profile){
+            return res.json(profile)
         }
-        return res.sendStatus(400)
+        return res.json(getJsonError(10, {values: { uuid }}))
     },
     async session(req, res){
         const { uuid } = req.body
@@ -57,46 +54,43 @@ module.exports = {
     async updateSocialMedia(req, res){
         const { uuid } = req.params
         const { email, discord, twitch, youtube } = req.body
-        if(uuid){
-            let profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                let validInfo = true
-                if(email){
-                    if(validateEmail(email)){
-                        profile.email = email.toLowerCase()
-                    }else{
-                        validInfo = false
-                    }
+        let profile = await PlayerProfile.findOne({ uuid })
+        if(profile){
+            let validInfo = true
+            if(email){
+                if(validateEmail(email)){
+                    profile.email = email.toLowerCase()
+                }else{
+                    validInfo = false
                 }
-                if(discord){
-                    if(validateDiscord(discord)){
-                        profile.discord = discord.toLowerCase()
-                    }else{
-                        validInfo = false
-                    }
-                }
-                if(twitch){
-                    if(validateTwitch(twitch)){
-                        profile.twitch = twitch.toLowerCase()
-                    }else{
-                        validInfo = false
-                    }
-                }
-                if(youtube){
-                    if(validateYoutube(youtube)){
-                        profile.youtube = youtube.toLowerCase()
-                    }else{
-                        validInfo = false
-                    }
-                }
-                if(validInfo){
-                    await profile.save()
-                    return res.sendStatus(200)
-                }
-                return res.sendStatus(304) //not modified
             }
-            return res.json(getJsonError(10, {values: { uuid }}))
+            if(discord){
+                if(validateDiscord(discord)){
+                    profile.discord = discord.toLowerCase()
+                }else{
+                    validInfo = false
+                }
+            }
+            if(twitch){
+                if(validateTwitch(twitch)){
+                    profile.twitch = twitch.toLowerCase()
+                }else{
+                    validInfo = false
+                }
+            }
+            if(youtube){
+                if(validateYoutube(youtube)){
+                    profile.youtube = youtube.toLowerCase()
+                }else{
+                    validInfo = false
+                }
+            }
+            if(validInfo){
+                await profile.save()
+                return res.sendStatus(200)
+            }
+            return res.sendStatus(304) //not modified
         }
-        return res.sendStatus(400)
+        return res.json(getJsonError(10, {values: { uuid }}))
     }
 }

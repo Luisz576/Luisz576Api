@@ -5,24 +5,21 @@ const { getJsonError } = require('../domain/errors/errors')
 module.exports = {
     async searsh(req, res){
         const { uuid } = req.params
-        if(uuid){
-            let profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                const friends = await profile.getFriends()
-                return res.json({
-                    "status": 200,
-                    uuid,
-                    friends
-                })
-            }
-            return res.json(getJsonError(10, {values: { uuid }}))
+        let profile = await PlayerProfile.findOne({ uuid })
+        if(profile){
+            const friends = await profile.getFriends()
+            return res.json({
+                "status": 200,
+                uuid,
+                friends
+            })
         }
-        return res.sendStatus(400)
+        return res.json(getJsonError(10, {values: { uuid }}))
     },
     async store(req, res){
         const { new_friend_uuid } = req.body
         const { uuid } = req.params
-        if(uuid && new_friend_uuid){
+        if(new_friend_uuid){
             let profile = await PlayerProfile.findOne({ uuid })
             let friend_profile = await PlayerProfile.findOne({ uuid: new_friend_uuid })
             if(profile){
@@ -74,7 +71,7 @@ module.exports = {
     },
     async accept(req, res){
         const { uuid, friend_uuid } = req.params
-        if(uuid && friend_uuid){
+        if(friend_uuid){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 let friend_profile = await PlayerProfile.findOne({ uuid: friend_uuid })
@@ -118,7 +115,7 @@ module.exports = {
     async remove(req, res){
         const { uuid } = req.params
         const { friend_uuid } = req.body
-        if(uuid && friend_uuid){
+        if(friend_uuid){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 let friend_profile = await PlayerProfile.findOne({ uuid: friend_uuid })

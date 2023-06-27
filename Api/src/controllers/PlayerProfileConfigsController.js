@@ -1,27 +1,24 @@
 const { isRole, isAdmin } = require('../domain/Roles')
 const { getJsonError } = require('../domain/errors/errors')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
-const { validateLanguage } = require('../services/validator')
+const { validateLanguage, validateFriendInvitePrefference } = require('../services/validator')
 
 module.exports = {
     async updateSkin(req, res){
         const { uuid } = req.params
         const { skin } = req.body
-        if(uuid){
-            let profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                profile.skin = skin
-                await profile.save()
-                return res.sendStatus(200)
-            }
-            return res.json(getJsonError(10, {values: { uuid }}))
+        let profile = await PlayerProfile.findOne({ uuid })
+        if(profile){
+            profile.skin = skin
+            await profile.save()
+            return res.sendStatus(200)
         }
-        return res.sendStatus(400)
+        return res.json(getJsonError(10, {values: { uuid }}))
     },
     async updateRole(req, res){
         const { uuid } = req.params
         const { applicator_uuid, role_id } = req.body
-        if(uuid && applicator_uuid && isRole(role_id)){
+        if(applicator_uuid && isRole(role_id)){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 let applicator_profile = await PlayerProfile.findOne({ uuid: applicator_uuid })
@@ -46,7 +43,7 @@ module.exports = {
     async updateLanguage(req, res){
         const { uuid } = req.params
         const { language } = req.body
-        if(uuid && validateLanguage(language)){
+        if(validateLanguage(language)){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 profile.language = language
@@ -60,7 +57,7 @@ module.exports = {
     async updateFriendInvitePrefferences(req, res){
         const { uuid } = req.params
         const { friend_invite_prefference } = req.body
-        if(uuid && friend_invite_prefference != undefined){
+        if(validateFriendInvitePrefference(friend_invite_prefference)){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 // TODO se decidir manter os ids ao inves de ativo e nao ativo, criar um validador
