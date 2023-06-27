@@ -55,9 +55,7 @@ module.exports = {
                         })
                         return res.sendStatus(201)
                     }
-                    return res.json(getJsonError(110, {
-                        languageId: profile.language
-                    }))
+                    return res.json(getJsonError(110))
                 }
                 return res.json(getJsonError(15, {
                     values: {

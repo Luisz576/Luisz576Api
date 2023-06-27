@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Luisz576/Luisz576Api#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "mongoose": "^7.3.1",
     "nodemon": "^2.0.22",

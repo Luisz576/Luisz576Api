@@ -17,13 +17,13 @@ routes.patch('/playerprofile/:uuid/role', PlayerProfileConfigsController.updateR
 routes.patch('/playerprofile/:uuid/language', PlayerProfileConfigsController.updateLanguage)
 routes.patch('/playerprofile/:uuid/changefriendinviteprefferences', PlayerProfileConfigsController.updateFriendInvitePrefferences)
 routes.patch('/playerprofile/:uuid/updatesocialmedia', PlayerProfileConfigsController.updateSocialMedia)
-//friends //TODO inserir try catch e tratar erros
+//friends //TODO inserir try catch e tratar erros // TODO: validate friend uuid
 routes.get('/playerprofile/:uuid/friends', FriendsController.searsh)
 routes.post('/playerprofile/:uuid/newfriend', FriendsController.store)
 routes.patch('/playerprofile/:uuid/acceptfriendinvite/:friend_uuid', FriendsController.accept)
 routes.delete('/playerprofile/:uuid/removefriend', FriendsController.remove)
 
-// <Punishments> //TODO inserir try catch e tratar erros
+// <Punishments> //TODO inserir try catch e tratar erros // TODO: validate applicator uuid
 routes.get('/punishments/:uuid', PunishmentsController.searsh)
 routes.post('/punishments/give', PunishmentsController.store)
 routes.delete('/punishments/:uuid/removeall', PunishmentsController.removeall)
