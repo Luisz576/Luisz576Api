@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 const FriendInviteSchema = new mongoose.Schema({
     sender_profile: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile'
+        ref: 'PlayerProfile',
+        immutable: true
     },
     receiver_profile: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile'
+        ref: 'PlayerProfile',
+        immutable: true
     },
     created: {
         type: Date,

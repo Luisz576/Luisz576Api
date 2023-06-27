@@ -78,7 +78,8 @@ module.exports = {
         return undefined
     },
     logError(error){
-        //TODO
+        console.error(error)
+        //TODO salvar log
     },
     // Errors
     errors,

@@ -12,6 +12,10 @@ module.exports = {
         return punishment_type == 1 || punishment_type == 3 ||
                 (punishment_type == 2 && duration > 0)
     },
+    validateUUID(uuid){
+        const s = "" + uuid;
+        return s.match('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') !== null
+    },
     validateEmail(email){
         return true;
     },

@@ -1,7 +1,7 @@
 const { isRole, isAdmin } = require('../domain/Roles')
 const { getJsonError } = require('../errors/errors')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
-const { validateLanguage, validateFriendInvitePrefference } = require('../services/validator')
+const validator = require('../services/validator')
 
 module.exports = {
     async updateSkin(req, res){
@@ -43,7 +43,7 @@ module.exports = {
     async updateLanguage(req, res){
         const { uuid } = req.params
         const { language } = req.body
-        if(validateLanguage(language)){
+        if(validator.validateLanguage(language)){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 profile.language = language
@@ -57,7 +57,7 @@ module.exports = {
     async updateFriendInvitePrefferences(req, res){
         const { uuid } = req.params
         const { friend_invite_prefference } = req.body
-        if(validateFriendInvitePrefference(friend_invite_prefference)){
+        if(validator.validateFriendInvitePrefference(friend_invite_prefference)){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 // TODO se decidir manter os ids ao inves de ativo e nao ativo, criar um validador
@@ -69,4 +69,47 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
+    // SOCIAL
+    async updateSocialMedia(req, res){
+        const { uuid } = req.params
+        const { email, discord, twitch, youtube } = req.body
+        let profile = await PlayerProfile.findOne({ uuid })
+        if(profile){
+            let validInfo = true
+            if(email){
+                if(validator.validateEmail(email)){
+                    profile.email = email.toLowerCase()
+                }else{
+                    validInfo = false
+                }
+            }
+            if(discord){
+                if(validator.validateDiscord(discord)){
+                    profile.discord = discord.toLowerCase()
+                }else{
+                    validInfo = false
+                }
+            }
+            if(twitch){
+                if(validator.validateTwitch(twitch)){
+                    profile.twitch = twitch.toLowerCase()
+                }else{
+                    validInfo = false
+                }
+            }
+            if(youtube){
+                if(validator.validateYoutube(youtube)){
+                    profile.youtube = youtube.toLowerCase()
+                }else{
+                    validInfo = false
+                }
+            }
+            if(validInfo){
+                await profile.save()
+                return res.sendStatus(200)
+            }
+            return res.sendStatus(304) //not modified
+        }
+        return res.json(getJsonError(10, {values: { uuid }}))
+    }
 }

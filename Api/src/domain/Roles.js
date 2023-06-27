@@ -7,7 +7,7 @@ module.exports = {
     ADMIN(99, "ADM", "ADM", "ADM");
     */
     isRole(id){
-        return id == 0 || id == 5 || id == 10 || id == 15 || id == 99
+        return id == 0 || id == 5 || id == 10 || id == 15 || this.isAdmin(id)
     },
     isAdmin(id){
         return id == 99

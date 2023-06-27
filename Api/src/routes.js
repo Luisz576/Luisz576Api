@@ -8,26 +8,25 @@ const PunishmentsController = require('./controllers/PunishmentsController')
 const routes = express.Router()
 
 // <PlayerProfile>
-routes.get('/api/playerprofile/:uuid', PlayerProfileController.searsh)
-routes.post('/api/playerprofile/newprofile', PlayerProfileController.store)
-routes.patch('/api/playerprofile/session', PlayerProfileController.session)
-//social
-routes.patch('/api/playerprofile/:uuid/updatesocialmedia', PlayerProfileController.updateSocialMedia)
-//configs
-routes.patch('/api/playerprofile/:uuid/skin', PlayerProfileConfigsController.updateSkin)
-routes.patch('/api/playerprofile/:uuid/role', PlayerProfileConfigsController.updateRole)
-routes.patch('/api/playerprofile/:uuid/language', PlayerProfileConfigsController.updateLanguage)
-routes.patch('/api/playerprofile/:uuid/changefriendinviteprefferences', PlayerProfileConfigsController.updateFriendInvitePrefferences)
-//friends
-routes.get('/api/playerprofile/:uuid/friends', FriendsController.searsh)
-routes.post('/api/playerprofile/:uuid/newfriend', FriendsController.store)
-routes.patch('/api/playerprofile/:uuid/acceptfriendinvite/:friend_uuid', FriendsController.accept)
-routes.delete('/api/playerprofile/:uuid/removefriend', FriendsController.remove)
+routes.get('/playerprofile/:uuid', PlayerProfileController.searsh)
+routes.post('/playerprofile/newprofile', PlayerProfileController.store)
+routes.patch('/playerprofile/:uuid/session', PlayerProfileController.session)
+//configs //TODO inserir try catch e tratar erros
+routes.patch('/playerprofile/:uuid/skin', PlayerProfileConfigsController.updateSkin)
+routes.patch('/playerprofile/:uuid/role', PlayerProfileConfigsController.updateRole)
+routes.patch('/playerprofile/:uuid/language', PlayerProfileConfigsController.updateLanguage)
+routes.patch('/playerprofile/:uuid/changefriendinviteprefferences', PlayerProfileConfigsController.updateFriendInvitePrefferences)
+routes.patch('/playerprofile/:uuid/updatesocialmedia', PlayerProfileConfigsController.updateSocialMedia)
+//friends //TODO inserir try catch e tratar erros
+routes.get('/playerprofile/:uuid/friends', FriendsController.searsh)
+routes.post('/playerprofile/:uuid/newfriend', FriendsController.store)
+routes.patch('/playerprofile/:uuid/acceptfriendinvite/:friend_uuid', FriendsController.accept)
+routes.delete('/playerprofile/:uuid/removefriend', FriendsController.remove)
 
-// <Punishments>
-routes.get('/api/punishments/:uuid', PunishmentsController.searsh)
-routes.post('/api/punishments/give', PunishmentsController.store)
-routes.delete('/api/punishments/:uuid/remove', PunishmentsController.removeall)
+// <Punishments> //TODO inserir try catch e tratar erros
+routes.get('/punishments/:uuid', PunishmentsController.searsh)
+routes.post('/punishments/give', PunishmentsController.store)
+routes.delete('/punishments/:uuid/removeall', PunishmentsController.removeall)
 
 // MINIGAMES //
 // <The Bridge>

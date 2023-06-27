@@ -35,16 +35,19 @@ const PlayerProfileSchema = new mongoose.Schema({
     // XP
     network_xp: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     // SHOP
     cash: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     coins: {
         type: Number,
-        default: 1000
+        default: 1000,
+        min: 0
     },
     products_list: {
         type: mongoose.Schema.Types.ObjectId,
@@ -99,19 +102,20 @@ const PlayerProfileSchema = new mongoose.Schema({
 }, {
     methods: {
         getFriends: async function(){
-            return (await FriendsList.findById(this.friends_list)).friends
+            const friendsList = await FriendsList.findById(this.friends_list)
+            return friendsList.friends
         },
-        areFriends: async function(friendProfileId){
+        areFriends: async function(friendProfileUUID){
             const friends = await this.getFriends()
             for(let i in friends){
-                if(friends[i].player_profile.toString() == friendProfileId.toString()){
+                if(friends[i].player_profile == friendProfileUUID){
                     return true
                 }
             }
             return false
         },
         acceptNewFriend: async function(friendProfile){
-            if(await this.areFriends(friendProfile._id)){
+            if(await this.areFriends(friendProfile.uuid)){
                 return false;
             }
 
@@ -120,10 +124,10 @@ const PlayerProfileSchema = new mongoose.Schema({
 
             //salve
             friendList.friends.push({
-                player_profile: friendProfile._id,
+                player_profile: friendProfile.uuid,
             })
             friendFriendList.friends.push({
-                player_profile: this._id
+                player_profile: this.uuid
             })
             await friendList.save()
             await friendFriendList.save()
@@ -131,7 +135,7 @@ const PlayerProfileSchema = new mongoose.Schema({
             return true
         },
         removeFriend: async function(friendProfile){
-            if(await this.areFriends(friendProfile._id)){
+            if(await this.areFriends(friendProfile.uuid)){
                 const friendList = await FriendsList.findById(this.friends_list)
                 const friendFriendList = await FriendsList.findById(friendProfile.friends_list)
 

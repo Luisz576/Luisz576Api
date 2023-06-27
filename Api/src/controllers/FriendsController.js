@@ -25,7 +25,7 @@ module.exports = {
             if(profile){
                 if(friend_profile){
                     // ve se ja nao sao amigos
-                    if(await profile.areFriends(friend_profile._id)){
+                    if(await profile.areFriends(friend_profile.uuid)){
                         return res.json(getJsonError(115))
                     }
                     // ver se ja nao tem um convite ativo
@@ -76,7 +76,7 @@ module.exports = {
             if(profile){
                 let friend_profile = await PlayerProfile.findOne({ uuid: friend_uuid })
                 if(friend_profile){
-                    if(await profile.areFriends(friend_profile._id)){
+                    if(await profile.areFriends(friend_profile.uuid)){
                         return res.json(getJsonError(115))
                     }
                     const friendInvites = await FriendInvite.find({
@@ -120,7 +120,7 @@ module.exports = {
             if(profile){
                 let friend_profile = await PlayerProfile.findOne({ uuid: friend_uuid })
                 if(friend_profile){
-                    if(await profile.areFriends(friend_profile._id)){
+                    if(await profile.areFriends(friend_profile.uuid)){
                         if(await profile.removeFriend(friend_profile)){
                             return res.sendStatus(200)
                         }

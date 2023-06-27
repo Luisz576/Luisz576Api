@@ -2,18 +2,22 @@ const BlockList = require('../models/player_profile/BlockList')
 const FriendsList = require('../models/friends/FriendsList')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const ProductsList = require('../models/player_profile/ProductsList')
-const { validateEmail, validateDiscord, validateTwitch, validateYoutube } = require('../services/validator')
-const { getJsonError } = require('../errors/errors')
+const validator = require('../services/validator')
+const { getJsonError, logError } = require('../errors/errors')
 
 module.exports = {
     async store(req, res){
         const { uuid, username } = req.body
-        if(uuid && username){
+        if(validator.validateUUID(uuid) && username){
             let profile = await PlayerProfile.findOne({ uuid })
             if(profile){
                 return res.sendStatus(409)
             }
-            profile = await PlayerProfile.create({ uuid, username })
+            try{
+                profile = await PlayerProfile.create({ uuid, username })
+            }catch(e){
+                logError(e)
+            }
             if(profile){
                 let friends_list = await FriendsList.create({ player_profile: profile._id })
                 let block_list = await BlockList.create({ player_profile: profile._id })
@@ -21,8 +25,12 @@ module.exports = {
                 profile.friends_list = friends_list
                 profile.block_list = block_list
                 profile.products_list = products_list
-                await profile.save()
-                return res.sendStatus(201)
+                try{
+                    await profile.save()
+                    return res.sendStatus(201)
+                }catch(e){
+                    logError(e)
+                }
             }
             return res.sendStatus(500)
         }
@@ -30,66 +38,32 @@ module.exports = {
     },
     async searsh(req, res){
         const { uuid } = req.params
-        let profile = await PlayerProfile.findOne({ uuid })
+        let profile
+        try{
+            profile = await PlayerProfile.findOne({ uuid })
+        }catch(e){
+            logError(e)
+            return res.sendStatus(500)
+        }
         if(profile){
             return res.json(profile)
         }
         return res.json(getJsonError(10, {values: { uuid }}))
     },
     async session(req, res){
-        const { uuid } = req.body
-        if(uuid){
-            let profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                profile.last_login = Date.now()
-                await profile.save()
-                return res.sendStatus(200)
-            }
-            return res.json(getJsonError(10, {values: { uuid }}))
-        }
-        return res.sendStatus(400)
-    },
-    // SOCIAL
-    async updateSocialMedia(req, res){
         const { uuid } = req.params
-        const { email, discord, twitch, youtube } = req.body
-        let profile = await PlayerProfile.findOne({ uuid })
+        let profile
+        try{
+            profile = await PlayerProfile.findOne({ uuid })
+        }catch(e){
+            logError(e)
+            return res.sendStatus(500)
+        }
         if(profile){
-            let validInfo = true
-            if(email){
-                if(validateEmail(email)){
-                    profile.email = email.toLowerCase()
-                }else{
-                    validInfo = false
-                }
-            }
-            if(discord){
-                if(validateDiscord(discord)){
-                    profile.discord = discord.toLowerCase()
-                }else{
-                    validInfo = false
-                }
-            }
-            if(twitch){
-                if(validateTwitch(twitch)){
-                    profile.twitch = twitch.toLowerCase()
-                }else{
-                    validInfo = false
-                }
-            }
-            if(youtube){
-                if(validateYoutube(youtube)){
-                    profile.youtube = youtube.toLowerCase()
-                }else{
-                    validInfo = false
-                }
-            }
-            if(validInfo){
-                await profile.save()
-                return res.sendStatus(200)
-            }
-            return res.sendStatus(304) //not modified
+            profile.last_login = Date.now()
+            await profile.save()
+            return res.sendStatus(200)
         }
         return res.json(getJsonError(10, {values: { uuid }}))
-    }
+    },
 }

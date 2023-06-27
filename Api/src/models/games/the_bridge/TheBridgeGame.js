@@ -21,7 +21,7 @@ const TheBridgeGame = mongoose.Schema({
     },
     winners: {
         type: [mongoose.Schema.Types.ObjectId],
-        require: ture
+        require: true
     },
 })
 

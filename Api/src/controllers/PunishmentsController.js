@@ -54,6 +54,6 @@ module.exports = {
     },
     async removeall(req, res){
         //TODO
-        return res.sendStatus(404)
+        return res.sendStatus(501)
     }
 }
