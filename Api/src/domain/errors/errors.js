@@ -46,13 +46,18 @@ const errors = [
         // message_error: messages.player_already_are_friends
     }),
     new Error({
+        id: 117,
+        error_name: "Players aren't friends",
+        // message_error: messages.player_arent_friends
+    }),
+    new Error({
         id: 120,
         error_name: "Friend invite already sent",
         // message_error: messages.friend_invite_already_sent
     }),
     new Error({
         id: 125,
-        error_name: "No friend invite founded",
+        error_name: "Friend invite not founded",
         // message_error: messages.no_friend_invite_from_this_player
     })
 ]

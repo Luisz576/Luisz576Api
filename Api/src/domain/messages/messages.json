@@ -18,5 +18,10 @@
         "pt": "Nenhum convite de amizade deste jogador",
         "en": "No friend invite from this player",
         "es": "No hay invitaciones de amigos de este jugador"
+    },
+    "player_arent_friends": {
+        "pt": "Você nao e amigo deste jogador",
+        "en": "You aren't friend of this player",
+        "es": "No eres amigo de este jugador"
     }
 }

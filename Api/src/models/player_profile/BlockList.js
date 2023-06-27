@@ -8,8 +8,16 @@ const BlockListSchema = new mongoose.Schema({
         require: true
     },
     blocked_players: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'PlayerProfile',
+        type: [{
+            player_profile: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'PlayerProfile'
+            },
+            timestamp: {
+                type: Date,
+                default: Date.now
+            }
+        }],
         default: []
     }
 })

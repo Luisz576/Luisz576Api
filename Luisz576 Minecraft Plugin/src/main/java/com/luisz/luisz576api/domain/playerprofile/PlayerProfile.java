@@ -7,10 +7,10 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class PlayerProfile {
-    public final UUID uuid;
-    public final String username, skin;
-    public final int networkXp, cash, coins;
-    public final boolean Punishment;
-    public final Role role;
+//    public final UUID uuid;
+//    public final String username, skin;
+//    public final int networkXp, cash, coins;
+//    public final boolean Punishment;
+//    public final Role role;
     //TODO: created, last_login
 }

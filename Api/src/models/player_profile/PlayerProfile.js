@@ -27,9 +27,9 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    block_list: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BlockList'
+    friend_invites_prefference: {
+        type: Number,
+        default: 0
     },
     // XP
     network_xp: {
@@ -79,11 +79,12 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    // Friends
-    friend_invites_prefference: {
-        type: Number,
-        default: 0
+    // Blocks
+    block_list: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BlockList'
     },
+    // Friends
     friends_list: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FriendsList'
@@ -95,9 +96,17 @@ const PlayerProfileSchema = new mongoose.Schema({
     },
 }, {
     methods: {
+        getFriends: async function(){
+            return (await FriendsList.findById(this.friends_list)).friends
+        },
         areFriends: async function(friendProfileId){
-            const friendList = await FriendsList.findById(this.friends_list)
-            return friendList.friends.includes(friendProfileId)
+            const friends = await this.getFriends()
+            for(let i in friends){
+                if(friends[i].player_profile.toString() == friendProfileId.toString()){
+                    return true
+                }
+            }
+            return false
         },
         acceptNewFriend: async function(friendProfile){
             if(await this.areFriends(friendProfile._id)){
@@ -118,6 +127,38 @@ const PlayerProfileSchema = new mongoose.Schema({
             await friendFriendList.save()
 
             return true
+        },
+        removeFriend: async function(friendProfile){
+            if(await this.areFriends(friendProfile._id)){
+                const friendList = await FriendsList.findById(this.friends_list)
+                const friendFriendList = await FriendsList.findById(friendProfile.friends_list)
+
+                // find
+                let targetIndex = -1
+                for(let i in friendList.friends){
+                    if(friendList.friends[i].player_profile.toString() == friendProfile._id.toString()){
+                        targetIndex = i
+                    }
+                }
+                let targetFriendIndex = -1
+                for(let i in friendFriendList.friends){
+                    if(friendFriendList.friends[i].player_profile.toString() == this._id.toString()){
+                        targetFriendIndex = i
+                    }
+                }
+
+                if(targetIndex != -1 && targetFriendIndex != -1){
+                    // remove
+                    friendList.friends.splice(targetIndex, 1)
+                    friendFriendList.friends.splice(targetFriendIndex, 1)
+
+                    // save
+                    await friendList.save()
+                    await friendFriendList.save()
+                    return true
+                }
+            }
+            return false
         }
     }
 })

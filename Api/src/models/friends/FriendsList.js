@@ -4,11 +4,15 @@ const mongoose = require('mongoose')
 const FriendsListSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile'
+        ref: 'PlayerProfile',
+        require: true
     },
     friends: {
         type: [{
-            player_profile: mongoose.Schema.Types.ObjectId,
+            player_profile: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'PlayerProfile'
+            },
             timestamp: {
                 type: Date,
                 default: Date.now

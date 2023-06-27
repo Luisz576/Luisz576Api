@@ -3,7 +3,23 @@ const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const { getJsonError } = require('../domain/errors/errors')
 
 module.exports = {
-    async addFriend(req, res){
+    async searsh(req, res){
+        const { uuid } = req.params
+        if(uuid){
+            let profile = await PlayerProfile.findOne({ uuid })
+            if(profile){
+                const friends = await profile.getFriends()
+                return res.json({
+                    "status": 200,
+                    uuid,
+                    friends
+                })
+            }
+            return res.json(getJsonError(10, {values: { uuid }}))
+        }
+        return res.sendStatus(400)
+    },
+    async store(req, res){
         const { new_friend_uuid } = req.body
         const { uuid } = req.params
         if(uuid && new_friend_uuid){
@@ -56,7 +72,7 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async acceptFriendInvite(req, res){
+    async accept(req, res){
         const { uuid, friend_uuid } = req.params
         if(uuid && friend_uuid){
             let profile = await PlayerProfile.findOne({ uuid })
@@ -99,8 +115,31 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async removeFriend(req, res){
-        //TODO
-        return res.sendStatus(404)
+    async remove(req, res){
+        const { uuid } = req.params
+        const { friend_uuid } = req.body
+        if(uuid && friend_uuid){
+            let profile = await PlayerProfile.findOne({ uuid })
+            if(profile){
+                let friend_profile = await PlayerProfile.findOne({ uuid: friend_uuid })
+                if(friend_profile){
+                    if(await profile.areFriends(friend_profile._id)){
+                        if(await profile.removeFriend(friend_profile)){
+                            return res.sendStatus(200)
+                        }
+                        console.log("Error: can't removeFriend")
+                        return res.sendStatus(500)
+                    }
+                    return res.json(getJsonError(117))
+                }
+                return res.json(getJsonError(15, {
+                    values: {
+                        "uuid_target": friend_uuid
+                    },
+                }))
+            }
+            return res.json(getJsonError(10, {values: { uuid }}))
+        }
+        return res.sendStatus(400)
     }
 }
