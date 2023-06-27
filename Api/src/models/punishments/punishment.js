@@ -4,11 +4,21 @@ const mongoose = require('mongoose')
 const PunishmentSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile'
+        ref: 'PlayerProfile',
+        require: true
     },
-    applicator: {
+    applicator_profile: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile'
+        ref: 'PlayerProfile',
+        require: true
+    },
+    reason: {
+        type: String,
+        require: true
+    },
+    punishment_type: {
+        type: Number,
+        require: true
     },
     created: {
         type: Date,
@@ -18,9 +28,11 @@ const PunishmentSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    reason: String,
-    punishment_type: Number,
-    duration: Date
+    duration: Date,
+    deleted: {
+        type: Boolean,
+        default: false
+    }
 })
 
 module.exports = Luisz576Db.model('Punishment', PunishmentSchema)

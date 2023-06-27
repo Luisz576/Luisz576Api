@@ -3,6 +3,7 @@ const express = require('express')
 const PlayerProfileController = require('./controllers/PlayerProfileController')
 const PlayerProfileConfigsController = require('./controllers/PlayerProfileConfigsController')
 const FriendsController = require('./controllers/FriendsController')
+const PunishmentsController = require('./controllers/PunishmentsController')
 
 const routes = express.Router()
 
@@ -14,6 +15,7 @@ routes.patch('/api/playerprofile/session', PlayerProfileController.session)
 routes.patch('/api/playerprofile/:uuid/updatesocialmedia', PlayerProfileController.updateSocialMedia)
 //configs
 routes.patch('/api/playerprofile/:uuid/skin', PlayerProfileConfigsController.updateSkin)
+routes.patch('/api/playerprofile/:uuid/role', PlayerProfileConfigsController.updateRole)
 routes.patch('/api/playerprofile/:uuid/language', PlayerProfileConfigsController.updateLanguage)
 routes.patch('/api/playerprofile/:uuid/changefriendinviteprefferences', PlayerProfileConfigsController.updateFriendInvitePrefferences)
 //friends
@@ -23,6 +25,9 @@ routes.patch('/api/playerprofile/:uuid/acceptfriendinvite/:friend_uuid', Friends
 routes.delete('/api/playerprofile/:uuid/removefriend', FriendsController.remove)
 
 // <Punishments>
+routes.get('/api/punishments/:uuid', PunishmentsController.searsh)
+routes.post('/api/punishments/give', PunishmentsController.store)
+routes.delete('/api/punishments/:uuid/remove', PunishmentsController.removeall)
 
 // MINIGAMES //
 // <The Bridge>

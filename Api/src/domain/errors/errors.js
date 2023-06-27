@@ -59,6 +59,12 @@ const errors = [
         id: 125,
         error_name: "Friend invite not founded",
         // message_error: messages.no_friend_invite_from_this_player
+    }),
+    // punishments
+    new Error({
+        id: 210,
+        error_name: "Applicator isn't a ADM",
+        // message_error: messages.no_friend_invite_from_this_player
     })
 ]
 

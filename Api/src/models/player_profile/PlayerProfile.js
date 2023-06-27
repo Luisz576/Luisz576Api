@@ -1,4 +1,5 @@
 const { Luisz576Db } = require('../../services/database')
+const Punishment = require('../../models/punishments/punishment')
 const mongoose = require('mongoose')
 const FriendsList = require('../friends/FriendsList')
 
@@ -159,6 +160,9 @@ const PlayerProfileSchema = new mongoose.Schema({
                 }
             }
             return false
+        },
+        async getPunishments(){
+            return await Punishment.find({player_profile: this._id})
         }
     }
 })

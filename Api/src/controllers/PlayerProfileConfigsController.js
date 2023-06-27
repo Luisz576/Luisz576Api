@@ -1,3 +1,4 @@
+const { isRole, isAdmin } = require('../domain/Roles')
 const { getJsonError } = require('../domain/errors/errors')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const { validateLanguage } = require('../services/validator')
@@ -12,6 +13,31 @@ module.exports = {
                 profile.skin = skin
                 await profile.save()
                 return res.sendStatus(200)
+            }
+            return res.json(getJsonError(10, {values: { uuid }}))
+        }
+        return res.sendStatus(400)
+    },
+    async updateRole(req, res){
+        const { uuid } = req.params
+        const { applicator_uuid, role_id } = req.body
+        if(uuid && applicator_uuid && isRole(role_id)){
+            let profile = await PlayerProfile.findOne({ uuid })
+            if(profile){
+                let applicator_profile = await PlayerProfile.findOne({ uuid: applicator_uuid })
+                if(applicator_profile){
+                    if(isAdmin(applicator_profile.role)){
+                        profile.role = role_id
+                        await profile.save()
+                        return res.sendStatus(200)
+                    }
+                    return res.json(getJsonError(210))
+                }
+                return res.json(getJsonError(15, {
+                    values: {
+                        "uuid_target": applicator_uuid
+                    },
+                }))
             }
             return res.json(getJsonError(10, {values: { uuid }}))
         }
