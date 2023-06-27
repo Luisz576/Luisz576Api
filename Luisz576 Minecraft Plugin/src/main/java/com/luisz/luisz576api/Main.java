@@ -2,16 +2,16 @@ package com.luisz.luisz576api;
 
 import com.luisz.lapi.LApi;
 import com.luisz.lapi.LPlugin;
-import com.luisz.luisz576api.api.v1.ApiConnectionBuilder;
 import com.luisz.luisz576api.api.Luisz576Api;
-import com.luisz.luisz576api.api.exceptions.ApiAlreadySetupedException;
-import com.luisz.luisz576api.api.exceptions.ApiNotLoadedException;
+import com.luisz.luisz576api.api.v1.ApiV1Builder;
+import com.luisz.luisz576api.domain.exceptions.ApiAlreadySetupedException;
+import com.luisz.luisz576api.domain.exceptions.ApiNotLoadedException;
 
 public class Main extends LPlugin {
     @Override
     public void onEnable() {
         try {
-            Luisz576Api._setup(this, ApiConnectionBuilder.class);
+            Luisz576Api._setup(this, ApiV1Builder.class);
             LApi.sendConsoleMessage("[Luisz576Api] Plugin loaded!");
         }catch (ApiNotLoadedException e) {
             LApi.sendConsoleMessage("[Luisz576Api] Can't load! Reason:\n" + e.reason);

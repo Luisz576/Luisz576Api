@@ -1,4 +1,4 @@
-package com.luisz.luisz576api.api.exceptions;
+package com.luisz.luisz576api.domain.exceptions;
 
 public class ApiNotLoadedException extends Exception {
     public final String reason;

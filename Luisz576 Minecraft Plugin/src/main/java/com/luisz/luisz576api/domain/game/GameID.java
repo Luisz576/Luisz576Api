@@ -4,12 +4,9 @@ public enum GameID {
     BLOCK_PARTY(5),
     THE_BRIDGE(10);
 
-    private final int id;
-    public int id(){
-        return this.id;
-    }
+    public final int ID;
 
     GameID(int id){
-        this.id = id;
+        this.ID = id;
     }
 }
