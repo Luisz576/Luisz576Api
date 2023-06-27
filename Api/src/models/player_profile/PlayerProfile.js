@@ -51,9 +51,10 @@ const PlayerProfileSchema = new mongoose.Schema({
         ref: 'ProductsList'
     },
     // INFO
-    created: {
+    created_at: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        immutable: true
     },
     last_login: {
         type: Date,

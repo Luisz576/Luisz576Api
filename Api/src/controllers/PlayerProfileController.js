@@ -2,9 +2,8 @@ const BlockList = require('../models/player_profile/BlockList')
 const FriendsList = require('../models/friends/FriendsList')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const ProductsList = require('../models/player_profile/ProductsList')
-
 const { validateEmail, validateDiscord, validateTwitch, validateYoutube } = require('../services/validator')
-const { getJsonError } = require('../domain/errors/errors')
+const { getJsonError } = require('../errors/errors')
 
 module.exports = {
     async store(req, res){

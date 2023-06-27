@@ -1,5 +1,5 @@
 const { isAdmin } = require("../domain/Roles")
-const { getJsonError } = require("../domain/errors/errors")
+const { getJsonError } = require('../errors/errors')
 const PlayerProfile = require("../models/player_profile/PlayerProfile")
 const punishment = require("../models/punishments/punishment")
 const { validatePunishmentAndDuration } = require("../services/validator")

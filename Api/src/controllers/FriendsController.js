@@ -1,6 +1,6 @@
 const FriendInvite = require('../models/friends/FriendInvite')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
-const { getJsonError } = require('../domain/errors/errors')
+const { getJsonError } = require('../errors/errors')
 
 module.exports = {
     async searsh(req, res){

@@ -77,6 +77,9 @@ module.exports = {
         }
         return undefined
     },
+    logError(error){
+        //TODO
+    },
     // Errors
     errors,
     Error

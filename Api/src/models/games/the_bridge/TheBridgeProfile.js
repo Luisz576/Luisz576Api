@@ -7,6 +7,11 @@ const TheBridgeProfileSchema = new mongoose.Schema({
         ref: 'PlayerProfile',
         require: true
     },
+    created_at: {
+        type: Date,
+        default: Date.now,
+        immutable: true
+    },
     total_placed_blocks: {
         type: Number,
         default: 0

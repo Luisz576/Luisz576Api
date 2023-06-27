@@ -4,7 +4,8 @@ const mongoose = require('mongoose')
 const TheBridgeGame = mongoose.Schema({
     timestamp: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        immutable: true
     },
     game_mode: {
         type: Number,
