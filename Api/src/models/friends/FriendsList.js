@@ -5,14 +5,14 @@ const FriendsListSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayerProfile',
-        require: true,
+        required: true,
         immutable: true
     },
     friends: {
         type: [{
             player_profile: {
                 type: String,
-                require: true
+                required: true
             },
             timestamp: {
                 type: Date,

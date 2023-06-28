@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 const FriendInviteSchema = new mongoose.Schema({
     sender: {
         type: String,
-        require: true,
+        required: true,
         immutable: true
     },
     receiver: {
         type: String,
-        require: true,
+        required: true,
         immutable: true
     },
     created: {

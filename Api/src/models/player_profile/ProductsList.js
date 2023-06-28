@@ -5,7 +5,7 @@ const ProductsListSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayerProfile',
-        require: true,
+        required: true,
         immutable: true
     },
     products: {

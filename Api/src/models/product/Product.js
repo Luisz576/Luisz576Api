@@ -1,12 +1,20 @@
 const mongoose = require('mongoose')
 
 const ProductSchema = new mongoose.Schema({
-    id: Number,
-    price: Number,
+    id: {
+        type: Number,
+        unique: true,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    required: true,
     min_role: {
         type: Number,
         default: 0
     }
 })
 
-//module.exports = ProductDb.model('Product', ProductSchema)
+//module.exports = Luisz576Db.model('Product', ProductSchema)

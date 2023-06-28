@@ -9,19 +9,19 @@ const TheBridgeGame = mongoose.Schema({
     },
     game_mode: {
         type: Number,
-        require: true
+        required: true
     },
     map_name: {
         type: String,
-        require: true
+        required: true
     },
     players: {
         type: [mongoose.Schema.Types.ObjectId],
-        require: true
+        required: true
     },
     winners: {
         type: [mongoose.Schema.Types.ObjectId],
-        require: true
+        required: true
     },
 })
 

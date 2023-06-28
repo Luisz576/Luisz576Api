@@ -5,14 +5,14 @@ const BlockListSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayerProfile',
-        require: true,
+        required: true,
         immutable: true
     },
     blocked_players: {
         type: [{
             player_profile: {
                 type: 'UUID',
-                require: true
+                required: true
             },
             timestamp: {
                 type: Date,

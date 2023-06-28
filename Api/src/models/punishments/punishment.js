@@ -4,22 +4,20 @@ const mongoose = require('mongoose')
 const PunishmentSchema = new mongoose.Schema({
     //TODO atualizar ObjectId por UUID e remover _profile dos nomes
     player_profile: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile',
-        require: true
+        type: String,
+        required: true
     },
     applicator_profile: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile',
-        require: true
+        type: String,
+        required: true
     },
     reason: {
         type: String,
-        require: true
+        required: true
     },
     punishment_type: {
         type: Number,
-        require: true
+        required: true
     },
     created: {
         type: Date,
