@@ -1,6 +1,5 @@
 const { isAdmin } = require("../domain/Roles")
 const { getJsonError, logError } = require('../errors/errors')
-const PlayerProfile = require("../models/player_profile/PlayerProfile")
 const PunishmentRepository = require("../repositories/punishments/PunishmentRepository")
 const validator = require("../services/validator")
 
@@ -9,9 +8,13 @@ module.exports = {
         const { uuid, applicator_uuid, punishment_type, reason, duration, comment } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && validator.validatePunishmentAndDuration(punishment_type, duration) && reason){
             try{
-                const profile = await PlayerProfile.findOne({uuid})
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
-                    const applicator_profile = await PlayerProfile.findOne({uuid: applicator_uuid})
+                    const applicator_profile = await PlayerProfileRepository.searsh({
+                        uuid: applicator_uuid
+                    })
                     if(applicator_profile){
                         if(isAdmin(applicator_profile.role)){
                             //TODO validar se ja nao tem essa punição
@@ -47,7 +50,9 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfile.findOne({uuid})
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     const punishments = await PunishmentRepository.searsh({
                         player_profile_uuid: profile.uuid
@@ -71,9 +76,13 @@ module.exports = {
         const { applicator_uuid, punishment_id } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && punishment_id){
             try{
-                const profile = await PlayerProfile.findOne({uuid})
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
-                    const applicator_profile = await PlayerProfile.findOne({uuid: applicator_uuid})
+                    const applicator_profile = await PlayerProfileRepository.searsh({
+                        uuid: applicator_uuid
+                    })
                     if(applicator_profile){
                         if(isAdmin(applicator_profile.role)){
                             await PunishmentRepository.pardon({
@@ -100,9 +109,13 @@ module.exports = {
         const { applicator_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid)){
             try{
-                const profile = await PlayerProfile.findOne({uuid})
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
-                    const applicator_profile = await PlayerProfile.findOne({uuid: applicator_uuid})
+                    const applicator_profile = await PlayerProfileRepository.searsh({
+                        uuid: applicator_uuid
+                    })
                     if(applicator_profile){
                         if(isAdmin(applicator_profile.role)){
                             await PunishmentRepository.pardonAll({player_profile_uuid: profile.uuid})

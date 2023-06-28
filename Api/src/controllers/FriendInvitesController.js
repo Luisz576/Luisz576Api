@@ -1,8 +1,8 @@
 const FriendInvite = require('../models/friends/FriendInvite')
-const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const { getJsonError, logError } = require('../errors/errors')
 const validator = require('../services/validator')
 const FriendInviteRepository = require('../repositories/friends/FriendInviteRepository')
+const PlayerProfileRepository = require('../repositories/player_profile/PlayerProfileRepository')
 
 async function acceptFriendInvite(friendInvite, profile, profile2){
     if(friendInvite && profile && profile2){
@@ -42,9 +42,13 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(new_friend_uuid)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
-                const friend_profile = await PlayerProfile.findOne({ uuid: new_friend_uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
+                    const friend_profile = await PlayerProfileRepository.searsh({
+                        uuid: new_friend_uuid
+                    })
                     if(friend_profile){
                         // ve se ja nao sao amigos
                         if(await profile.areFriends(friend_profile.uuid)){
@@ -102,9 +106,13 @@ module.exports = {
         const { uuid, friend_uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
-                    const friend_profile = await PlayerProfile.findOne({ uuid: friend_uuid })
+                    const friend_profile = await PlayerProfileRepository.searsh({
+                        uuid: friend_uuid
+                    })
                     if(friend_profile){
                         // ve se ja sao amigos
                         if(await profile.areFriends(friend_profile.uuid)){

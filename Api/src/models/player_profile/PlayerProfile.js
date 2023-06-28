@@ -89,13 +89,11 @@ const PlayerProfileSchema = new mongoose.Schema({
     block_list: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'BlockList',
-        required: true
     },
     // Friends
     friends_list: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FriendsList',
-        required: true
     },
     // Flags
     punishment: {

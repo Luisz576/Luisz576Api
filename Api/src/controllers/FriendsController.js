@@ -1,4 +1,3 @@
-const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const { getJsonError, logError } = require('../errors/errors')
 const validator = require('../services/validator')
 
@@ -7,7 +6,9 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     const friends = await profile.getFriends()
                     return res.json({
@@ -29,9 +30,13 @@ module.exports = {
         const { friend_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
-                    const friend_profile = await PlayerProfile.findOne({ uuid: friend_uuid })
+                    const friend_profile = await PlayerProfileRepository.searsh({
+                        uuid: friend_uuid
+                    })
                     if(friend_profile){
                         if(await profile.areFriends(friend_profile.uuid)){
                             await profile.removeFriend(friend_profile)

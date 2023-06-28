@@ -1,30 +1,36 @@
-const BlockList = require('../models/player_profile/BlockList')
-const FriendsList = require('../models/friends/FriendsList')
-const PlayerProfile = require('../models/player_profile/PlayerProfile')
-const ProductsList = require('../models/player_profile/ProductsList')
 const validator = require('../services/validator')
 const { getJsonError, logError } = require('../errors/errors')
+const PlayerProfileRepository = require('../repositories/player_profile/PlayerProfileRepository')
 
 module.exports = {
     async store(req, res){
         const { uuid, username } = req.body
         if(validator.validateUUID(uuid) && username){
             try{
-                let profile = await PlayerProfile.findOne({ uuid })
-                if(profile){
+                // uuid
+                const profileByUUID = await PlayerProfileRepository.searsh({
+                    uuid
+                })
+                if(profileByUUID){
                     return res.sendStatus(409)
                 }
-                profile = await PlayerProfile.create({ uuid, username })
+                // username
+                const profileByUsername = await PlayerProfileRepository.searsh({
+                    username
+                })
+                if(profileByUsername){
+                    return res.sendStatus(409)
+                }
+                // cria
+                const profile = await PlayerProfileRepository.create({
+                    uuid,
+                    username
+                })
                 if(profile){
-                    // TODO: passar para repository
-                    let friends_list = await FriendsList.create({ player_profile: profile._id })
-                    let block_list = await BlockList.create({ player_profile: profile._id })
-                    let products_list = await ProductsList.create({ player_profile: profile._id })
-                    profile.friends_list = friends_list
-                    profile.block_list = block_list
-                    profile.products_list = products_list
-                    await profile.save()
-                    return res.sendStatus(201)
+                    return res.json({
+                        status: 200,
+                        profile
+                    })
                 }
                 return res.sendStatus(500)
             }catch(e){
@@ -38,9 +44,14 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
-                    return res.json(profile)
+                    return res.json({
+                        status: 200,
+                        profile
+                    })
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
@@ -54,11 +65,14 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     // TODO ver se nao esta banido
-                    profile.last_login = Date.now()
-                    await profile.save()
+                    await PlayerProfileRepository.session({
+                        player_profile: profile
+                    })
                     return res.sendStatus(200)
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))

@@ -1,15 +1,17 @@
 const { isRole, isAdmin } = require('../domain/Roles')
 const { getJsonError, logError } = require('../errors/errors')
-const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const validator = require('../services/validator')
 
 module.exports = {
+    // TODO colocar logica de update e save no repository
     async updateSkin(req, res){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             const { skin } = req.body
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     profile.skin = skin
                     await profile.save()
@@ -28,9 +30,13 @@ module.exports = {
         const { applicator_uuid, role_id } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && isRole(role_id)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
-                    const applicator_profile = await PlayerProfile.findOne({ uuid: applicator_uuid })
+                    const applicator_profile = await PlayerProfileRepository.searsh({
+                        uuid: applicator_uuid
+                    })
                     if(applicator_profile){
                         if(isAdmin(applicator_profile.role)){
                             profile.role = role_id
@@ -59,7 +65,9 @@ module.exports = {
         if(validator.validateLanguage(language)){
             let profile
             try{
-                profile = await PlayerProfile.findOne({ uuid })
+                profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     profile.language = language
                     await profile.save()
@@ -78,7 +86,9 @@ module.exports = {
         const { friend_invite_prefference } = req.body
         if(validator.validateBoolean(friend_invite_prefference)){
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     profile.friend_invites_prefference = friend_invite_prefference
                     await profile.save()
@@ -98,7 +108,9 @@ module.exports = {
         if(validator.validateUUID(uuid)){
             const { email, discord, twitch, youtube } = req.body
             try{
-                const profile = await PlayerProfile.findOne({ uuid })
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     let validInfo = true
                     if(email){

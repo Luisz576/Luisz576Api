@@ -1,5 +1,5 @@
 const { logError, getJsonError } = require("../errors/errors")
-const PlayerProfile = require("../models/player_profile/PlayerProfile")
+const PlayerProfileRepository = require("../repositories/player_profile/PlayerProfileRepository")
 const validator = require('../services/validator')
 
 module.exports = {
@@ -7,7 +7,9 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfile.findOne({uuid})
+                const profile = await PlayerProfileRepository.searsh({
+                    uuid
+                })
                 if(profile){
                     const blocked_players = await profile.getBlocks()
                     return res.json({
