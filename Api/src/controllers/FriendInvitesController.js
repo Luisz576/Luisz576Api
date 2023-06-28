@@ -2,6 +2,7 @@ const FriendInvite = require('../models/friends/FriendInvite')
 const PlayerProfile = require('../models/player_profile/PlayerProfile')
 const { getJsonError, logError } = require('../errors/errors')
 const validator = require('../services/validator')
+const FriendInviteRepository = require('../repositories/friends/FriendInviteRepository')
 
 async function acceptFriendInvite(friendInvite, profile, profile2){
     if(friendInvite && profile && profile2){
@@ -49,17 +50,18 @@ module.exports = {
                         if(await profile.areFriends(friend_profile.uuid)){
                             return res.json(getJsonError(115))
                         }
-
                         // ve se esta com os pedidos de amizade ativos
                         if(friend_profile.friend_invites_prefference){
                             // ver se ja nao tem um convite ativo
-                            const validFriendInvite = await FriendInvite.findValidInvite(profile.uuid, friend_profile.uuid)
+                            const validFriendInvite = await FriendInviteRepository.findValid({
+                                sender_uuid: profile.uuid,
+                                receiver_uuid: friend_profile.uuid
+                            })
                             // ja existe
                             if(validFriendInvite){
-                                validateResult = validFriendInvite.stillValid()
                                 return res.json(getJsonError(120, {
                                     values: {
-                                        "remaining_time": validateResult.remainingTimeInSeconds
+                                        "remaining_time": validFriendInvite.getRemainingTimeInSeconds()
                                     },
                                 }))
                             }
@@ -74,9 +76,9 @@ module.exports = {
                             */
 
                             // create invite
-                            await FriendInvite.create({
-                                sender: profile.uuid,
-                                receiver: friend_profile.uuid,
+                            await FriendInviteRepository.create({
+                                sender_uuid: profile.uuid,
+                                receiver_uuid: friend_profile.uuid
                             })
                             return res.sendStatus(201)
                         }
@@ -109,7 +111,10 @@ module.exports = {
                             return res.json(getJsonError(115))
                         }
                         // busca convite de amizade valido
-                        let validFriendInvite = await FriendInvite.findValidInvite(friend_profile.uuid, profile.uuid)
+                        const validFriendInvite = await FriendInviteRepository.findValid({
+                            sender_uuid: friend_profile.uuid,
+                            receiver_uuid: profile.uuid
+                        });
                         if(validFriendInvite){
                             await acceptFriendInvite(validFriendInvite, profile, friend_profile)
                             return res.sendStatus(200)

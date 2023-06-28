@@ -16,6 +16,7 @@ module.exports = {
                 }
                 profile = await PlayerProfile.create({ uuid, username })
                 if(profile){
+                    // TODO: passar para repository
                     let friends_list = await FriendsList.create({ player_profile: profile._id })
                     let block_list = await BlockList.create({ player_profile: profile._id })
                     let products_list = await ProductsList.create({ player_profile: profile._id })

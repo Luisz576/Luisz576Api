@@ -11,7 +11,7 @@ const BlockListSchema = new mongoose.Schema({
     blocked_players: {
         type: [{
             player_profile: {
-                type: 'UUID',
+                type: String,
                 required: true
             },
             timestamp: {

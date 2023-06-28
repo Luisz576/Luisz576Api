@@ -1,8 +1,8 @@
 const { Luisz576Db } = require('../../services/database')
-const Punishment = require('../../models/punishments/punishment')
 const mongoose = require('mongoose')
-const FriendsList = require('../friends/FriendsList')
-const BlockList = require('./BlockList')
+const FriendsListRepository = require('../../repositories/friends/FriendsListRepository')
+const BlockListRepository = require('../../repositories/player_profile/BlockListRepository')
+const PunishmentRepository = require('../../repositories/punishments/PunishmentRepository')
 
 const PlayerProfileSchema = new mongoose.Schema({
     // DATA
@@ -88,12 +88,14 @@ const PlayerProfileSchema = new mongoose.Schema({
     // Blocks
     block_list: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'BlockList'
+        ref: 'BlockList',
+        required: true
     },
     // Friends
     friends_list: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'FriendsList'
+        ref: 'FriendsList',
+        required: true
     },
     // Flags
     punishment: {
@@ -103,7 +105,9 @@ const PlayerProfileSchema = new mongoose.Schema({
 }, {
     methods: {
         getFriends: async function(){
-            const friendsList = await FriendsList.findById(this.friends_list)
+            const friendsList = await FriendsListRepository.getById({
+                friends_list_id: this.friends_list
+            })
             return friendsList.friends
         },
         areFriends: async function(profileUUID){
@@ -120,51 +124,35 @@ const PlayerProfileSchema = new mongoose.Schema({
                 throw "Players are already friends"
             }
 
-            const friendList = await FriendsList.findById(this.friends_list)
-            const friendFriendList = await FriendsList.findById(profile.friends_list)
-
-            //salve
-            friendList.friends.push({
-                player_profile: profile.uuid,
+            // salva
+            await FriendsListRepository.insertFriend({
+                friends_list_id: this.friends_list,
+                player_profile_uuid: profile.uuid
             })
-            friendFriendList.friends.push({
-                player_profile: this.uuid
+            await FriendsListRepository.insertFriend({
+                friends_list_id: profile.friends_list,
+                player_profile_uuid: this.uuid
             })
-            await friendList.save()
-            await friendFriendList.save()
         },
         removeFriend: async function(profile){
-            const friendList = await FriendsList.findById(this.friends_list)
-            const friendFriendList = await FriendsList.findById(profile.friends_list)
-
-            // find
-            let targetIndex = -1
-            for(let i in friendList.friends){
-                if(friendList.friends[i].player_profile == profile.uuid){
-                    targetIndex = i
-                }
-            }
-            let targetFriendIndex = -1
-            for(let i in friendFriendList.friends){
-                if(friendFriendList.friends[i].player_profile == this.uuid){
-                    targetFriendIndex = i
-                }
-            }
-
-            if(targetIndex != -1 && targetFriendIndex != -1){
+            if(await this.areFriends(profile.uuid)){
                 // remove
-                friendList.friends.splice(targetIndex, 1)
-                friendFriendList.friends.splice(targetFriendIndex, 1)
-
-                // save
-                await friendList.save()
-                await friendFriendList.save()
+                await FriendsListRepository.removeFriend({
+                    friends_list_id: this.friends_list,
+                    player_profile_uuid: profile.uuid
+                })
+                await FriendsListRepository.removeFriend({
+                    friends_list_id: profile.friends_list,
+                    player_profile_uuid: this.uuid
+                })
                 return
             }
             throw "Players aren't friends"
         },
         getBlocks: async function(){
-            const blockList = await BlockList.findById(this.block_list)
+            const blockList = await BlockListRepository.getById({
+                block_list_id: this.block_list
+            })
             return blockList.blocked_players
         },
         isBlockedByPlayer: async function(profileUUID){
@@ -176,12 +164,11 @@ const PlayerProfileSchema = new mongoose.Schema({
             }
             return false
         },
-        // TODO tirar daqui e colocar no modelo Punishments com o nome de findAllFor
-        registerPunishment: function(){
-            this.punishment = true
-        },
+        // TODO tirar daqui e colocar no PunishmentRepository
         getPunishments: async function(){
-            return await Punishment.find({player_profile: this._id})
+            return await PunishmentRepository.searsh({
+                player_profile_uuid: this.uuid
+            })
         }
     }
 })

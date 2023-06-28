@@ -27,6 +27,13 @@ const FriendInviteSchema = new mongoose.Schema({
     },
 }, {
     methods: {
+        getRemainingTimeInSeconds(){
+            const timeInSeconds = Math.floor((Date.now() - this.created.getTime()) / 1000)
+            if(timeInSeconds > 300){
+                return 0
+            }
+            return 300 - timeInSeconds
+        },
         stillValid(){
             if(this.accepted || !this.valid_invite){
                 return {
@@ -35,16 +42,10 @@ const FriendInviteSchema = new mongoose.Schema({
                 }
             }
             // calcula tempo restante
-            const timeInSeconds = Math.floor((Date.now() - this.created.getTime()) / 1000)
-            if(timeInSeconds > 300){
-                return {
-                    isValid: false,
-                    remainingTimeInSeconds: 0
-                }
-            }
+            const remainingTimeInSeconds = this.getRemainingTimeInSeconds()
             return {
-                isValid: true,
-                remainingTimeInSeconds: 300 - timeInSeconds
+                isValid: remainingTimeInSeconds != 0,
+                remainingTimeInSeconds
             }
         },
         accept(){
@@ -54,6 +55,7 @@ const FriendInviteSchema = new mongoose.Schema({
     }
 })
 
+// TODO passar para repository
 FriendInviteSchema.static('findAllValidInvitesFor', async function(receiver){
     const friendInvites = await this.find({
         receiver,
@@ -68,22 +70,6 @@ FriendInviteSchema.static('findAllValidInvitesFor', async function(receiver){
         }
     }
     return invites
-})
-
-FriendInviteSchema.static('findValidInvite', async function(sender, receiver){
-    const friendInvites = await this.find({
-        sender,
-        receiver,
-        valid_invite: true,
-        accepted: false
-    })
-    // procura convite valido
-    for(let i in friendInvites){
-        if(friendInvites[i].stillValid().isValid){
-            return friendInvites[i]
-        }
-    }
-    return undefined
 })
 
 module.exports = FriendsDb.model('FriendInvite', FriendInviteSchema)

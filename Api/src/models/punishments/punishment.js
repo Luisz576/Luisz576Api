@@ -32,6 +32,10 @@ const PunishmentSchema = new mongoose.Schema({
         default: 0,
         min: 0,
     },
+    is_valid: {
+        type: Boolean,
+        default: true
+    },
     deleted: {
         type: Boolean,
         default: false
