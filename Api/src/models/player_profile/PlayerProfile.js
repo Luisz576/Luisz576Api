@@ -176,6 +176,7 @@ const PlayerProfileSchema = new mongoose.Schema({
             }
             return false
         },
+        // TODO tirar daqui e colocar no modelo Punishments com o nome de findAllFor
         getPunishments: async function(){
             return await Punishment.find({player_profile: this._id})
         }

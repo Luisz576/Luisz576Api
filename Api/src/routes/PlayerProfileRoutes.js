@@ -1,5 +1,7 @@
 const express = require('express')
 
+const AuthenticatorMiddleware = require('../middlewares/AuthenticatorMiddleware')
+
 const PlayerProfileController = require('../controllers/PlayerProfileController')
 const PlayerProfileConfigsController = require('../controllers/PlayerProfileConfigsController')
 const FriendsController = require('../controllers/FriendsController')
@@ -8,16 +10,20 @@ const BlocksController = require('../controllers/BlocksController')
 
 const routes = express.Router()
 
+routes.use(AuthenticatorMiddleware)
+
 // <PlayerProfile>
 routes.get('/:uuid', PlayerProfileController.searsh)
 routes.post('/newprofile', PlayerProfileController.store)
 routes.patch('/:uuid/session', PlayerProfileController.session)
+
 //configs
 routes.patch('/:uuid/skin', PlayerProfileConfigsController.updateSkin)
 routes.patch('/:uuid/role', PlayerProfileConfigsController.updateRole)
 routes.patch('/:uuid/language', PlayerProfileConfigsController.updateLanguage)
 routes.patch('/:uuid/changefriendinviteprefferences', PlayerProfileConfigsController.updateFriendInvitePrefferences)
 routes.patch('/:uuid/updatesocialmedia', PlayerProfileConfigsController.updateSocialMedia)
+
 //friends
 routes.get('/:uuid/friends', FriendsController.searsh)
 routes.delete('/:uuid/removefriend', FriendsController.remove)

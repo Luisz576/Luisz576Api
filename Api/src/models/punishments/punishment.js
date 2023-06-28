@@ -2,6 +2,7 @@ const { Luisz576Db } = require('../../services/database')
 const mongoose = require('mongoose')
 
 const PunishmentSchema = new mongoose.Schema({
+    //TODO atualizar ObjectId por UUID e remover _profile dos nomes
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayerProfile',

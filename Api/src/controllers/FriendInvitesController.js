@@ -22,7 +22,7 @@ module.exports = {
     async searsh(req, res){
         const { uuid } = req.params
         try{
-            const friend_invites = await FriendInvite.findAllValidInvitesForPlayer(uuid)
+            const friend_invites = await FriendInvite.findAllValidInvitesFor(uuid)
             return res.json({
                 status: "200",
                 uuid,

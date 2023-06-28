@@ -1,4 +1,4 @@
-const { mongodb_connection_uri } = require('../../configs/configs.json')
+const { mongodb_connection_uri } = require('../../configs/db_config.json')
 const mongoose = require('mongoose')
 const { createClient } = require('redis')
 

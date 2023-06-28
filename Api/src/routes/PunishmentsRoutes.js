@@ -1,8 +1,12 @@
 const express = require('express')
 
+const AuthenticatorMiddleware = require('../middlewares/AuthenticatorMiddleware')
+
 const PunishmentsController = require('../controllers/PunishmentsController')
 
 const routes = express.Router()
+
+routes.use(AuthenticatorMiddleware)
 
 // <Punishments>
 routes.get('/:uuid', PunishmentsController.searsh)

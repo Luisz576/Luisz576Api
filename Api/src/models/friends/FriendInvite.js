@@ -50,7 +50,7 @@ const FriendInviteSchema = new mongoose.Schema({
     }
 })
 
-FriendInviteSchema.static('findAllValidInvitesForPlayer', async function(receiver){
+FriendInviteSchema.static('findAllValidInvitesFor', async function(receiver){
     const friendInvites = await this.find({
         receiver,
         valid_invite: true,
