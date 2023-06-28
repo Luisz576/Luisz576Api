@@ -1,8 +1,17 @@
 package com.luisz.luisz576api.domain.playerprofile;
 
-import lombok.RequiredArgsConstructor;
+import com.luisz.luisz576api.domain.playerprofile.enums.Language;
+import com.luisz.luisz576api.domain.playerprofile.enums.Role;
+import lombok.AllArgsConstructor;
 
-@RequiredArgsConstructor
+import java.util.UUID;
+
+@AllArgsConstructor
 public class PlayerProfile {
-    //TODO
+    public UUID uuid;
+    public String username, skin, email, discord, youtube, twitch;
+    public Language language;
+    public Role role;
+    public int network_xp, cash, coins;
+    public boolean account_actived, punishment;
 }

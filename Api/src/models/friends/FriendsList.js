@@ -11,7 +11,7 @@ const FriendsListSchema = new mongoose.Schema({
     friends: {
         type: [{
             player_profile: {
-                type: 'UUID',
+                type: String,
                 require: true
             },
             timestamp: {

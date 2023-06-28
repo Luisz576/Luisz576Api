@@ -4,7 +4,6 @@
   "description": "Luisz576 Api",
   "main": "./src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "api": "nodemon ./src/app"
   },
   "repository": {

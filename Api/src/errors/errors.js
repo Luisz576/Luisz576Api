@@ -20,11 +20,11 @@ class Error{
 const errors = [
     new Error({
         id: 10,
-        error_name: "Profile not finded"
+        error_name: "Profile not found"
     }),
     new Error({
         id: 15,
-        error_name: "Target profile not finded"
+        error_name: "Target profile not found"
     }),
     new Error({
         id: 110,
@@ -44,9 +44,8 @@ const errors = [
     }),
     new Error({
         id: 125,
-        error_name: "Friend invite not founded",
+        error_name: "No valid friend invite found",
     }),
-    // punishments
     new Error({
         id: 210,
         error_name: "Applicator isn't a ADM",
@@ -65,8 +64,5 @@ module.exports = {
     logError(error){
         console.error(error)
         //TODO salvar log
-    },
-    // Errors
-    errors,
-    Error
+    }
 }

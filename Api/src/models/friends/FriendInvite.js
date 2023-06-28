@@ -17,6 +17,10 @@ const FriendInviteSchema = new mongoose.Schema({
         default: Date.now,
         immutable: true
     },
+    valid_invite: {
+        type: Boolean,
+        default: true
+    },
     accepted: {
         type: Boolean,
         default: false
@@ -24,19 +28,41 @@ const FriendInviteSchema = new mongoose.Schema({
 }, {
     methods: {
         stillValid(){
-            if(this.accepted){
+            if(this.accepted || !this.valid_invite){
                 return {
                     isValid: false,
                     remainingTimeInSeconds: 0
                 }
             }
-            //TODO
+            // calcula tempo restante
+            const timeInSeconds = Math.floor((Date.now() - this.created.getTime()) / 1000)
+            if(timeInSeconds > 300){
+                return {
+                    isValid: false,
+                    remainingTimeInSeconds: 0
+                }
+            }
             return {
                 isValid: true,
-                remainingTimeInSeconds: 100
+                remainingTimeInSeconds: 300 - timeInSeconds
             }
         }
     }
+})
+
+FriendInviteSchema.static('findValidInvite', async function(sender_profile, receiver_profile){
+    const friendInvites = await this.find({
+        sender_profile,
+        receiver_profile
+    })
+    // procura convite valido
+    for(let i in friendInvites){
+        const validateResult = friendInvites[i].stillValid()
+        if(validateResult.isValid){
+            return friendInvites[i]
+        }
+    }
+    return undefined
 })
 
 module.exports = FriendsDb.model('FriendInvite', FriendInviteSchema)

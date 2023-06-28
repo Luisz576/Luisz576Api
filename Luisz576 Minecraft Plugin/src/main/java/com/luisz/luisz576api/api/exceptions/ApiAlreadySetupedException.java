@@ -1,3 +1,3 @@
-package com.luisz.luisz576api.domain.exceptions;
+package com.luisz.luisz576api.api.exceptions;
 
 public class ApiAlreadySetupedException extends Exception{}

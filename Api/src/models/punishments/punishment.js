@@ -28,7 +28,11 @@ const PunishmentSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    duration: Date,
+    duration: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
     deleted: {
         type: Boolean,
         default: false

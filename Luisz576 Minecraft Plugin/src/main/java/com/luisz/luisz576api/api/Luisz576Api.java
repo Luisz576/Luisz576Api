@@ -3,9 +3,9 @@ package com.luisz.luisz576api.api;
 import com.luisz.lapi.LPlugin;
 import com.luisz.luisz576api.domain.api.IApi;
 import com.luisz.luisz576api.domain.api.builder.IApiBuilder;
-import com.luisz.luisz576api.domain.exceptions.ApiAlreadySetupedException;
-import com.luisz.luisz576api.domain.exceptions.ApiNotInitializedException;
-import com.luisz.luisz576api.domain.exceptions.ApiNotLoadedException;
+import com.luisz.luisz576api.api.exceptions.ApiAlreadySetupedException;
+import com.luisz.luisz576api.api.exceptions.ApiNotInitializedException;
+import com.luisz.luisz576api.api.exceptions.ApiNotLoadedException;
 
 import java.lang.reflect.InvocationTargetException;
 

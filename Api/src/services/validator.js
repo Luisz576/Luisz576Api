@@ -2,7 +2,7 @@ const { getLanguageById } = require("../domain/languages");
 
 module.exports = {
     validateFriendInvitePrefference(prefference){
-        return prefference == 0 || prefference == 1 || prefference == 2
+        return prefference === false || prefference === true
     },
     validateLanguage(language){
         return getLanguageById(language, false)
