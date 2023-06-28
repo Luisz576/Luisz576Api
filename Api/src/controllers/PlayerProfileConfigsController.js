@@ -16,7 +16,7 @@ module.exports = {
             }
             return res.json(getJsonError(10, {values: { uuid }}))
         }catch(e){
-            logError(e)
+            logError(e, 'PlayerProfileConfigsController', 'uploadSkin')
             return res.sendStatus(500)
         }
     },
@@ -44,7 +44,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'PlayerProfileConfigsController', 'uploadRole')
                 return res.sendStatus(500)
             }
         }
@@ -64,7 +64,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'PlayerProfileConfigsController', 'uploadLanguage')
                 return res.sendStatus(500)
             }
         }
@@ -83,7 +83,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'PlayerProfileConfigsController', 'updateFriendInvitePrefferences')
                 return res.sendStatus(500)
             }
         }
@@ -133,7 +133,7 @@ module.exports = {
             }
             return res.json(getJsonError(10, {values: { uuid }}))
         }catch(e){
-            logError(e)
+            logError(e, 'PlayerProfileConfigsController', 'updateSocialMedia')
             return res.sendStatus(500)
         }
     }

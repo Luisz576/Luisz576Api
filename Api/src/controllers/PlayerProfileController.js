@@ -51,6 +51,7 @@ module.exports = {
         try{
             const profile = await PlayerProfile.findOne({ uuid })
             if(profile){
+                // TODO ver se nao esta banido
                 profile.last_login = Date.now()
                 await profile.save()
                 return res.sendStatus(200)

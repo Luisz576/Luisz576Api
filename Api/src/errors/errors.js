@@ -61,7 +61,8 @@ module.exports = {
         }
         return undefined
     },
-    logError(error){
+    logError(error, controller, func){
+        console.log(`Error at '${controller}' in '${func}':`)
         console.error(error)
         //TODO salvar log
     }

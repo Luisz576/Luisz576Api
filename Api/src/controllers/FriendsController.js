@@ -18,7 +18,7 @@ module.exports = {
             }
             return res.json(getJsonError(10, {values: { uuid }}))
         }catch(e){
-            logError(e)
+            logError(e, 'FriendsController', 'searsh')
             return res.sendStatus(500)
         }
     },
@@ -69,7 +69,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'FriendsController', 'store')
                 return res.sendStatus(500)
             }
         }
@@ -109,7 +109,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'FriendsController', 'accept')
                 return res.sendStatus(500)
             }
         }
@@ -138,7 +138,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'FriendsController', 'remove')
                 return res.sendStatus(500)
             }
         }

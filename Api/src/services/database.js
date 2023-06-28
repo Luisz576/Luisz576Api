@@ -13,7 +13,7 @@ const Luisz576Db = mongoose.createConnection(mongodb_connection_uri, {
     console.log("[Luisz576Api] Erro ao conectar ao Luisz576Db!")
 })
 
-// Friends DB //TODO manter?
+// Friends DB
 const FriendsDb = mongoose.createConnection(mongodb_connection_uri, {
     dbName: "Friends",
     serverSelectionTimeoutMS: 10000

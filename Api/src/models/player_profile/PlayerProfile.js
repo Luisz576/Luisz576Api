@@ -2,6 +2,7 @@ const { Luisz576Db } = require('../../services/database')
 const Punishment = require('../../models/punishments/punishment')
 const mongoose = require('mongoose')
 const FriendsList = require('../friends/FriendsList')
+const BlockList = require('./BlockList')
 
 const PlayerProfileSchema = new mongoose.Schema({
     // DATA
@@ -105,26 +106,26 @@ const PlayerProfileSchema = new mongoose.Schema({
             const friendsList = await FriendsList.findById(this.friends_list)
             return friendsList.friends
         },
-        areFriends: async function(friendProfileUUID){
+        areFriends: async function(profileUUID){
             const friends = await this.getFriends()
             for(let i in friends){
-                if(friends[i].player_profile == friendProfileUUID){
+                if(friends[i].player_profile == profileUUID){
                     return true
                 }
             }
             return false
         },
-        addNewFriend: async function(friendProfile){
-            if(await this.areFriends(friendProfile.uuid)){
+        addNewFriend: async function(profile){
+            if(await this.areFriends(profile.uuid)){
                 throw "Players are already friends"
             }
 
             const friendList = await FriendsList.findById(this.friends_list)
-            const friendFriendList = await FriendsList.findById(friendProfile.friends_list)
+            const friendFriendList = await FriendsList.findById(profile.friends_list)
 
             //salve
             friendList.friends.push({
-                player_profile: friendProfile.uuid,
+                player_profile: profile.uuid,
             })
             friendFriendList.friends.push({
                 player_profile: this.uuid
@@ -132,14 +133,14 @@ const PlayerProfileSchema = new mongoose.Schema({
             await friendList.save()
             await friendFriendList.save()
         },
-        removeFriend: async function(friendProfile){
+        removeFriend: async function(profile){
             const friendList = await FriendsList.findById(this.friends_list)
-            const friendFriendList = await FriendsList.findById(friendProfile.friends_list)
+            const friendFriendList = await FriendsList.findById(profile.friends_list)
 
             // find
             let targetIndex = -1
             for(let i in friendList.friends){
-                if(friendList.friends[i].player_profile == friendProfile.uuid){
+                if(friendList.friends[i].player_profile == profile.uuid){
                     targetIndex = i
                 }
             }
@@ -162,7 +163,20 @@ const PlayerProfileSchema = new mongoose.Schema({
             }
             throw "Players aren't friends"
         },
-        async getPunishments(){
+        getBlocks: async function(){
+            const blockList = await BlockList.findById(this.block_list)
+            return blockList.blocked_players
+        },
+        isBlockedByPlayer: async function(profileUUID){
+            const blocked_players = await this.getBlocks()
+            for(let i in blocked_players){
+                if(blocked_players[i].player_profile == profileUUID){
+                    return true
+                }
+            }
+            return false
+        },
+        getPunishments: async function(){
             return await Punishment.find({player_profile: this._id})
         }
     }
