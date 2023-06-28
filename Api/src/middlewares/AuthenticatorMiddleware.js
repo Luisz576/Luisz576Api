@@ -22,6 +22,7 @@ module.exports = (req, res, next) => {
             return res.sendStatus(401)
         }
 
+        // TODO: deixar salvo o token no redis? e ai quando gerar um novo token so set nele?
         authenticator.verifyToken(token, (e, decoded) => {
             if(e){
                 return res.sendStatus(401)

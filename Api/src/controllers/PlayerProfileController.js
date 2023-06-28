@@ -35,31 +35,37 @@ module.exports = {
     },
     async searsh(req, res){
         const { uuid } = req.params
-        try{
-            const profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                return res.json(profile)
+        if(validator.validateUUID(uuid)){
+            try{
+                const profile = await PlayerProfile.findOne({ uuid })
+                if(profile){
+                    return res.json(profile)
+                }
+                return res.json(getJsonError(10, {values: { uuid }}))
+            }catch(e){
+                logError(e)
+                return res.sendStatus(500)
             }
-            return res.json(getJsonError(10, {values: { uuid }}))
-        }catch(e){
-            logError(e)
-            return res.sendStatus(500)
         }
+        return res.sendStatus(400)
     },
     async session(req, res){
         const { uuid } = req.params
-        try{
-            const profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                // TODO ver se nao esta banido
-                profile.last_login = Date.now()
-                await profile.save()
-                return res.sendStatus(200)
+        if(validator.validateUUID(uuid)){
+            try{
+                const profile = await PlayerProfile.findOne({ uuid })
+                if(profile){
+                    // TODO ver se nao esta banido
+                    profile.last_login = Date.now()
+                    await profile.save()
+                    return res.sendStatus(200)
+                }
+                return res.json(getJsonError(10, {values: { uuid }}))
+            }catch(e){
+                logError(e)
+                return res.sendStatus(500)
             }
-            return res.json(getJsonError(10, {values: { uuid }}))
-        }catch(e){
-            logError(e)
-            return res.sendStatus(500)
         }
+        return res.sendStatus(400)
     },
 }

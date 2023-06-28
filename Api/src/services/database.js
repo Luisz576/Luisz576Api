@@ -10,7 +10,7 @@ const Luisz576Db = mongoose.createConnection(mongodb_connection_uri, {
 .on('open', () => {
     console.log("[Luisz576Api] Conectado ao Luisz576Db!")
 }).on('error', () => {
-    console.log("[Luisz576Api] Erro ao conectar ao Luisz576Db!")
+    console.error("[Luisz576Api] Erro ao conectar ao Luisz576Db!")
 })
 
 // Friends DB
@@ -21,7 +21,7 @@ const FriendsDb = mongoose.createConnection(mongodb_connection_uri, {
 .on('open', () => {
     console.log("[Luisz576Api] Conectado ao FriendsDb!")
 }).on('error', () => {
-    console.log("[Luisz576Api] Erro ao conectar ao FriendsDb!")
+    console.error("[Luisz576Api] Erro ao conectar ao FriendsDb!")
 })
 
 // TheBridge DB
@@ -32,18 +32,16 @@ const TheBridgeDb = mongoose.createConnection(mongodb_connection_uri, {
 .on('open', () => {
     console.log("[Luisz576Api] Conectado ao TheBridgeDb!")
 }).on('error', () => {
-    console.log("[Luisz576Api] Erro ao conectar ao TheBridgeDb!")
+    console.error("[Luisz576Api] Erro ao conectar ao TheBridgeDb!")
 })
 
 // Redis
 const redisCache = createClient()
-
-redisCache.on('error', err => {
-    console.log('RedisClient Error', err)
-})
-
 redisCache.connect().then(() => {
     console.log('RedisClient created!')
+})
+redisCache.on('error', err => {
+    console.error('RedisClient Error', err)
 })
 
 module.exports = {

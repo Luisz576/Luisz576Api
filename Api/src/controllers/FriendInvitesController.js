@@ -5,15 +5,15 @@ const validator = require('../services/validator')
 
 async function acceptFriendInvite(friendInvite, profile, profile2){
     if(friendInvite && profile && profile2){
+        // aceita convite
+        friendInvite.accept()
         // adiciona amigo
-        friendInvite.valid_invite = false
-        friendInvite.accepted = true
         await profile.addNewFriend(profile2)
         // salva
         await friendInvite.save()
         await profile.save()
         await profile2.save()
-        return 
+        return
     }
     throw "Invalid args in function 'acceptFriendInvite'"
 }
@@ -21,22 +21,25 @@ async function acceptFriendInvite(friendInvite, profile, profile2){
 module.exports = {
     async searsh(req, res){
         const { uuid } = req.params
-        try{
-            const friend_invites = await FriendInvite.findAllValidInvitesFor(uuid)
-            return res.json({
-                status: "200",
-                uuid,
-                friend_invites
-            })
-        }catch(e){
-            logError(e, 'FriendInvitesController', 'searsh')
-            return res.sendStatus(500)
+        if(validator.validateUUID(uuid)){
+            try{
+                const friend_invites = await FriendInvite.findAllValidInvitesFor(uuid)
+                return res.json({
+                    status: "200",
+                    uuid,
+                    friend_invites
+                })
+            }catch(e){
+                logError(e, 'FriendInvitesController', 'searsh')
+                return res.sendStatus(500)
+            }
         }
+        return res.sendStatus(400)
     },
     async store(req, res){
         const { new_friend_uuid } = req.body
         const { uuid } = req.params
-        if(validator.validateUUID(new_friend_uuid)){
+        if(validator.validateUUID(uuid) && validator.validateUUID(new_friend_uuid)){
             try{
                 const profile = await PlayerProfile.findOne({ uuid })
                 const friend_profile = await PlayerProfile.findOne({ uuid: new_friend_uuid })
@@ -95,7 +98,7 @@ module.exports = {
     },
     async accept(req, res){
         const { uuid, friend_uuid } = req.params
-        if(validator.validateUUID(friend_uuid)){
+        if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             try{
                 const profile = await PlayerProfile.findOne({ uuid })
                 if(profile){

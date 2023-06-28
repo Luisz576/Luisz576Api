@@ -46,6 +46,10 @@ const FriendInviteSchema = new mongoose.Schema({
                 isValid: true,
                 remainingTimeInSeconds: 300 - timeInSeconds
             }
+        },
+        accept(){
+            this.valid_invite = false
+            this.accepted = true
         }
     }
 })

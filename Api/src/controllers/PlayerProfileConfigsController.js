@@ -6,24 +6,27 @@ const validator = require('../services/validator')
 module.exports = {
     async updateSkin(req, res){
         const { uuid } = req.params
-        const { skin } = req.body
-        try{
-            const profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                profile.skin = skin
-                await profile.save()
-                return res.sendStatus(200)
+        if(validator.validateUUID(uuid)){
+            const { skin } = req.body
+            try{
+                const profile = await PlayerProfile.findOne({ uuid })
+                if(profile){
+                    profile.skin = skin
+                    await profile.save()
+                    return res.sendStatus(200)
+                }
+                return res.json(getJsonError(10, {values: { uuid }}))
+            }catch(e){
+                logError(e, 'PlayerProfileConfigsController', 'uploadSkin')
+                return res.sendStatus(500)
             }
-            return res.json(getJsonError(10, {values: { uuid }}))
-        }catch(e){
-            logError(e, 'PlayerProfileConfigsController', 'uploadSkin')
-            return res.sendStatus(500)
         }
+        return res.sendStatus(400)
     },
     async updateRole(req, res){
         const { uuid } = req.params
         const { applicator_uuid, role_id } = req.body
-        if(validator.validateUUID(applicator_uuid) && isRole(role_id)){
+        if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && isRole(role_id)){
             try{
                 const profile = await PlayerProfile.findOne({ uuid })
                 if(profile){
@@ -92,49 +95,52 @@ module.exports = {
     // SOCIAL
     async updateSocialMedia(req, res){
         const { uuid } = req.params
-        const { email, discord, twitch, youtube } = req.body
-        try{
-            const profile = await PlayerProfile.findOne({ uuid })
-            if(profile){
-                let validInfo = true
-                if(email){
-                    if(validator.validateEmail(email)){
-                        profile.email = email.toLowerCase()
-                    }else{
-                        validInfo = false
+        if(validator.validateUUID(uuid)){
+            const { email, discord, twitch, youtube } = req.body
+            try{
+                const profile = await PlayerProfile.findOne({ uuid })
+                if(profile){
+                    let validInfo = true
+                    if(email){
+                        if(validator.validateEmail(email)){
+                            profile.email = email.toLowerCase()
+                        }else{
+                            validInfo = false
+                        }
                     }
-                }
-                if(discord){
-                    if(validator.validateDiscord(discord)){
-                        profile.discord = discord.toLowerCase()
-                    }else{
-                        validInfo = false
+                    if(discord){
+                        if(validator.validateDiscord(discord)){
+                            profile.discord = discord.toLowerCase()
+                        }else{
+                            validInfo = false
+                        }
                     }
-                }
-                if(twitch){
-                    if(validator.validateTwitch(twitch)){
-                        profile.twitch = twitch.toLowerCase()
-                    }else{
-                        validInfo = false
+                    if(twitch){
+                        if(validator.validateTwitch(twitch)){
+                            profile.twitch = twitch.toLowerCase()
+                        }else{
+                            validInfo = false
+                        }
                     }
-                }
-                if(youtube){
-                    if(validator.validateYoutube(youtube)){
-                        profile.youtube = youtube.toLowerCase()
-                    }else{
-                        validInfo = false
+                    if(youtube){
+                        if(validator.validateYoutube(youtube)){
+                            profile.youtube = youtube.toLowerCase()
+                        }else{
+                            validInfo = false
+                        }
                     }
+                    if(validInfo){
+                        await profile.save()
+                        return res.sendStatus(200)
+                    }
+                    return res.sendStatus(304) //not modified
                 }
-                if(validInfo){
-                    await profile.save()
-                    return res.sendStatus(200)
-                }
-                return res.sendStatus(304) //not modified
+                return res.json(getJsonError(10, {values: { uuid }}))
+            }catch(e){
+                logError(e, 'PlayerProfileConfigsController', 'updateSocialMedia')
+                return res.sendStatus(500)
             }
-            return res.json(getJsonError(10, {values: { uuid }}))
-        }catch(e){
-            logError(e, 'PlayerProfileConfigsController', 'updateSocialMedia')
-            return res.sendStatus(500)
         }
+        return res.sendStatus(400)
     }
 }

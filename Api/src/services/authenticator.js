@@ -19,7 +19,7 @@ module.exports = {
     generateJWTToken(payload = {}, expiresIn = 86400){
         return jwt.sign(payload, secret, { expiresIn })
     },
-    verifyToken(token, callback = (err, decoded) => {}){
+    verifyToken(token, callback = (_err, _decoded) => {}){
         jwt.verify(token, secret, callback)
     },
     getClientById(client_id){

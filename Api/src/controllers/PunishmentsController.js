@@ -7,27 +7,30 @@ const validator = require("../services/validator")
 module.exports = {
     async searsh(req, res){
         const { uuid } = req.params
-        try{
-            const profile = await PlayerProfile.findOne({uuid})
-            if(profile){
-                if(profile.punishment){
-                    const punishments = await profile.getPunishments()
+        if(validator.validateUUID(uuid)){
+            try{
+                const profile = await PlayerProfile.findOne({uuid})
+                if(profile){
+                    if(profile.punishment){
+                        const punishments = await profile.getPunishments()
+                        return res.json({
+                            "status": 200,
+                            uuid,
+                            punishments
+                        })
+                    }
                     return res.json({
                         "status": 200,
-                        uuid,
-                        punishments
+                        "punishments": []
                     })
                 }
-                return res.json({
-                    "status": 200,
-                    "punishments": []
-                })
+            }catch(e){
+                logError(e)
+                return res.sendStatus(500)
             }
-        }catch(e){
-            logError(e)
-            return res.sendStatus(500)
+            return res.json(getJsonError(10, {values: { uuid }}))
         }
-        return res.json(getJsonError(10, {values: { uuid }}))
+        return res.sendStatus(400)
     },
     async store(req, res){
         const { uuid, applicator_uuid, punishment_type, reason, duration, comment } = req.body
