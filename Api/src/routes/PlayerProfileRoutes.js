@@ -3,6 +3,7 @@ const express = require('express')
 const PlayerProfileController = require('../controllers/PlayerProfileController')
 const PlayerProfileConfigsController = require('../controllers/PlayerProfileConfigsController')
 const FriendsController = require('../controllers/FriendsController')
+const FriendInvitesController = require('../controllers/FriendInvitesController')
 const BlocksController = require('../controllers/BlocksController')
 
 const routes = express.Router()
@@ -19,9 +20,11 @@ routes.patch('/:uuid/changefriendinviteprefferences', PlayerProfileConfigsContro
 routes.patch('/:uuid/updatesocialmedia', PlayerProfileConfigsController.updateSocialMedia)
 //friends
 routes.get('/:uuid/friends', FriendsController.searsh)
-routes.post('/:uuid/newfriend', FriendsController.store)
-routes.patch('/:uuid/acceptfriendinvite/:friend_uuid', FriendsController.accept)
 routes.delete('/:uuid/removefriend', FriendsController.remove)
+routes.post('/:uuid/newfriend', FriendInvitesController.store)
+routes.patch('/:uuid/acceptfriendinvite/:friend_uuid', FriendInvitesController.accept)
+routes.get('/:uuid/friendinvites', FriendInvitesController.searsh)
+
 //blocks
 routes.get('/:uuid/blocks', BlocksController.searsh)
 routes.post('/:uuid/block', BlocksController.store)

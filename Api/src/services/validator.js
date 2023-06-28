@@ -1,9 +1,6 @@
 const { getLanguageById } = require("../domain/languages");
 
 module.exports = {
-    validateFriendInvitePrefference(prefference){
-        return prefference === false || prefference === true
-    },
     validateLanguage(language){
         return getLanguageById(language, false)
     },
@@ -14,6 +11,9 @@ module.exports = {
     validateUUID(uuid){
         const s = "" + uuid;
         return s.match('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') !== null
+    },
+    validateBoolean(bool){
+        return bool === false || bool === true
     },
     //TODO
     validateEmail(email){

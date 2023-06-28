@@ -73,7 +73,7 @@ module.exports = {
     async updateFriendInvitePrefferences(req, res){
         const { uuid } = req.params
         const { friend_invite_prefference } = req.body
-        if(validator.validateFriendInvitePrefference(friend_invite_prefference)){
+        if(validator.validateBoolean(friend_invite_prefference)){
             try{
                 const profile = await PlayerProfile.findOne({ uuid })
                 if(profile){

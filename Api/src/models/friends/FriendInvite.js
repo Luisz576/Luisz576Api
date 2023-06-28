@@ -2,14 +2,14 @@ const { FriendsDb } = require('../../services/database')
 const mongoose = require('mongoose');
 
 const FriendInviteSchema = new mongoose.Schema({
-    sender_profile: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile',
+    sender: {
+        type: String,
+        require: true,
         immutable: true
     },
-    receiver_profile: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerProfile',
+    receiver: {
+        type: String,
+        require: true,
         immutable: true
     },
     created: {
@@ -50,15 +50,32 @@ const FriendInviteSchema = new mongoose.Schema({
     }
 })
 
-FriendInviteSchema.static('findValidInvite', async function(sender_profile, receiver_profile){
+FriendInviteSchema.static('findAllValidInvitesForPlayer', async function(receiver){
     const friendInvites = await this.find({
-        sender_profile,
-        receiver_profile
+        receiver,
+        valid_invite: true,
+        accepted: false
+    })
+    const invites = []
+    // procura convite valido
+    for(let i in friendInvites){
+        if(friendInvites[i].stillValid().isValid){
+            invites.push(friendInvites[i])
+        }
+    }
+    return invites
+})
+
+FriendInviteSchema.static('findValidInvite', async function(sender, receiver){
+    const friendInvites = await this.find({
+        sender,
+        receiver,
+        valid_invite: true,
+        accepted: false
     })
     // procura convite valido
     for(let i in friendInvites){
-        const validateResult = friendInvites[i].stillValid()
-        if(validateResult.isValid){
+        if(friendInvites[i].stillValid().isValid){
             return friendInvites[i]
         }
     }
