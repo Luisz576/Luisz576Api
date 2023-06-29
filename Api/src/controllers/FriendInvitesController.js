@@ -1,4 +1,3 @@
-const FriendInvite = require('../models/friends/FriendInvite')
 const { getJsonError, logError } = require('../errors/errors')
 const validator = require('../services/validator')
 const FriendInviteRepository = require('../repositories/friends/FriendInviteRepository')
@@ -10,7 +9,9 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const friend_invites = await FriendInvite.findAllValidInvitesFor(uuid)
+                const friend_invites = await FriendInviteRepository.findAllValids({
+                    receiver_uuid: uuid
+                })
                 return res.json({
                     status: "200",
                     uuid,

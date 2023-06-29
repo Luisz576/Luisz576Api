@@ -132,7 +132,6 @@ const PlayerProfileSchema = new mongoose.Schema({
             }
             return false
         },
-        // TODO tirar daqui e colocar no PunishmentRepository
         getPunishments: async function(){
             return await PunishmentRepository.searsh({
                 player_profile_uuid: this.uuid

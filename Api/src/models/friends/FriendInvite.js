@@ -51,25 +51,11 @@ const FriendInviteSchema = new mongoose.Schema({
         accept(){
             this.valid_invite = false
             this.accepted = true
+        },
+        expires(){
+            this.valid_invite = false
         }
     }
-})
-
-// TODO passar para repository
-FriendInviteSchema.static('findAllValidInvitesFor', async function(receiver){
-    const friendInvites = await this.find({
-        receiver,
-        valid_invite: true,
-        accepted: false
-    })
-    const invites = []
-    // procura convite valido
-    for(let i in friendInvites){
-        if(friendInvites[i].stillValid().isValid){
-            invites.push(friendInvites[i])
-        }
-    }
-    return invites
 })
 
 module.exports = FriendsDb.model('FriendInvite', FriendInviteSchema)
