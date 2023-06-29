@@ -8,11 +8,11 @@ module.exports = {
         const { uuid, applicator_uuid, punishment_type, reason, duration, comment } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && validator.validatePunishmentAndDuration(punishment_type, duration) && reason){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
-                    const applicator_profile = await PlayerProfileRepository.searsh({
+                    const applicator_profile = await PlayerProfileRepository.search({
                         uuid: applicator_uuid
                     })
                     if(applicator_profile){
@@ -46,15 +46,15 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async searsh(req, res){
+    async search(req, res){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
-                    const punishments = await PunishmentRepository.searsh({
+                    const punishments = await PunishmentRepository.search({
                         player_profile_uuid: profile.uuid
                     })
                     return res.json({
@@ -65,7 +65,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e, 'PunishmentsController', 'searsh')
+                logError(e, 'PunishmentsController', 'search')
                 return res.sendStatus(500)
             }
         }
@@ -76,11 +76,11 @@ module.exports = {
         const { applicator_uuid, punishment_id } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && punishment_id){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
-                    const applicator_profile = await PlayerProfileRepository.searsh({
+                    const applicator_profile = await PlayerProfileRepository.search({
                         uuid: applicator_uuid
                     })
                     if(applicator_profile){
@@ -109,11 +109,11 @@ module.exports = {
         const { applicator_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
-                    const applicator_profile = await PlayerProfileRepository.searsh({
+                    const applicator_profile = await PlayerProfileRepository.search({
                         uuid: applicator_uuid
                     })
                     if(applicator_profile){

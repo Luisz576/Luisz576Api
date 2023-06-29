@@ -3,11 +3,11 @@ const PlayerProfileRepository = require("../repositories/player_profile/PlayerPr
 const validator = require('../services/validator')
 
 module.exports = {
-    async searsh(req, res){
+    async search(req, res){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
@@ -20,7 +20,7 @@ module.exports = {
                 }
                 return res.sendStatus(getJsonError(10, { values: {uuid} }))
             }catch(e){
-                logError(e, 'BlocksController', 'searsh')
+                logError(e, 'BlocksController', 'search')
                 return res.sendStatus(500)
             }
         }

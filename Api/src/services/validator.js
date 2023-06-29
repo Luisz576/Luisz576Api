@@ -15,17 +15,10 @@ module.exports = {
     validateBoolean(bool){
         return bool === false || bool === true
     },
+    validateString(string){
+        return string !== undefined && string !== null
+    },
     validateEmail(email){
         return /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/gm.test(email);
-    },
-    // TODO
-    validateDiscord(discord){
-        return true;
-    },
-    validateTwitch(twitch){
-        return true;
-    },
-    validateYoutube(youtube){
-        return true;
     },
 }

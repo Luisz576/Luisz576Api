@@ -9,7 +9,7 @@ const routes = express.Router()
 routes.use(AuthenticatorMiddleware)
 
 // <Punishments>
-routes.get('/:uuid', PunishmentsController.searsh)
+routes.get('/:uuid', PunishmentsController.search)
 routes.post('/give', PunishmentsController.store)
 routes.delete('/:uuid/pardon', PunishmentsController.pardon)
 routes.delete('/:uuid/pardonall', PunishmentsController.pardonall)

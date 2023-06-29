@@ -133,7 +133,7 @@ const PlayerProfileSchema = new mongoose.Schema({
             return false
         },
         getPunishments: async function(){
-            return await PunishmentRepository.searsh({
+            return await PunishmentRepository.search({
                 player_profile_uuid: this.uuid
             })
         }

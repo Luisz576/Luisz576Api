@@ -5,7 +5,7 @@ const PlayerProfileRepository = require('../repositories/player_profile/PlayerPr
 const FriendsListRepository = require('../repositories/friends/FriendsListRepository')
 
 module.exports = {
-    async searsh(req, res){
+    async search(req, res){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
@@ -18,7 +18,7 @@ module.exports = {
                     friend_invites
                 })
             }catch(e){
-                logError(e, 'FriendInvitesController', 'searsh')
+                logError(e, 'FriendInvitesController', 'search')
                 return res.sendStatus(500)
             }
         }
@@ -29,11 +29,11 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(new_friend_uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
-                    const friend_profile = await PlayerProfileRepository.searsh({
+                    const friend_profile = await PlayerProfileRepository.search({
                         uuid: new_friend_uuid
                     })
                     if(friend_profile){
@@ -93,11 +93,11 @@ module.exports = {
         const { uuid, friend_uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
-                    const friend_profile = await PlayerProfileRepository.searsh({
+                    const friend_profile = await PlayerProfileRepository.search({
                         uuid: friend_uuid
                     })
                     if(friend_profile){

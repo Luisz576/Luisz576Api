@@ -2,11 +2,11 @@ const { getJsonError, logError } = require('../errors/errors')
 const validator = require('../services/validator')
 
 module.exports = {
-    async searsh(req, res){
+    async search(req, res){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
@@ -19,7 +19,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e, 'FriendsController', 'searsh')
+                logError(e, 'FriendsController', 'search')
                 return res.sendStatus(500)
             }
         }
@@ -30,11 +30,11 @@ module.exports = {
         const { friend_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             try{
-                const profile = await await PlayerProfileRepository.searsh({
+                const profile = await await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
-                    const friend_profile = await PlayerProfileRepository.searsh({
+                    const friend_profile = await PlayerProfileRepository.search({
                         uuid: friend_uuid
                     })
                     if(friend_profile){

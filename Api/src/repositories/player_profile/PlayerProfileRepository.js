@@ -1,4 +1,5 @@
 const PlayerProfile = require('../../models/player_profile/PlayerProfile')
+const validator = require('../../services/validator')
 
 module.exports = {
     async create({uuid, username}){
@@ -17,7 +18,7 @@ module.exports = {
     async getById({player_profile_id}){
         return await PlayerProfile.findById(player_profile_id)
     },
-    async searsh({uuid, username}){
+    async search({uuid, username}){
         const filter = {}
         if(uuid){
             filter.uuid = uuid
@@ -33,7 +34,7 @@ module.exports = {
             profile = player_profile
             return
         }
-        profile = this.searsh({
+        profile = this.search({
             uuid: player_profile_uuid
         })
         if(profile){
@@ -43,10 +44,33 @@ module.exports = {
         }
         throw "PlayerProfile not founded"
     },
-    async updateConfigsAndSocial({skin, language, friend_invite_prefference, email, discord, youtube, twitch}){
-        // TODO
+    async updateConfigsAndSocial({player_profile_uuid, skin, language, friend_invites_prefference, email, discord, youtube, twitch}){
+        // filter
+        const filter = {
+            ...(language && { language }),
+            ...(email && { email }),
+            ...(discord && { discord }),
+            ...(youtube && { youtube }),
+        }
+        if(validator.validateString(skin)){
+            filter.skin = ""
+        }
+        if(validator.validateBoolean(friend_invites_prefference)){
+            filter.friend_invites_prefference = friend_invites_prefference
+        }
+        // update
+        const profile = await PlayerProfile.findOneAndUpdate({
+            uuid: player_profile_uuid
+        }, filter, {
+            new: true
+        })
+        if(profile){
+            return profile
+        }
+        throw "PlayerProfile not founded"
     },
-    async updateRole({role}){
-        // TODO
+    async updateRole({player_profile, role}){
+        player_profile.role = role
+        await player_profile.save()
     }
 }

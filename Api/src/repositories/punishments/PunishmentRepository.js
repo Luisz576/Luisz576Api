@@ -18,7 +18,7 @@ module.exports = {
     async getById({punishment_id}){
         return await Punishment.findById(punishment_id)
     },
-    async searsh({player_profile_uuid, applicator_profile_uuid, deleted, is_valid}){
+    async search({player_profile_uuid, applicator_profile_uuid, deleted, is_valid}){
         const filter = {
             player_profile: player_profile_uuid
         }
@@ -50,7 +50,7 @@ module.exports = {
         throw 'Punishment not founded'
     },
     async pardonAll({player_profile_uuid}){
-        const punishments = await this.searsh({player_profile_uuid, deleted: false, is_valid: true})
+        const punishments = await this.search({player_profile_uuid, deleted: false, is_valid: true})
         for(let i in punishments){
             punishments[i].deleted = true
             punishments[i].is_valid = false

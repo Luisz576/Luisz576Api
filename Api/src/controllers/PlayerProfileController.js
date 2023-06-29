@@ -8,14 +8,14 @@ module.exports = {
         if(validator.validateUUID(uuid) && username){
             try{
                 // uuid
-                const profileByUUID = await PlayerProfileRepository.searsh({
+                const profileByUUID = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profileByUUID){
                     return res.sendStatus(409)
                 }
                 // username
-                const profileByUsername = await PlayerProfileRepository.searsh({
+                const profileByUsername = await PlayerProfileRepository.search({
                     username
                 })
                 if(profileByUsername){
@@ -40,11 +40,11 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async searsh(req, res){
+    async search(req, res){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){
@@ -65,7 +65,7 @@ module.exports = {
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
-                const profile = await PlayerProfileRepository.searsh({
+                const profile = await PlayerProfileRepository.search({
                     uuid
                 })
                 if(profile){

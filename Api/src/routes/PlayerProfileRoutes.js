@@ -13,7 +13,7 @@ const routes = express.Router()
 routes.use(AuthenticatorMiddleware)
 
 // <PlayerProfile>
-routes.get('/:uuid', PlayerProfileController.searsh)
+routes.get('/:uuid', PlayerProfileController.search)
 routes.post('/newprofile', PlayerProfileController.store)
 routes.patch('/:uuid/session', PlayerProfileController.session)
 
@@ -25,14 +25,14 @@ routes.patch('/:uuid/changefriendinviteprefferences', PlayerProfileConfigsContro
 routes.patch('/:uuid/updatesocialmedia', PlayerProfileConfigsController.updateSocialMedia)
 
 //friends
-routes.get('/:uuid/friends', FriendsController.searsh)
+routes.get('/:uuid/friends', FriendsController.search)
 routes.delete('/:uuid/removefriend', FriendsController.remove)
 routes.post('/:uuid/newfriend', FriendInvitesController.store)
 routes.patch('/:uuid/acceptfriendinvite/:friend_uuid', FriendInvitesController.accept)
-routes.get('/:uuid/friendinvites', FriendInvitesController.searsh)
+routes.get('/:uuid/friendinvites', FriendInvitesController.search)
 
 //blocks
-routes.get('/:uuid/blocks', BlocksController.searsh)
+routes.get('/:uuid/blocks', BlocksController.search)
 routes.post('/:uuid/block', BlocksController.store)
 routes.delete('/:uuid/unblock', BlocksController.delete)
 

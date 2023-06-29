@@ -9,7 +9,7 @@ module.exports = {
     async getById({friends_list_id}){
         return await FriendsList.findById(friends_list_id)
     },
-    async searsh({player_profile_id}){
+    async search({player_profile_id}){
         return await FriendsList.findOne({
             player_profile: player_profile_id
         })

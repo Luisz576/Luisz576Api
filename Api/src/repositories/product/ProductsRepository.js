@@ -2,7 +2,7 @@ module.exports = {
     store(){
 
     },
-    searsh(){
+    search(){
 
     },
 }
