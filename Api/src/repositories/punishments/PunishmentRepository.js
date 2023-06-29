@@ -31,7 +31,21 @@ module.exports = {
         if(validator.validateBoolean(is_valid)){
             filter.is_valid = is_valid
         }
-        return await Punishment.find(filter)
+        const punishmentsFinded = await Punishment.find(filter)
+        if(validator.validateBoolean(is_valid)){
+            const punishments = []
+            for(let i in punishmentsFinded){
+                if(punishmentsFinded[i].stillValid()){
+                    punishments.push(punishmentsFinded[i])
+                }else{
+                    this.pardon({
+                        punishment: punishmentsFinded[i]
+                    })
+                }
+            }
+            return punishments
+        }
+        return punishmentsFinded
     },
     async pardon({punishment, punishment_id}){
         // punishment
@@ -46,7 +60,6 @@ module.exports = {
             p.is_valid = false
             await p.save()
         }
-        // TODO: que tal passar para typescript e tratar com Either?
         throw 'Punishment not founded'
     },
     async pardonAll({player_profile_uuid}){

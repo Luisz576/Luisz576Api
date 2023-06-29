@@ -4,7 +4,6 @@ const PlayerProfileRepository = require('../repositories/player_profile/PlayerPr
 const validator = require('../services/validator')
 
 module.exports = {
-    // TODO colocar logica de update e save no repository
     async updateSkin(req, res){
         const { uuid } = req.params
         const { skin } = req.body

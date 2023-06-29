@@ -1,3 +1,4 @@
+const { isValidPunishment } = require("../domain/PunishmentType")
 const { isAdmin } = require("../domain/Roles")
 const { getJsonError, logError } = require('../errors/errors')
 const PunishmentRepository = require("../repositories/punishments/PunishmentRepository")
@@ -6,7 +7,7 @@ const validator = require("../services/validator")
 module.exports = {
     async store(req, res){
         const { uuid, applicator_uuid, punishment_type, reason, duration, comment } = req.body
-        if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && validator.validatePunishmentAndDuration(punishment_type, duration) && reason){
+        if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && isValidPunishment(punishment_type, duration) && reason){
             try{
                 const profile = await PlayerProfileRepository.search({
                     uuid

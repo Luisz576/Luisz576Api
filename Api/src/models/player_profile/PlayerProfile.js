@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const FriendsListRepository = require('../../repositories/friends/FriendsListRepository')
 const BlockListRepository = require('../../repositories/player_profile/BlockListRepository')
 const PunishmentRepository = require('../../repositories/punishments/PunishmentRepository')
+const { isBanPunishment } = require('../../domain/PunishmentType')
 
 const PlayerProfileSchema = new mongoose.Schema({
     // DATA
@@ -136,6 +137,24 @@ const PlayerProfileSchema = new mongoose.Schema({
             return await PunishmentRepository.search({
                 player_profile_uuid: this.uuid
             })
+        },
+        getValidPunishments: async function(){
+            return await PunishmentRepository.search({
+                player_profile_uuid: this.uuid,
+                deleted: false,
+                is_valid: true
+            })
+        },
+        isBanned: async function(){
+            if(this.punishment){
+                const punishments = await this.getValidPunishments()
+                for(let i in punishments){
+                    if(isBanPunishment(punishments[i])){
+                        return true
+                    }
+                }
+            }
+            return false
         }
     }
 })

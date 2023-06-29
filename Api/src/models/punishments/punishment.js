@@ -1,8 +1,8 @@
+const { isValidPunishment, isPunishmentWithDuration } = require('../../domain/PunishmentType')
 const { Luisz576Db } = require('../../services/database')
 const mongoose = require('mongoose')
 
 const PunishmentSchema = new mongoose.Schema({
-    //TODO atualizar ObjectId por UUID e remover _profile dos nomes
     player_profile: {
         type: String,
         required: true
@@ -39,6 +39,24 @@ const PunishmentSchema = new mongoose.Schema({
     deleted: {
         type: Boolean,
         default: false
+    }
+}, {
+    methods: {
+        getRemainingTimeInSeconds: function(){
+            if(isPunishmentWithDuration(this.punishment_type)){
+                const r = this.duration - Math.floor((Date.now() - this.created.getTime()) / 1000)
+                if(r > 0){
+                    return r
+                }
+            }
+            return 0
+        },
+        stillValid: function(){
+            if(this.deleted || !this.is_valid){
+                return false
+            }
+            return isValidPunishment(this.punishment_type, this.getRemainingTimeInSeconds())
+        }
     }
 })
 

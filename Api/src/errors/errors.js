@@ -49,7 +49,11 @@ const errors = [
     new Error({
         id: 210,
         error_name: "Applicator isn't a ADM",
-    })
+    }),
+    new Error({
+        id: 220,
+        error_name: "Player banned",
+    }),
 ]
 
 module.exports = {

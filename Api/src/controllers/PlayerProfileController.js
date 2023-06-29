@@ -69,7 +69,10 @@ module.exports = {
                     uuid
                 })
                 if(profile){
-                    // TODO ver se nao esta banido
+                    if(await profile.isBanned()){
+                        return res.json(getJsonError(220))
+                    }
+                    // session
                     await PlayerProfileRepository.session({
                         player_profile: profile
                     })
