@@ -30,6 +30,7 @@ module.exports = (req, res, next) => {
 
             if(decoded.secret){
                 if(decoded.secret == clientData.secret){
+                    req.client_name = clientData.name
                     return next();
                 }
             }

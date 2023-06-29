@@ -42,5 +42,11 @@ module.exports = {
             return
         }
         throw "PlayerProfile not founded"
+    },
+    async updateConfigsAndSocial({skin, language, friend_invite_prefference, email, discord, youtube, twitch}){
+        // TODO
+    },
+    async updateRole({role}){
+        // TODO
     }
 }

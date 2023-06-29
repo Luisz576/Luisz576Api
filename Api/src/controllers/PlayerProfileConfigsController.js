@@ -1,6 +1,5 @@
 const { isRole, isAdmin } = require('../domain/Roles')
 const { getJsonError, logError } = require('../errors/errors')
-const validator = require('../services/validator')
 
 module.exports = {
     // TODO colocar logica de update e save no repository

@@ -3,21 +3,7 @@ const { getJsonError, logError } = require('../errors/errors')
 const validator = require('../services/validator')
 const FriendInviteRepository = require('../repositories/friends/FriendInviteRepository')
 const PlayerProfileRepository = require('../repositories/player_profile/PlayerProfileRepository')
-
-async function acceptFriendInvite(friendInvite, profile, profile2){
-    if(friendInvite && profile && profile2){
-        // aceita convite
-        friendInvite.accept()
-        // adiciona amigo
-        await profile.addNewFriend(profile2)
-        // salva
-        await friendInvite.save()
-        await profile.save()
-        await profile2.save()
-        return
-    }
-    throw "Invalid args in function 'acceptFriendInvite'"
-}
+const FriendsListRepository = require('../repositories/friends/FriendsListRepository')
 
 module.exports = {
     async searsh(req, res){
@@ -124,7 +110,20 @@ module.exports = {
                             receiver_uuid: profile.uuid
                         });
                         if(validFriendInvite){
-                            await acceptFriendInvite(validFriendInvite, profile, friend_profile)
+                            // aceita convite
+                            await FriendInviteRepository.acceptInvite({
+                                friend_invite: validFriendInvite
+                            })
+                            // insere na lista de amigos do profile que aceitou
+                            await FriendsListRepository.insertFriend({
+                                friends_list: profile.friends_list,
+                                player_profile_uuid: friend_profile.uuid,
+                            })
+                            // insere na lista de amigos de profile que convidou
+                            await FriendsListRepository.insertFriend({
+                                friends_list: profile.friends_list,
+                                player_profile_uuid: friend_profile.uuid,
+                            })
                             return res.sendStatus(200)
                         }
                         return res.json(getJsonError(125));

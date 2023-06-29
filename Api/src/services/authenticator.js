@@ -1,4 +1,4 @@
-const { secret } = require('../../configs/auth/auth_config.json')
+const { auth_secret } = require('../../configs/auth/auth_config.json')
 const { clients } = require('../../configs/auth/clients.json')
 const jwt = require('jsonwebtoken')
 
@@ -8,6 +8,7 @@ module.exports = {
         for(let i in clients){
             if(clients[i].client_secret == client_secret){
                 client = clients[i]
+                break
             }
         }
         if(!client){
@@ -17,10 +18,10 @@ module.exports = {
     },
     // default: 1 day
     generateJWTToken(payload = {}, expiresIn = 86400){
-        return jwt.sign(payload, secret, { expiresIn })
+        return jwt.sign(payload, auth_secret, { expiresIn })
     },
     verifyToken(token, callback = (_err, _decoded) => {}){
-        jwt.verify(token, secret, callback)
+        jwt.verify(token, auth_secret, callback)
     },
     getClientById(client_id){
         if(!client_id) return undefined

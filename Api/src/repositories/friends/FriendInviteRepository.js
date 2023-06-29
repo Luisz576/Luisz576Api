@@ -22,7 +22,8 @@ module.exports = {
         }
         return undefined
     },
-    async acceptInvite({friendInvite}){
-        // TODO aceita por aqui ou pelo FriendsList ou como?
+    async acceptInvite({friend_invite}){
+        friend_invite.accept()
+        await friend_invite.save()
     },
 }

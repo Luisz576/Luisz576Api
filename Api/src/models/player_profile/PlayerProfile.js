@@ -117,36 +117,6 @@ const PlayerProfileSchema = new mongoose.Schema({
             }
             return false
         },
-        addNewFriend: async function(profile){
-            if(await this.areFriends(profile.uuid)){
-                throw "Players are already friends"
-            }
-
-            // salva
-            await FriendsListRepository.insertFriend({
-                friends_list_id: this.friends_list,
-                player_profile_uuid: profile.uuid
-            })
-            await FriendsListRepository.insertFriend({
-                friends_list_id: profile.friends_list,
-                player_profile_uuid: this.uuid
-            })
-        },
-        removeFriend: async function(profile){
-            if(await this.areFriends(profile.uuid)){
-                // remove
-                await FriendsListRepository.removeFriend({
-                    friends_list_id: this.friends_list,
-                    player_profile_uuid: profile.uuid
-                })
-                await FriendsListRepository.removeFriend({
-                    friends_list_id: profile.friends_list,
-                    player_profile_uuid: this.uuid
-                })
-                return
-            }
-            throw "Players aren't friends"
-        },
         getBlocks: async function(){
             const blockList = await BlockListRepository.getById({
                 block_list_id: this.block_list

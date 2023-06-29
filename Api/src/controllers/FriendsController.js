@@ -39,7 +39,15 @@ module.exports = {
                     })
                     if(friend_profile){
                         if(await profile.areFriends(friend_profile.uuid)){
-                            await profile.removeFriend(friend_profile)
+                            // remove
+                            await FriendsListRepository.removeFriend({
+                                friends_list_id: this.friends_list,
+                                player_profile_uuid: profile.uuid
+                            })
+                            await FriendsListRepository.removeFriend({
+                                friends_list_id: profile.friends_list,
+                                player_profile_uuid: this.uuid
+                            })
                             return res.sendStatus(200)
                         }
                         return res.json(getJsonError(117))
