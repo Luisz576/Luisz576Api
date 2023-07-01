@@ -1,10 +1,11 @@
-const { isAdmin, isRole } = require('../domain/Roles')
-const { getJsonError, logError } = require('../errors/errors')
-const PlayerProfileRepository = require('../repositories/player_profile/PlayerProfileRepository')
-const validator = require('../services/validator')
+import roles from '../domain/roles'
+import { validateLanguage } from '../domain/languages'
+import { Request, Response } from 'express'
+import { getJsonError, logError } from '../errors/errors'
+import validator from '../services/validator'
 
-module.exports = {
-    async updateSkin(req, res){
+export default {
+    async updateSkin(req: Request, res: Response){
         const { uuid } = req.params
         const { skin } = req.body
         if(validator.validateUUID(uuid)){
@@ -27,7 +28,7 @@ module.exports = {
     async updateLanguage(req, res){
         const { uuid } = req.params
         const { language } = req.body
-        if(validator.validateLanguage(language)){
+        if(validateLanguage(language)){
             try{
                 const profile = await PlayerProfileRepository.updateConfigsAndSocial({
                     friend_invites_prefference: uuid,
@@ -65,7 +66,7 @@ module.exports = {
         return res.sendStatus(400)
     },
     // SOCIAL
-    async updateSocialMedia(req, res){
+    async updateSocialMedia(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             const { email, discord, twitch, youtube } = req.body
@@ -86,7 +87,7 @@ module.exports = {
         return res.sendStatus(400)
     },
     // ROLE
-    async updateRole(req, res){
+    async updateRole(req: Request, res: Response){
         const { uuid } = req.params
         const { applicator_uuid, role_id } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && isRole(role_id)){
@@ -99,7 +100,7 @@ module.exports = {
                         uuid: applicator_uuid
                     })
                     if(applicator_profile){
-                        if(isAdmin(applicator_profile.role)){
+                        if(roles.isAdmin(applicator_profile.role)){
                             await PlayerProfileRepository.updateRole({
                                 player_profile: profile,
                                 role

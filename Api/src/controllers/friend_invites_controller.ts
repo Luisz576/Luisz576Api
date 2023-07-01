@@ -1,11 +1,9 @@
-const { getJsonError, logError } = require('../errors/errors')
-const validator = require('../services/validator')
-const FriendInviteRepository = require('../repositories/friends/FriendInviteRepository')
-const PlayerProfileRepository = require('../repositories/player_profile/PlayerProfileRepository')
-const FriendsListRepository = require('../repositories/friends/FriendsListRepository')
+import { getJsonError, logError } from '../errors/errors'
+import { Request, Response } from 'express'
+import validator from '../services/validator'
 
-module.exports = {
-    async search(req, res){
+export default {
+    async search(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
@@ -24,7 +22,7 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async store(req, res){
+    async store(req: Request, res: Response){
         const { new_friend_uuid } = req.body
         const { uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(new_friend_uuid)){
@@ -89,7 +87,7 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async accept(req, res){
+    async accept(req: Request, res: Response){
         const { uuid, friend_uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             try{

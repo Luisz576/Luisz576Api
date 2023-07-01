@@ -1,11 +1,10 @@
-const { isValidPunishment } = require("../domain/PunishmentType")
-const { isAdmin } = require("../domain/Roles")
-const { getJsonError, logError } = require('../errors/errors')
-const PunishmentRepository = require("../repositories/punishment/PunishmentRepository")
-const validator = require("../services/validator")
+import roles from '../domain/roles'
+import { Request, Response } from 'express'
+import { getJsonError, logError } from '../errors/errors'
+import validator from '../services/validator'
 
-module.exports = {
-    async store(req, res){
+export default {
+    async store(req: Request, res: Response){
         const { uuid, applicator_uuid, punishment_type, reason, duration, comment } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && isValidPunishment(punishment_type, duration) && reason){
             try{
@@ -17,7 +16,7 @@ module.exports = {
                         uuid: applicator_uuid
                     })
                     if(applicator_profile){
-                        if(isAdmin(applicator_profile.role)){
+                        if(roles.isAdmin(applicator_profile.role)){
                             //TODO validar se ja nao tem essa punição
                             const punishment = await PunishmentRepository.givePunishment({
                                 player_profile: profile,
@@ -47,7 +46,7 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async search(req, res){
+    async search(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
@@ -72,7 +71,7 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async pardon(req, res){
+    async pardon(req: Request, res: Response){
         const { uuid } = req.params
         const { applicator_uuid, punishment_id } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && punishment_id){
@@ -85,7 +84,7 @@ module.exports = {
                         uuid: applicator_uuid
                     })
                     if(applicator_profile){
-                        if(isAdmin(applicator_profile.role)){
+                        if(roles.isAdmin(applicator_profile.role)){
                             await PunishmentRepository.pardon({
                                 punishment_id
                             })
@@ -105,7 +104,7 @@ module.exports = {
         }
         return res.sendStatus(501)
     },
-    async pardonall(req, res){
+    async pardonall(req: Request, res: Response){
         const { uuid } = req.params
         const { applicator_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid)){
@@ -118,7 +117,7 @@ module.exports = {
                         uuid: applicator_uuid
                     })
                     if(applicator_profile){
-                        if(isAdmin(applicator_profile.role)){
+                        if(roles.isAdmin(applicator_profile.role)){
                             await PunishmentRepository.pardonAll({player_profile_uuid: profile.uuid})
                             return res.sendStatus(200)
                         }

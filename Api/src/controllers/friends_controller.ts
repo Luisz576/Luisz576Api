@@ -1,8 +1,9 @@
-const { getJsonError, logError } = require('../errors/errors')
-const validator = require('../services/validator')
+import { getJsonError, logError } from '../errors/errors'
+import { Request, Response } from 'express'
+import validator from '../services/validator'
 
-module.exports = {
-    async search(req, res){
+export default {
+    async search(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
@@ -25,7 +26,7 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async remove(req, res){
+    async remove(req: Request, res: Response){
         const { uuid } = req.params
         const { friend_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){

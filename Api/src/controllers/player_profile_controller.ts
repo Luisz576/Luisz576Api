@@ -1,9 +1,9 @@
-const validator = require('../services/validator')
-const { getJsonError, logError } = require('../errors/errors')
-const PlayerProfileRepository = require('../repositories/player_profile/PlayerProfileRepository')
+import validator from '../services/validator'
+import { Request, Response } from 'express'
+import { getJsonError, logError } from '../errors/errors'
 
-module.exports = {
-    async store(req, res){
+export default {
+    async store(req: Request, res: Response){
         const { uuid, username } = req.body
         if(validator.validateUUID(uuid) && username){
             try{
@@ -34,13 +34,13 @@ module.exports = {
                 }
                 return res.sendStatus(500)
             }catch(e){
-                logError(e)
+                logError(e, 'PlayerProfileController', 'store')
                 return res.sendStatus(500)
             }
         }
         return res.sendStatus(400)
     },
-    async search(req, res){
+    async search(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
@@ -55,13 +55,13 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'PlayerProfileController', 'searsh')
                 return res.sendStatus(500)
             }
         }
         return res.sendStatus(400)
     },
-    async session(req, res){
+    async session(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
@@ -80,7 +80,7 @@ module.exports = {
                 }
                 return res.json(getJsonError(10, {values: { uuid }}))
             }catch(e){
-                logError(e)
+                logError(e, 'PlayerProfileController', 'session')
                 return res.sendStatus(500)
             }
         }

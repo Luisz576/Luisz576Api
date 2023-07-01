@@ -1,9 +1,9 @@
-const { logError, getJsonError } = require("../errors/errors")
-const PlayerProfileRepository = require("../repositories/player_profile/PlayerProfileRepository")
-const validator = require('../services/validator')
+import { getJsonError, logError } from '../errors/errors'
+import { Request, Response } from 'express'
+import validator from '../services/validator'
 
-module.exports = {
-    async search(req, res){
+export default {
+    async search(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             try{
@@ -18,7 +18,7 @@ module.exports = {
                         blocked_players
                     })
                 }
-                return res.sendStatus(getJsonError(10, { values: {uuid} }))
+                return res.json(getJsonError(10, { values: {uuid} }))
             }catch(e){
                 logError(e, 'BlocksController', 'search')
                 return res.sendStatus(500)
@@ -26,10 +26,10 @@ module.exports = {
         }
         return res.sendStatus(400)
     },
-    async store(req, res){
+    async store(req: Request, res: Response){
         return res.sendStatus(501)
     },
-    async delete(req, res){
+    async delete(req: Request, res: Response){
         return res.sendStatus(501)
     }
 }

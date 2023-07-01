@@ -10,7 +10,7 @@ class LogError implements LogErrorProps{
         this.id = id
         this.error_name = error_name
     }
-    toJson(options?: {values: any[]}){
+    toJson(options?: {values: Object}){
         let json = {
             error_id: this.id,
             error_name: this.error_name,
@@ -61,7 +61,7 @@ const errors = [
     }),
 ]
 
-export function getJsonError(id: number, options?: {values: any[]}){
+export function getJsonError(id: number, options?: {values: Object}){
     for(let error of errors){
         if(error.id == id){
             return error.toJson(options)
