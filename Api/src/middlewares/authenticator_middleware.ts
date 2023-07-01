@@ -1,15 +1,17 @@
-const { logError } = require('../errors/errors')
-const authenticator = require('../services/authenticator')
+import { NextFunction, Request, Response } from "express"
 
-module.exports = (req, res, next) => {
+import authenticator from '../services/authenticator'
+import { logError } from "../errors/errors"
+
+export default (req: Request, res: Response, next: NextFunction) => {
     const { auth_token } = req.headers
 
-    if(!auth_token){
+    if(typeof(auth_token) != 'string'){
         return res.sendStatus(401)
     }
 
     try{
-        const tokenParts = auth_token.split('_')
+        const tokenParts: string[] = auth_token.split('_')
 
         if(tokenParts.length !== 2){
             return res.sendStatus(401)
@@ -24,13 +26,12 @@ module.exports = (req, res, next) => {
 
         // TODO: deixar salvo o token no redis? e ai quando gerar um novo token so set nele?
         authenticator.verifyToken(token, (e, decoded) => {
-            if(e){
+            if(e || !decoded || typeof(decoded) == 'string'){
                 return res.sendStatus(401)
             }
 
             if(decoded.secret){
                 if(decoded.secret == clientData.secret){
-                    req.client_name = clientData.name
                     return next();
                 }
             }

@@ -1,7 +1,7 @@
 const { isValidPunishment } = require("../domain/PunishmentType")
 const { isAdmin } = require("../domain/Roles")
 const { getJsonError, logError } = require('../errors/errors')
-const PunishmentRepository = require("../repositories/punishments/PunishmentRepository")
+const PunishmentRepository = require("../repositories/punishment/PunishmentRepository")
 const validator = require("../services/validator")
 
 module.exports = {

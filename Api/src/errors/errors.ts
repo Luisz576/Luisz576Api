@@ -1,73 +1,77 @@
-class Error{
-    constructor({id, error_name}){
+interface LogErrorProps{
+    id: number
+    error_name: string
+}
+
+class LogError implements LogErrorProps{
+    id: number
+    error_name: string
+    constructor({id, error_name}: LogErrorProps){
         this.id = id
         this.error_name = error_name
     }
-    toJson(options = {values}){
+    toJson(options?: {values: any[]}){
         let json = {
             error_id: this.id,
             error_name: this.error_name,
         }
         if(options && options.values){
-            for(let i in options.values){
-                json[i] = options.values[i]
-            }
+            Object.assign(json, options.values)
         }
         return json
     }
 }
 
 const errors = [
-    new Error({
+    new LogError({
         id: 10,
         error_name: "Profile not found"
     }),
-    new Error({
+    new LogError({
         id: 15,
         error_name: "Target profile not found"
     }),
-    new Error({
+    new LogError({
         id: 110,
         error_name: "Incompatible friend invite prefference",
     }),
-    new Error({
+    new LogError({
         id: 115,
         error_name: "Players are already friends",
     }),
-    new Error({
+    new LogError({
         id: 117,
         error_name: "Players aren't friends",
     }),
-    new Error({
+    new LogError({
         id: 120,
         error_name: "Friend invite already sent",
     }),
-    new Error({
+    new LogError({
         id: 125,
         error_name: "No valid friend invite found",
     }),
-    new Error({
+    new LogError({
         id: 210,
         error_name: "Applicator isn't a ADM",
     }),
-    new Error({
+    new LogError({
         id: 220,
         error_name: "Player banned",
     }),
 ]
 
-module.exports = {
-    getJsonError(id, options = { values: {} }){
-        for(let i in errors){
-            if(errors[i].id == id){
-                return errors[i].toJson({values: options.values})
-            }
+export function getJsonError(id: number, options?: {values: any[]}){
+    for(let error of errors){
+        if(error.id == id){
+            return error.toJson(options)
         }
-        return undefined
-    },
-    logError(error, controller, func){
-        console.log(`Error at '${controller}' in '${func}':`)
-        console.error(error)
-        //TODO salvar log
     }
+    return undefined
+}
+
+export function logError(error: any, controller: string, func: string){
+    console.log(`Error at '${controller}' in '${func}':`)
+    console.error(error)
+    //TODO salvar log
 }

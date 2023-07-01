@@ -2,7 +2,7 @@ const { Luisz576Db } = require('../../services/database')
 const mongoose = require('mongoose')
 const FriendsListRepository = require('../../repositories/friends/FriendsListRepository')
 const BlockListRepository = require('../../repositories/player_profile/BlockListRepository')
-const PunishmentRepository = require('../../repositories/punishments/PunishmentRepository')
+const PunishmentRepository = require('../../repositories/punishment/PunishmentRepository')
 const { isBanPunishment } = require('../../domain/PunishmentType')
 
 const PlayerProfileSchema = new mongoose.Schema({

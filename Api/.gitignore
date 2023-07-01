@@ -1,5 +1,7 @@
 node_modules/
-configs/
+src/configs/
 logs/
+build/
 
-package-lock.json
+yarn.lock
+.env
