@@ -1,6 +1,6 @@
 const BlockList = require('../../models/player_profile/BlockList')
 
-module.exports = {
+export default {
     async create({player_profile_id}){
         return await BlockList.create({
             player_profile: player_profile_id

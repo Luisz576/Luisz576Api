@@ -1,7 +1,8 @@
-const authenticator = require('../../services/authenticator')
+import {Request, Response} from 'express'
+import authenticator from '../../services/authenticator'
 
-module.exports = {
-    async store(req, res){
+export default {
+    async store(req: Request, res: Response){
         const { client_secret } = req.body
         if(client_secret){
             const token = authenticator.generateAplicationTokenByClientSecret(client_secret)
