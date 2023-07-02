@@ -33,3 +33,5 @@ export const left = <L, R>(l: L): Either<L, R> => {
 export const right = <L, R>(r: R): Either<L, R> => {
     return new Right(r)
 }
+
+export type OnlyExecutePromise = Promise<Either<any, null>>

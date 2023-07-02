@@ -1,13 +1,35 @@
 import { isPunishmentWithDuration, isValidPunishment } from '../../domain/punishmentType'
 import { Luisz576Db } from '../../services/database'
 import mongoose from 'mongoose'
+import { IPlayerProfile } from '../player_profile/PlayerProfile'
 
-const PunishmentSchema = new mongoose.Schema({
-    player_profile: {
+export interface IPunishmentCreateProps{
+    player_profile: IPlayerProfile,
+    applicator_uuid: string
+    reason: string
+    punishment_type: number,
+    comment?: string
+    duration?: number
+}
+
+export interface IPunishment{
+    player_uuid: string,
+    applicator_uuid: string
+    reason: string
+    punishment_type: number,
+    comment: string
+    duration: number
+    is_valid: boolean
+    deleted: boolean
+    created_at: Date
+}
+
+const PunishmentSchema = new mongoose.Schema<IPunishment>({
+    player_uuid: {
         type: String,
         required: true
     },
-    applicator_profile: {
+    applicator_uuid: {
         type: String,
         required: true
     },
@@ -36,9 +58,10 @@ const PunishmentSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    created: {
+    created_at: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        immutable: true
     },
 })
 

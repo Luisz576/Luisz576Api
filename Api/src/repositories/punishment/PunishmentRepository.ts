@@ -1,19 +1,24 @@
 import validator from "../../services/validator"
-const Punishment = require('../../models/punishments/punishment')
+import Punishment, { IPunishment, IPunishmentCreateProps } from "../../models/punishments/Punishment"
+import { Either, left, right } from "../../types/either"
 
 export default {
-    async givePunishment({player_profile, applicator_profile_uuid, punishment_type, reason, duration, comment}){
-        const punishment = await Punishment.create({
-            player_profile: player_profile.uuid,
-            applicator_profile: applicator_profile_uuid,
-            punishment_type,
-            reason,
-            duration,
-            comment
-        })
-        player_profile.punishment = true
-        await player_profile.save()
-        return punishment
+    async givePunishment(data: IPunishmentCreateProps): Promise<Either<any, IPunishment>>{
+        try{
+            const punishment = await Punishment.create({
+                player_uuid: data.player_profile.uuid,
+                applicator_uuid: data.applicator_uuid,
+                punishment_type: data.punishment_type,
+                reason: data.reason,
+                duration: data.duration,
+                comment: data.comment
+            })
+            data.player_profile.punishment = true
+            await data.player_profile.save()
+            return right(punishment)
+        }catch(err){
+            return left(err)
+        }
     },
     async getById({punishment_id}){
         return await Punishment.findById(punishment_id)

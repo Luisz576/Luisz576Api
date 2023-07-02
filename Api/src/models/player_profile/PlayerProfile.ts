@@ -1,8 +1,40 @@
 import { Luisz576Db } from "../../services/database"
 import mongoose from "mongoose"
 import { isBanPunishment } from "../../domain/punishmentType"
+import PunishmentRepository from "../../repositories/punishment/PunishmentRepository"
 
-const PlayerProfileSchema = new mongoose.Schema({
+export interface IPlayerProfileCreateProps{
+    uuid: string,
+    username: string
+}
+
+export type IPlayerProfileSearchProps = Partial<IPlayerProfileCreateProps>
+
+// TODO testar comportamento se fosse class
+export interface IPlayerProfile{
+    uuid: string
+    username: string
+    language: number
+    skin: string
+    account_actived: boolean
+    friend_invites_preference: boolean
+    network_xp: number
+    cash: number
+    coins: number
+    created_at: Date
+    last_login: Date
+    role: number
+    email: string
+    discord: string
+    twitch: string
+    youtube: string
+    products_list: mongoose.Schema.Types.ObjectId
+    block_list: mongoose.Schema.Types.ObjectId
+    friends_list: mongoose.Schema.Types.ObjectId
+    punishment: boolean
+}
+
+const PlayerProfileSchema = new mongoose.Schema<IPlayerProfile>({
     // DATA
     uuid: {
         type: String,
@@ -27,7 +59,7 @@ const PlayerProfileSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    friend_invites_prefference: {
+    friend_invites_preference: {
         type: Boolean,
         default: true
     },
@@ -107,7 +139,7 @@ PlayerProfileSchema.methods.getFriends = async function(){
     return friendsList.friends
 }
 
-PlayerProfileSchema.methods.areFriends = async function(profileUUID){
+PlayerProfileSchema.methods.areFriends = async function(profileUUID: string){
     const friends = await this.getFriends()
     for(let i in friends){
         if(friends[i].player_profile == profileUUID){
@@ -124,7 +156,7 @@ PlayerProfileSchema.methods.getBlocks = async function(){
     return blockList.blocked_players
 }
 
-PlayerProfileSchema.methods.isBlockedByPlayer = async function(profileUUID){
+PlayerProfileSchema.methods.isBlockedByPlayer = async function(profileUUID: string){
     const blocked_players = await this.getBlocks()
     for(let i in blocked_players){
         if(blocked_players[i].player_profile == profileUUID){
