@@ -1,4 +1,5 @@
 export type Either<L, R> = Left<L> | Right<R>
+export type PromiseEither<L, R> = Promise<Either<L, R>>
 
 class Left<L>{
     value: L
@@ -34,8 +35,6 @@ export const right = <L, R>(r: R): Either<L, R> => {
     return new Right(r)
 }
 
-export type OnlyExecute = Either<any, null>
-export type OnlyExecutePromise = Promise<OnlyExecute>
+export type OnlyExecutePromise<E = any> = PromiseEither<E, null>
 
-export type ReturnOrError<R> = Either<any, R>
-export type ReturnOrErrorPromise<R> = Promise<ReturnOrError<R>>
+export type ReturnOrErrorPromise<R, E = any> = PromiseEither<E, R>

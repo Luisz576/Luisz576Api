@@ -1,8 +1,8 @@
 import FriendsList, { IFriendList, IFriendListCreateProps, IFriendListSearchProps } from "../../models/friends/FriendsList"
-import { Either, OnlyExecutePromise, left, right } from "../../types/either"
+import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 
-type IFriendListOrError = Promise<Either<any, IFriendList>>
-type MaybeIFriendListOrError = Promise<Either<any, IFriendList | undefined>>
+type IFriendListOrError = ReturnOrErrorPromise<IFriendList>
+type MaybeIFriendListOrError = ReturnOrErrorPromise<IFriendList | undefined>
 
 type FriendDTO = {
     friends_list?: IFriendList,
@@ -11,7 +11,7 @@ type FriendDTO = {
 }
 
 export default {
-    async create(data: IFriendListCreateProps): IFriendListOrError{
+    async store(data: IFriendListCreateProps): IFriendListOrError{
         try{
             const friend_list = await FriendsList.create(data)
             if(friend_list){
@@ -76,8 +76,9 @@ export default {
             }
             if(friendsList){
                 let targetIndex: number = -1
-                for(let i in friendsList.friends){
-                    if(friendsList.friends[i].player_profile == data.player_profile_uuid){
+                const friends = friendsList.friends
+                for(let i = 0; i < friends.length; i++){
+                    if(friends[i].player_profile == data.player_profile_uuid){
                         targetIndex = i
                         break
                     }
@@ -85,7 +86,7 @@ export default {
                 if(targetIndex == -1){
                     return left("Players aren't friends")
                 }
-                friendsList.friends.splice(targetIndex, 1)
+                friends.splice(targetIndex, 1)
                 await friendsList.save()
                 return right(null)
             }

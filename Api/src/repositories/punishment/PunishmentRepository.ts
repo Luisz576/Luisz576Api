@@ -1,13 +1,13 @@
 import validator from "../../services/validator"
 import Punishment, { IPunishment, IPunishmentCreateProps, IPunishmentSearchProps } from "../../models/punishments/Punishment"
-import { Either, OnlyExecutePromise, left, right } from "../../types/either"
+import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 import { IPlayerProfile } from "../../models/player_profile/PlayerProfile"
 
 type CustomIPunishmentCreateProps = Omit<IPunishmentCreateProps, 'player_uuid'> & {
     player_profile: IPlayerProfile
 }
-type IPunishmentOrError = Promise<Either<any, IPunishment>>
-type MaybeIPunishmentsOrError = Promise<Either<any, IPunishment[]>>
+type IPunishmentOrError = ReturnOrErrorPromise<IPunishment>
+type MaybeIPunishmentsOrError = ReturnOrErrorPromise<IPunishment[]>
 
 export default {
     async store(data: CustomIPunishmentCreateProps): IPunishmentOrError{
@@ -86,7 +86,7 @@ export default {
             return left(err)
         }
     },
-    async pardonAll(player_uuid: string): OnlyExecutePromise{
+    async pardonAllOfPlayer(player_uuid: string): OnlyExecutePromise{
         try{
             const punishments_response = await this.search({
                 player_uuid,

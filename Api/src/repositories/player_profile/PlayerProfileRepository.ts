@@ -1,11 +1,12 @@
 import PlayerProfile, { IPlayerProfile, IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../models/player_profile/PlayerProfile"
 import validator from "../../services/validator"
-import { Either, OnlyExecutePromise, left, right } from "../../types/either"
+import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
+import FriendsListRepository from "../friends/FriendsListRepository"
 import BlockListRepository from "./BlockListRepository"
 import ProductsListRepository from "./ProductsListRepository"
 
-type IPlayerProfileOrErrorReturn = Promise<Either<any, IPlayerProfile>>
-type MaybeIPlayerProfileOrErrorReturn = Promise<Either<any, IPlayerProfile | undefined>>
+type IPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfile>
+type MaybeIPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfile | undefined>
 interface SessionProps{
     player_profile?: IPlayerProfile
     uuid?: string
@@ -67,7 +68,7 @@ export default {
                     if(search_response.isRight()){
                         profile = search_response.value 
                     }else{
-                        return left("Error searching by uuid")
+                        return left(search_response.value)
                     }
                 }else{
                     return left("No parameter was passed")

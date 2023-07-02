@@ -1,8 +1,8 @@
 import BlockList, { IBlockList, IBlockListCreateProps, IBlockListSearchProps } from "../../models/player_profile/BlockList"
-import { Either, left, right } from "../../types/either"
+import { ReturnOrErrorPromise, left, right } from "../../types/either"
 
-type IBlockListOrError = Promise<Either<any, IBlockList>>
-type MaybeIBlockListOrError = Promise<Either<any, IBlockList | undefined>>
+type IBlockListOrError = ReturnOrErrorPromise<IBlockList>
+type MaybeIBlockListOrError = ReturnOrErrorPromise<IBlockList | undefined>
 
 export default {
     async store(data: IBlockListCreateProps): IBlockListOrError{

@@ -1,55 +1,52 @@
-const FriendInvite = require('../../models/friends/FriendInvite')
+import FriendInvite, { IFriendInvite, IFriendInviteCreateProps, IFriendInviteSearchProps } from "../../models/friends/FriendInvite"
+import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
+
+type IFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite>
+type MayberIFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite | undefined>
+type MayberIFriendInvitesOrError = ReturnOrErrorPromise<IFriendInvite[] | undefined>
 
 export default {
-    async create({sender_uuid, receiver_uuid}){
-        return await FriendInvite.create({
-            sender: sender_uuid,
-            receiver: receiver_uuid,
-        })
-    },
-    async findAllValids({receiver_uuid}){
-        const friendInvites = await this.find({
-            receiver: receiver_uuid,
-            valid_invite: true,
-            accepted: false
-        })
-        const invites = []
-        // procura convite valido
-        for(let i in friendInvites){
-            if(friendInvites[i].stillValid().isValid){
-                invites.push(friendInvites[i])
-            }else{
-                this.expiresInvite({
-                    friend_invite: friendInvites[i]
-                })
+    async create(data: IFriendInviteCreateProps): IFriendInviteOrError{
+        try{
+            const friend_invite = await FriendInvite.create(data)
+            if(friend_invite){
+                return right(friend_invite)
             }
+            return left("Can't create FriendInvite")
+        }catch(err){
+            return left(err)
         }
-        return invites
     },
-    async findValid({sender_uuid, receiver_uuid}){
-        const friendInvites = await FriendInvite.find({
-            sender: sender_uuid,
-            receiver: receiver_uuid,
-            valid_invite: true,
-            accepted: false
-        })
-        for(let i in friendInvites){
-            if(friendInvites[i].stillValid().isValid){
-                return friendInvites[i]
-            }else{
-                this.expiresInvite({
-                    friend_invite: friendInvites[i]
-                })
-            }
+    async searchOne(filter: IFriendInviteSearchProps): MayberIFriendInviteOrError{
+        try{
+            return right(await FriendInvite.findOne(filter))
+        }catch(err){
+            return left(err)
         }
-        return undefined
     },
-    async expiresInvite({friend_invite}){
-        friend_invite.expires()
-        await friend_invite.save()
+    async searchAll(filter: IFriendInviteSearchProps): MayberIFriendInvitesOrError{
+        try{
+            return right(await FriendInvite.find(filter))
+        }catch(err){
+            return left(err)
+        }
     },
-    async acceptInvite({friend_invite}){
-        friend_invite.accept()
-        await friend_invite.save()
+    async expiresInvite(friend_invite: IFriendInvite): OnlyExecutePromise{
+        try{
+            friend_invite.expires()
+            await friend_invite.save()
+            return right(null)
+        }catch(err){
+            return left(err)
+        }
     },
+    async acceptInvite(friend_invite: IFriendInvite): OnlyExecutePromise{
+        try{
+            friend_invite.accept()
+            await friend_invite.save()
+            return right(null)
+        }catch(err){
+            return left(err)
+        }
+    }
 }

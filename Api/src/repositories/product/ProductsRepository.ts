@@ -1,8 +1,8 @@
 import Product, { IProduct, IProductCreateProps, IProductSearchProps } from "../../models/product/Product"
-import { Either, left, right } from "../../types/either"
+import { ReturnOrErrorPromise, left, right } from "../../types/either"
 
-type IProductOrError = Promise<Either<any, IProduct>>
-type MaybeIProductOrError = Promise<Either<any, IProduct>>
+type IProductOrError = ReturnOrErrorPromise<IProduct>
+type MaybeIProductOrError = ReturnOrErrorPromise<IProduct>
 
 export default {
     async store(data: IProductCreateProps): IProductOrError{
