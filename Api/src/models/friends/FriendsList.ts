@@ -1,7 +1,20 @@
 import { FriendsDb } from "../../services/database"
 import mongoose from "mongoose"
 
-const FriendsListSchema = new mongoose.Schema({
+export interface IFriendListCreateProps{
+    player_profile: mongoose.Schema.Types.ObjectId
+}
+
+interface IFriend{
+    player_profile: string
+    timestamp: Date
+}
+export interface IFriendList{
+    player_profile: mongoose.Schema.Types.ObjectId
+    friends: IFriend[]
+}
+
+const FriendsListSchema = new mongoose.Schema<IFriendList>({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayerProfile',

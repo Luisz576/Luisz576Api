@@ -5,26 +5,37 @@ import validator from "../../services/validator"
 import { Either, OnlyExecutePromise, left, right } from "../../types/either"
 import ProductsListRepository from "./ProductsListRepository"
 
-type PlayerProfileOrErrorReturn = Promise<Either<any, IPlayerProfile | undefined>>
-type SessionProps = {
+type IPlayerProfileOrErrorReturn = Promise<Either<any, IPlayerProfile | undefined>>
+interface SessionProps{
     player_profile?: IPlayerProfile
     uuid?: string
 }
+interface IPlayerProfileConfigData{
+    uuid: string
+    skin?: string
+    language?: number
+    friend_invites_prefference?: boolean
+    email?: string
+    discord?: string
+    youtube?: string
+    twitch?: string
+}
 
-module.exports = {
-    async create(data: IPlayerProfileCreateProps): PlayerProfileOrErrorReturn{
+export default {
+    async store(data: IPlayerProfileCreateProps): IPlayerProfileOrErrorReturn{
         try{
             const profile = await PlayerProfile.create({
                 uuid: data.uuid,
                 username: data.username
             })
             if(profile){
-                const friends_list = await FriendsList.create({ player_profile: profile._id })
-                const block_list = await BlockList.create({ player_profile: profile._id })
-                const products_list = await ProductsListRepository.create({ player_profile: profile._id })
-                profile.friends_list = friends_list
-                profile.block_list = block_list
-                profile.products_list = products_list
+                // talvez jogar pro default dos campos no PlayerProfileScheme?
+                const friends_list_response = await FriendsList.store({ player_profile: profile._id })
+                const block_list_response = await BlockList.store({ player_profile: profile._id })
+                const products_list_response = await ProductsListRepository.store({ player_profile: profile._id })
+                profile.friends_list = friends_list_response.value
+                profile.block_list = block_list_response.value
+                profile.products_list = products_list_response.value
                 await profile.save()
             }
             return right(profile)
@@ -32,14 +43,14 @@ module.exports = {
             return left(err)
         }
     },
-    async getById(player_profile_id: string): PlayerProfileOrErrorReturn{
+    async getById(player_profile_id: string): IPlayerProfileOrErrorReturn{
         try{
             return right(await PlayerProfile.findById(player_profile_id))
         }catch(err){
             return left(err)
         }
     },
-    async search(filter: IPlayerProfileSearchProps): PlayerProfileOrErrorReturn{
+    async search(filter: IPlayerProfileSearchProps): IPlayerProfileOrErrorReturn{
         try{
             return right(await PlayerProfile.findOne(filter))
         }catch(err){
@@ -70,31 +81,35 @@ module.exports = {
             return left(err)
         }
     },
-    async updateConfigsAndSocial({player_profile_uuid, skin, language, friend_invites_prefference, email, discord, youtube, twitch}){
-        // filter
-        const filter = {
-            ...(language && { language }),
-            ...(email && { email }),
-            ...(discord && { discord }),
-            ...(youtube && { youtube }),
-            ...(twitch && { twitch }),
+    async updateConfigsAndSocial(data: IPlayerProfileConfigData): OnlyExecutePromise{
+        try{
+            // filter
+            const filter: Omit<IPlayerProfileConfigData, 'uuid'> = {
+                ...(data.language && { language: data.language }),
+                ...(data.email && { email: data.email }),
+                ...(data.discord && { discord: data.discord }),
+                ...(data.youtube && { youtube: data.youtube }),
+                ...(data.twitch && { twitch: data.twitch }),
+            }
+            if(validator.validateString(data.skin)){
+                filter.skin = ""
+            }
+            if(validator.validateBoolean(data.friend_invites_prefference)){
+                filter.friend_invites_prefference = data.friend_invites_prefference
+            }
+            // update
+            const profile = await PlayerProfile.findOneAndUpdate({
+                uuid: data.uuid
+            }, filter, {
+                new: true
+            })
+            if(profile){
+                return right(null)
+            }
+            return left("PlayerProfile not founded")
+        }catch(err){
+            return left(err)
         }
-        if(validator.validateString(skin)){
-            filter.skin = ""
-        }
-        if(validator.validateBoolean(friend_invites_prefference)){
-            filter.friend_invites_prefference = friend_invites_prefference
-        }
-        // update
-        const profile = await PlayerProfile.findOneAndUpdate({
-            uuid: player_profile_uuid
-        }, filter, {
-            new: true
-        })
-        if(profile){
-            return profile
-        }
-        throw "PlayerProfile not founded"
     },
     async updateRole(data: {player_profile: IPlayerProfile, role: number}): OnlyExecutePromise{
         try{

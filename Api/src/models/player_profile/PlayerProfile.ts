@@ -10,10 +10,7 @@ export interface IPlayerProfileCreateProps{
 
 export type IPlayerProfileSearchProps = Partial<IPlayerProfileCreateProps>
 
-// TODO testar comportamento se fosse class
-export interface IPlayerProfile{
-    uuid: string
-    username: string
+export interface IPlayerProfile extends IPlayerProfileCreateProps, mongoose.Document{
     language: number
     skin: string
     account_actived: boolean
@@ -34,7 +31,7 @@ export interface IPlayerProfile{
     punishment: boolean
 }
 
-const PlayerProfileSchema = new mongoose.Schema<IPlayerProfile>({
+const PlayerProfileSchema = new mongoose.Schema({
     // DATA
     uuid: {
         type: String,
@@ -192,4 +189,4 @@ PlayerProfileSchema.methods.isBanned = async function(){
     return false
 }
 
-export default Luisz576Db.model('PlayerProfile', PlayerProfileSchema)
+export default Luisz576Db.model<IPlayerProfile>('PlayerProfile', PlayerProfileSchema)

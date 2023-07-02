@@ -1,14 +1,26 @@
 import { Luisz576Db } from "../../services/database"
 import mongoose from "mongoose"
 
+export interface IProductCreateProps{
+    name: string
+    icon_item: string
+    description: string[]
+    price: number
+    category: number
+    rarity: number
+    min_role?: number
+}
+
+export interface IProduct extends Required<IProductCreateProps>, mongoose.Document{
+    created_at: Date
+}
+
+export type IProductSearchProps = Partial<IProductCreateProps>
+
 const ProductSchema = new mongoose.Schema({
-    product_id: {
-        type: Number,
-        unique: true,
-        required: true
-    },
     name: {
         type: String,
+        unique: true,
         required: true,
     },
     icon_item: {
@@ -33,15 +45,15 @@ const ProductSchema = new mongoose.Schema({
         min: 0,
         required: true
     },
-    timestamp: {
-        type: Date,
-        default: Date.now
-    },
     min_role: {
         type: Number,
         min: 0,
-        required: true
-    }
+        default: 0
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
 })
 
-export default Luisz576Db.model('Product', ProductSchema)
+export default Luisz576Db.model<IProduct>('Product', ProductSchema)

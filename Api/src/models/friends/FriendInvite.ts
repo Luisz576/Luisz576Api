@@ -1,7 +1,20 @@
 import { FriendsDb } from "../../services/database"
 import mongoose from "mongoose"
 
-const FriendInviteSchema = new mongoose.Schema({
+export interface IFriendInviteCreateProps{
+    sender: string
+    receiver: string
+}
+
+export interface IFriendInvite{
+    sender: string
+    receiver: string
+    created_at: Date
+    valid_invite: boolean
+    accepted: boolean
+}
+
+const FriendInviteSchema = new mongoose.Schema<IFriendInvite>({
     sender: {
         type: String,
         required: true,
@@ -12,7 +25,7 @@ const FriendInviteSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    created: {
+    created_at: {
         type: Date,
         default: Date.now,
         immutable: true

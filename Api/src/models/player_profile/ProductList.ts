@@ -1,6 +1,20 @@
 import { Luisz576Db } from "../../services/database"
 import mongoose from "mongoose"
 
+export interface IProductListCreateProps{
+    player_profile: mongoose.Schema.Types.ObjectId
+}
+
+export type IProductListSearchProps = IProductListCreateProps
+
+interface IProduct{
+    product: mongoose.Schema.Types.ObjectId
+    timestamp: Date
+}
+export interface IProductList extends IProductListCreateProps, mongoose.Document{
+    products: IProduct[]
+}
+
 const ProductsListSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
@@ -23,4 +37,4 @@ const ProductsListSchema = new mongoose.Schema({
     }
 })
 
-export default Luisz576Db.model('ProductsList', ProductsListSchema)
+export default Luisz576Db.model<IProductList>('ProductsList', ProductsListSchema)
