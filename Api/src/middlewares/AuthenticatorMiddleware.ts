@@ -11,7 +11,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     }
 
     try{
-        const tokenParts: string[] = auth_token.split('_')
+        const tokenParts: string[] = auth_token.split('._.')
 
         if(tokenParts.length !== 2){
             return res.sendStatus(401)
@@ -38,7 +38,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
             return res.sendStatus(401)
         })
     }catch(e){
-        logError(e, 'AuthenticationMiddleware', 'main') 
+        logError(e, 'AuthenticationMiddleware', 'default', 'main') 
         return res.sendStatus(500)
     }
 }

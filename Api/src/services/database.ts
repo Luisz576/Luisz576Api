@@ -1,7 +1,8 @@
+import {database_url} from '../configs/configs.json'
 import mongoose from "mongoose"
 
 // Geral DB
-export const Luisz576Db = mongoose.createConnection(process.env.DATABASE_URL, {
+export const Luisz576Db = mongoose.createConnection(database_url, {
     dbName: "Luisz576",
     serverSelectionTimeoutMS: 10000
 })
@@ -12,7 +13,7 @@ export const Luisz576Db = mongoose.createConnection(process.env.DATABASE_URL, {
 })
 
 // Friends DB
-export const FriendsDb = mongoose.createConnection(process.env.DATABASE_URL, {
+export const FriendsDb = mongoose.createConnection(database_url, {
     dbName: "Friends",
     serverSelectionTimeoutMS: 10000
 })
@@ -23,7 +24,7 @@ export const FriendsDb = mongoose.createConnection(process.env.DATABASE_URL, {
 })
 
 // TheBridge DB
-export const TheBridgeDb = mongoose.createConnection(process.env.DATABASE_URL, {
+export const TheBridgeDb = mongoose.createConnection(database_url, {
     dbName: "TheBridge",
     serverSelectionTimeoutMS: 10000
 })

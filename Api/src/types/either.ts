@@ -6,7 +6,7 @@ class Left<L, R>{
     constructor(value: L){
         this.value = value
     }
-    isLeft(): this is Left<L, R>{
+    isLeft(): this is Left<L, R> {
         return true
     }
     isRight(): this is Right<L, R>{
@@ -19,11 +19,11 @@ class Right<L, R>{
     constructor(value: R){
         this.value = value
     }
-    isLeft(): this is Left<L, R>{
-        return false
-    }
     isRight(): this is Right<L, R>{
         return true
+    }
+    isLeft(): this is Left<L, R>{
+        return false
     }
 }
 

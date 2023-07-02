@@ -84,7 +84,7 @@ export default {
             return left(err)
         }
     },
-    async updateConfigsAndSocial(data: IPlayerProfileConfigData): OnlyExecutePromise{
+    async updateConfigsAndSocial(data: IPlayerProfileConfigData): ReturnOrErrorPromise<boolean>{
         try{
             // filter
             const filter: Omit<IPlayerProfileConfigData, 'uuid'> = {
@@ -95,10 +95,10 @@ export default {
                 ...(data.twitch && { twitch: data.twitch }),
             }
             if(validator.validateString(data.skin)){
-                filter.skin = ""
+                filter.skin = data.skin
             }
-            if(validator.validateBoolean(data.friend_invites_prefference)){
-                filter.friend_invites_prefference = data.friend_invites_prefference
+            if(validator.validateBoolean(data.friend_invites_preference)){
+                filter.friend_invites_preference = data.friend_invites_preference
             }
             // update
             const profile = await PlayerProfile.findOneAndUpdate({
@@ -107,7 +107,7 @@ export default {
                 new: true
             })
             if(profile){
-                return right(null)
+                return right(true)
             }
             return left("PlayerProfile not founded")
         }catch(err){

@@ -19,7 +19,7 @@ export default {
         if(!client){
             return undefined
         }
-        return `${client.id}_${this.generateJWTToken({ secret: client.secret }, expiresIn)}`
+        return `${client.id}._.${this.generateJWTToken({ secret: client.secret }, expiresIn)}`
     },
     // default: 1 day
     generateJWTToken(payload: Object, expiresIn = 86400): string{

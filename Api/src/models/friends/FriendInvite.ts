@@ -51,7 +51,7 @@ const FriendInviteSchema = new mongoose.Schema({
 })
 
 FriendInviteSchema.methods.getRemainingTimeInSeconds = function(): number{
-    const timeInSeconds = Math.floor((Date.now() - this.created.getTime()) / 1000)
+    const timeInSeconds = Math.floor((Date.now() - this.created_at.getTime()) / 1000)
     if(timeInSeconds > 300){
         return 0
     }

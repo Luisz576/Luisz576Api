@@ -65,7 +65,7 @@ const PunishmentSchema = new mongoose.Schema({
 
 PunishmentSchema.methods.getRemainingTimeInSeconds = function(): number{
     if(isPunishmentWithDuration(this.punishment_type)){
-        const r = this.duration - Math.floor((Date.now() - this.created.getTime()) / 1000)
+        const r = this.duration - Math.floor((Date.now() - this.created_at.getTime()) / 1000)
         if(r > 0){
             return r
         }

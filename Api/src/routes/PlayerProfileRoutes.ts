@@ -21,7 +21,7 @@ routes.patch('/:uuid/session', player_profile_controller.session)
 routes.patch('/:uuid/skin', player_profile_configs_controller.updateSkin)
 routes.patch('/:uuid/role', player_profile_configs_controller.updateRole)
 routes.patch('/:uuid/language', player_profile_configs_controller.updateLanguage)
-routes.patch('/:uuid/changefriendinviteprefferences', player_profile_configs_controller.updateFriendInvitePrefferences)
+routes.patch('/:uuid/changefriendinvitepreferences', player_profile_configs_controller.updateFriendInvitePreferences)
 routes.patch('/:uuid/updatesocialmedia', player_profile_configs_controller.updateSocialMedia)
 
 //friends

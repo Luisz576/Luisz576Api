@@ -18,12 +18,12 @@ export default {
                             blocked_players: blocked_players_response.value
                         })
                     }
-                    logError(blocked_players_response.value, 'BlocksController', 'PlayerProfile.getBlocks')
+                    logError(blocked_players_response.value, 'BlocksController', 'search', 'PlayerProfile.getBlocks')
                     return res.sendStatus(500)
                 }
                 return res.json(getJsonError(10, { values: {uuid} }))
             }
-            logError(profile_response.value, 'BlocksController', 'PlayerProfileRepository.search')
+            logError(profile_response.value, 'BlocksController', 'search', 'PlayerProfileRepository.search')
             return res.sendStatus(500)
         }
         return res.sendStatus(400)

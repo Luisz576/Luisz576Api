@@ -4,8 +4,9 @@ export default {
     validatePunishmentAndDuration(type: number, duration?: number): boolean{
         return type == 1 || isValidBan(type, duration)
     },
-    validateUUID(uuid: string): boolean{
-        return uuid.match('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') !== null
+    validateUUID(uuid: any): boolean{
+        const s = "" + uuid
+        return s.match('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') !== null
     },
     validateEmail(email: string): boolean{
         return /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/gm.test(email);

@@ -17,7 +17,7 @@ export interface IPlayerProfileCreateProps{
 export interface IPlayerProfileConfigs{
     skin: string
     language: number
-    friend_invites_prefference: boolean
+    friend_invites_preference: boolean
     email: string
     discord: string
     youtube: string

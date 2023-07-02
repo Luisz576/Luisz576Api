@@ -70,8 +70,8 @@ export function getJsonError(id: number, options?: {values: Object}){
     return undefined
 }
 
-export function logError(error: any, controller: string, func: string){
-    console.log(`Error at '${controller}' in '${func}':`)
+export function logError(error: any, controller: string, action: string, func: string){
+    console.log(`Error at '${controller}'.${action} -> '${func}':`)
     console.error(error)
     //TODO salvar log
 }
