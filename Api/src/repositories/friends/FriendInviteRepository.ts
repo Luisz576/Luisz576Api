@@ -1,6 +1,6 @@
 const FriendInvite = require('../../models/friends/FriendInvite')
 
-module.exports = {
+export default {
     async create({sender_uuid, receiver_uuid}){
         return await FriendInvite.create({
             sender: sender_uuid,

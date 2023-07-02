@@ -6,15 +6,25 @@ export interface IFriendInviteCreateProps{
     receiver: string
 }
 
-export interface IFriendInvite{
-    sender: string
-    receiver: string
-    created_at: Date
-    valid_invite: boolean
-    accepted: boolean
+export interface IFriendInviteSearchProps extends Partial<IFriendInviteCreateProps>{
+    valid_invite?: boolean
+    accepted?: boolean
 }
 
-const FriendInviteSchema = new mongoose.Schema<IFriendInvite>({
+export interface IInviteFriendValidate{
+    isValid: boolean
+    remainingTimeInSeconds: number
+}
+
+export interface IFriendInvite extends Required<IFriendInviteSearchProps>, mongoose.Document{
+    created_at: Date
+    accept(): void
+    expires(): void
+    stillValid(): IInviteFriendValidate
+    getRemainingTimeInSeconds(): number
+}
+
+const FriendInviteSchema = new mongoose.Schema({
     sender: {
         type: String,
         required: true,
@@ -40,7 +50,7 @@ const FriendInviteSchema = new mongoose.Schema<IFriendInvite>({
     },
 })
 
-FriendInviteSchema.methods.getRemainingTimeInSeconds = function(){
+FriendInviteSchema.methods.getRemainingTimeInSeconds = function(): number{
     const timeInSeconds = Math.floor((Date.now() - this.created.getTime()) / 1000)
     if(timeInSeconds > 300){
         return 0
@@ -48,7 +58,7 @@ FriendInviteSchema.methods.getRemainingTimeInSeconds = function(){
     return 300 - timeInSeconds
 }
 
-FriendInviteSchema.methods.stillValid = function(){
+FriendInviteSchema.methods.stillValid = function(): IInviteFriendValidate{
     if(this.accepted || !this.valid_invite){
         return {
             isValid: false,
@@ -72,4 +82,4 @@ FriendInviteSchema.methods.expires = function(){
     this.valid_invite = false
 }
 
-export default FriendsDb.model('FriendInvite', FriendInviteSchema)
+export default FriendsDb.model<IFriendInvite>('FriendInvite', FriendInviteSchema)

@@ -5,16 +5,17 @@ export interface IFriendListCreateProps{
     player_profile: mongoose.Schema.Types.ObjectId
 }
 
-interface IFriend{
+export type IFriendListSearchProps = IFriendListCreateProps
+
+export interface IFriend{
     player_profile: string
-    timestamp: Date
+    timestamp?: Date
 }
-export interface IFriendList{
-    player_profile: mongoose.Schema.Types.ObjectId
+export interface IFriendList extends IFriendListCreateProps, mongoose.Document{
     friends: IFriend[]
 }
 
-const FriendsListSchema = new mongoose.Schema<IFriendList>({
+const FriendsListSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayerProfile',
@@ -37,4 +38,4 @@ const FriendsListSchema = new mongoose.Schema<IFriendList>({
     }
 })
 
-export default FriendsDb.model('FriendsList', FriendsListSchema)
+export default FriendsDb.model<IFriendList>('FriendsList', FriendsListSchema)

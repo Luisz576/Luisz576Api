@@ -7,9 +7,9 @@ export interface IProductListCreateProps{
 
 export type IProductListSearchProps = IProductListCreateProps
 
-interface IProduct{
+export interface IProduct{
     product: mongoose.Schema.Types.ObjectId
-    timestamp: Date
+    timestamp?: Date
 }
 export interface IProductList extends IProductListCreateProps, mongoose.Document{
     products: IProduct[]

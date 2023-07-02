@@ -34,4 +34,8 @@ export const right = <L, R>(r: R): Either<L, R> => {
     return new Right(r)
 }
 
-export type OnlyExecutePromise = Promise<Either<any, null>>
+export type OnlyExecute = Either<any, null>
+export type OnlyExecutePromise = Promise<OnlyExecute>
+
+export type ReturnOrError<R> = Either<any, R>
+export type ReturnOrErrorPromise<R> = Promise<ReturnOrError<R>>

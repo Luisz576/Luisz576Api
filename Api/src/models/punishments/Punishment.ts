@@ -1,10 +1,9 @@
 import { isPunishmentWithDuration, isValidPunishment } from '../../domain/punishmentType'
 import { Luisz576Db } from '../../services/database'
 import mongoose from 'mongoose'
-import { IPlayerProfile } from '../player_profile/PlayerProfile'
 
 export interface IPunishmentCreateProps{
-    player_profile: IPlayerProfile,
+    player_uuid: string,
     applicator_uuid: string
     reason: string
     punishment_type: number,
@@ -12,19 +11,18 @@ export interface IPunishmentCreateProps{
     duration?: number
 }
 
-export interface IPunishment{
-    player_uuid: string,
-    applicator_uuid: string
-    reason: string
-    punishment_type: number,
-    comment: string
-    duration: number
-    is_valid: boolean
-    deleted: boolean
-    created_at: Date
+export type IPunishmentSearchProps = Partial<IPunishmentCreateProps> & {
+    is_valid?: boolean
+    deleted?: boolean
 }
 
-const PunishmentSchema = new mongoose.Schema<IPunishment>({
+export interface IPunishment extends Required<IPunishmentSearchProps>, mongoose.Document{
+    created_at: Date
+    getRemainingTimeInSeconds(): number
+    stillValid(): boolean
+}
+
+const PunishmentSchema = new mongoose.Schema({
     player_uuid: {
         type: String,
         required: true
@@ -65,7 +63,7 @@ const PunishmentSchema = new mongoose.Schema<IPunishment>({
     },
 })
 
-PunishmentSchema.methods.getRemainingTimeInSeconds = function(){
+PunishmentSchema.methods.getRemainingTimeInSeconds = function(): number{
     if(isPunishmentWithDuration(this.punishment_type)){
         const r = this.duration - Math.floor((Date.now() - this.created.getTime()) / 1000)
         if(r > 0){
@@ -75,11 +73,11 @@ PunishmentSchema.methods.getRemainingTimeInSeconds = function(){
     return 0
 }
 
-PunishmentSchema.methods.stillValid = function(){
+PunishmentSchema.methods.stillValid = function(): boolean{
     if(this.deleted || !this.is_valid){
         return false
     }
     return isValidPunishment(this.punishment_type, this.getRemainingTimeInSeconds())
 }
 
-export default Luisz576Db.model('Punishment', PunishmentSchema)
+export default Luisz576Db.model<IPunishment>('Punishment', PunishmentSchema)

@@ -1,24 +1,17 @@
-import FriendsList from "../../models/friends/FriendsList"
-import BlockList from "../../models/player_profile/BlockList"
-import PlayerProfile, { IPlayerProfile, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../models/player_profile/PlayerProfile"
+import PlayerProfile, { IPlayerProfile, IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../models/player_profile/PlayerProfile"
 import validator from "../../services/validator"
 import { Either, OnlyExecutePromise, left, right } from "../../types/either"
+import BlockListRepository from "./BlockListRepository"
 import ProductsListRepository from "./ProductsListRepository"
 
-type IPlayerProfileOrErrorReturn = Promise<Either<any, IPlayerProfile | undefined>>
+type IPlayerProfileOrErrorReturn = Promise<Either<any, IPlayerProfile>>
+type MaybeIPlayerProfileOrErrorReturn = Promise<Either<any, IPlayerProfile | undefined>>
 interface SessionProps{
     player_profile?: IPlayerProfile
     uuid?: string
 }
-interface IPlayerProfileConfigData{
+type IPlayerProfileConfigData = Partial<IPlayerProfileConfigs> & {
     uuid: string
-    skin?: string
-    language?: number
-    friend_invites_prefference?: boolean
-    email?: string
-    discord?: string
-    youtube?: string
-    twitch?: string
 }
 
 export default {
@@ -30,27 +23,31 @@ export default {
             })
             if(profile){
                 // talvez jogar pro default dos campos no PlayerProfileScheme?
-                const friends_list_response = await FriendsList.store({ player_profile: profile._id })
-                const block_list_response = await BlockList.store({ player_profile: profile._id })
+                const friends_list_response = await FriendsListRepository.store({ player_profile: profile._id })
+                const block_list_response = await BlockListRepository.store({ player_profile: profile._id })
                 const products_list_response = await ProductsListRepository.store({ player_profile: profile._id })
+                if(friends_list_response.isLeft() || block_list_response.isLeft() || products_list_response.isLeft()){
+                   return left(`Some list wasn't generated for player '${data.username}' (${data.uuid})`) 
+                }
                 profile.friends_list = friends_list_response.value
                 profile.block_list = block_list_response.value
                 profile.products_list = products_list_response.value
                 await profile.save()
+                return right(profile)
             }
-            return right(profile)
+            return left(`Can't create profile for '${data.username}' (${data.uuid})`)
         }catch(err){
             return left(err)
         }
     },
-    async getById(player_profile_id: string): IPlayerProfileOrErrorReturn{
+    async getById(player_profile_id: string): MaybeIPlayerProfileOrErrorReturn{
         try{
             return right(await PlayerProfile.findById(player_profile_id))
         }catch(err){
             return left(err)
         }
     },
-    async search(filter: IPlayerProfileSearchProps): IPlayerProfileOrErrorReturn{
+    async search(filter: IPlayerProfileSearchProps): MaybeIPlayerProfileOrErrorReturn{
         try{
             return right(await PlayerProfile.findOne(filter))
         }catch(err){
@@ -64,9 +61,14 @@ export default {
                 profile = session.player_profile
             }else{
                 if(session.uuid){
-                    profile = this.search({
+                    const search_response = await this.search({
                         uuid: session.uuid
                     })
+                    if(search_response.isRight()){
+                        profile = search_response.value 
+                    }else{
+                        return left("Error searching by uuid")
+                    }
                 }else{
                     return left("No parameter was passed")
                 }
