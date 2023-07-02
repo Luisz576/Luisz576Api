@@ -2,7 +2,7 @@ import BlockList, { IBlockList, IBlockListCreateProps, IBlockListSearchProps } f
 import { ReturnOrErrorPromise, left, right } from "../../types/either"
 
 type IBlockListOrError = ReturnOrErrorPromise<IBlockList>
-type MaybeIBlockListOrError = ReturnOrErrorPromise<IBlockList | undefined>
+type MaybeIBlockListOrError = ReturnOrErrorPromise<IBlockList | null>
 
 export default {
     async store(data: IBlockListCreateProps): IBlockListOrError{

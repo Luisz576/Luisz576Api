@@ -2,7 +2,7 @@ import ProductList, { IProductList, IProductListCreateProps, IProductListSearchP
 import { ReturnOrErrorPromise, left, right } from "../../types/either"
 
 type IProductListOrError = ReturnOrErrorPromise<IProductList>
-type MaybeIProductListOrError = ReturnOrErrorPromise<IProductList | undefined>
+type MaybeIProductListOrError = ReturnOrErrorPromise<IProductList | null>
 
 export default {
     async store(data: IProductListCreateProps): IProductListOrError {

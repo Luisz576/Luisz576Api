@@ -1,28 +1,28 @@
-export type Either<L, R> = Left<L> | Right<R>
+export type Either<L, R> = Left<L, R> | Right<L, R>
 export type PromiseEither<L, R> = Promise<Either<L, R>>
 
-class Left<L>{
+class Left<L, R>{
     value: L
     constructor(value: L){
         this.value = value
     }
-    isLeft(): Boolean{
+    isLeft(): this is Left<L, R>{
         return true
     }
-    isRight(): Boolean{
+    isRight(): this is Right<L, R>{
         return false
     }
 }
 
-class Right<R>{
+class Right<L, R>{
     value: R
     constructor(value: R){
         this.value = value
     }
-    isLeft(): Boolean{
+    isLeft(): this is Left<L, R>{
         return false
     }
-    isRight(): Boolean{
+    isRight(): this is Right<L, R>{
         return true
     }
 }

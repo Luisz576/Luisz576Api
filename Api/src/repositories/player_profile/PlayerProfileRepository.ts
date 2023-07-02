@@ -6,7 +6,7 @@ import BlockListRepository from "./BlockListRepository"
 import ProductsListRepository from "./ProductsListRepository"
 
 type IPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfile>
-type MaybeIPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfile | undefined>
+type MaybeIPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfile | null>
 interface SessionProps{
     player_profile?: IPlayerProfile
     uuid?: string
@@ -27,14 +27,14 @@ export default {
                 const friends_list_response = await FriendsListRepository.store({ player_profile: profile._id })
                 const block_list_response = await BlockListRepository.store({ player_profile: profile._id })
                 const products_list_response = await ProductsListRepository.store({ player_profile: profile._id })
-                if(friends_list_response.isLeft() || block_list_response.isLeft() || products_list_response.isLeft()){
-                   return left(`Some list wasn't generated for player '${data.username}' (${data.uuid})`) 
+                if(friends_list_response.isRight() && block_list_response.isRight() && products_list_response.isRight()){
+                    profile.friends_list = friends_list_response.value._id
+                    profile.block_list = block_list_response.value._id
+                    profile.products_list = products_list_response.value._id
+                    await profile.save()
+                    return right(profile)
                 }
-                profile.friends_list = friends_list_response.value
-                profile.block_list = block_list_response.value
-                profile.products_list = products_list_response.value
-                await profile.save()
-                return right(profile)
+                return left(`Some list wasn't generated for player '${data.username}' (${data.uuid})`)
             }
             return left(`Can't create profile for '${data.username}' (${data.uuid})`)
         }catch(err){
@@ -57,7 +57,7 @@ export default {
     },
     async session(session: SessionProps): OnlyExecutePromise{
         try{
-            let profile: IPlayerProfile | undefined
+            let profile: IPlayerProfile | null
             if(session.player_profile){
                 profile = session.player_profile
             }else{

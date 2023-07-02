@@ -2,8 +2,8 @@ import FriendInvite, { IFriendInvite, IFriendInviteCreateProps, IFriendInviteSea
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 
 type IFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite>
-type MayberIFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite | undefined>
-type MayberIFriendInvitesOrError = ReturnOrErrorPromise<IFriendInvite[] | undefined>
+type IFriendInvitesOrError = ReturnOrErrorPromise<IFriendInvite[]>
+type MayberIFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite | null>
 
 export default {
     async create(data: IFriendInviteCreateProps): IFriendInviteOrError{
@@ -24,7 +24,7 @@ export default {
             return left(err)
         }
     },
-    async searchAll(filter: IFriendInviteSearchProps): MayberIFriendInvitesOrError{
+    async searchAll(filter: IFriendInviteSearchProps): IFriendInvitesOrError{
         try{
             return right(await FriendInvite.find(filter))
         }catch(err){
