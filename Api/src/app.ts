@@ -3,9 +3,9 @@ import express from 'express'
 import http from 'http'
 import cors from 'cors'
 
-import PlayerProfileRoutes from './routes/player_profile_routes'
-import PunishmentsRoutes from './routes/punishments_routes'
-import AuthenticationRoutes from './routes/authentication_routes'
+import PlayerProfileRoutes from './routes/PlayerProfileRoutes'
+import PunishmentsRoutes from './routes/PunishmentsRoutes'
+import AuthenticationRoutes from './routes/AuthenticationRoutes'
 
 dotenv.config()
 

@@ -1,5 +1,5 @@
-const { FriendsDb } = require('../../services/database')
-const mongoose = require('mongoose')
+import { FriendsDb } from "../../services/database"
+import mongoose from "mongoose"
 
 const FriendsListSchema = new mongoose.Schema({
     player_profile: {
@@ -24,4 +24,4 @@ const FriendsListSchema = new mongoose.Schema({
     }
 })
 
-module.exports = FriendsDb.model('FriendsList', FriendsListSchema)
+export default FriendsDb.model('FriendsList', FriendsListSchema)

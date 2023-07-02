@@ -1,4 +1,4 @@
-import punishment_type from "../domain/punishment_type";
+import punishment_type from "../domain/punishmentType";
 
 export default {
     validatePunishmentAndDuration(type: number, duration?: number){

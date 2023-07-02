@@ -1,6 +1,6 @@
 declare namespace NodeJS{
     interface ProcessEnv{
-        MONGO_URL_CONNECTION: string
+        DATABASE_URL: string
         API_PORT: number
     }
 }

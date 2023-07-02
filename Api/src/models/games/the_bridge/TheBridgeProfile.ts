@@ -1,5 +1,5 @@
-const { TheBridgeDb } = require('../../../services/database')
-const mongoose = require('mongoose')
+import { TheBridgeDb } from "../../../services/database"
+import mongoose from "mongoose"
 
 const TheBridgeProfileSchema = new mongoose.Schema({
     player_profile: {
@@ -118,4 +118,4 @@ const TheBridgeProfileSchema = new mongoose.Schema({
     }
 })
 
-module.exports = TheBridgeDb.model('TheBridgeProfile', TheBridgeProfileSchema)
+export default TheBridgeDb.model('TheBridgeProfile', TheBridgeProfileSchema)

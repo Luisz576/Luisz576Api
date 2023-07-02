@@ -1,12 +1,12 @@
 import express from 'express'
 
-import authenticator_middleware from '../middlewares/authenticator_middleware'
+import authenticator_middleware from '../middlewares/AuthenticatorMiddleware'
 
-import player_profile_controller from '../controllers/player_profile_controller'
-import player_profile_configs_controller from '../controllers/player_profile_configs_controller'
-import friends_controller from '../controllers/friends_controller'
-import friend_invites_controller from '../controllers/friend_invites_controller'
-import blocks_controller from '../controllers/blocks_controller'
+import player_profile_controller from '../controllers/PlayerProfileController'
+import player_profile_configs_controller from '../controllers/PlayerProfileConfigs_controller'
+import friends_controller from '../controllers/FriendsController'
+import friend_invites_controller from '../controllers/FriendInvitesController'
+import blocks_controller from '../controllers/BlocksController'
 
 const routes = express.Router()
 

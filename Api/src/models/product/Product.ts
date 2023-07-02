@@ -1,5 +1,5 @@
-const { Luisz576Db } = require('../../services/database')
-const mongoose = require('mongoose')
+import { Luisz576Db } from "../../services/database"
+import mongoose from "mongoose"
 
 const ProductSchema = new mongoose.Schema({
     product_id: {
@@ -33,6 +33,10 @@ const ProductSchema = new mongoose.Schema({
         min: 0,
         required: true
     },
+    timestamp: {
+        type: Date,
+        default: Date.now
+    },
     min_role: {
         type: Number,
         min: 0,
@@ -40,4 +44,4 @@ const ProductSchema = new mongoose.Schema({
     }
 })
 
-module.exports = Luisz576Db.model('Product', ProductSchema)
+export default Luisz576Db.model('Product', ProductSchema)

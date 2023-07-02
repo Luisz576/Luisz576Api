@@ -1,6 +1,6 @@
 import express from 'express'
 
-import authentication_controller from '../controllers/auth/authentication_controller'
+import authentication_controller from '../controllers/auth/AuthenticationController'
 
 const routes = express.Router()
 

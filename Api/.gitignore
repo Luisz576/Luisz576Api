@@ -2,6 +2,7 @@ node_modules/
 src/configs/
 logs/
 build/
+prisma/
 
 yarn.lock
 .env

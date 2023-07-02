@@ -1,8 +1,8 @@
 import express from 'express'
 
-import authenticator_middleware from '../middlewares/authenticator_middleware'
+import authenticator_middleware from '../middlewares/AuthenticatorMiddleware'
 
-import punishments_controller from '../controllers/punishments_controller'
+import punishments_controller from '../controllers/PunishmentsController'
 
 const routes = express.Router()
 

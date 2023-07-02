@@ -17,6 +17,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
             return res.sendStatus(401)
         }
 
+        // TODO: deixar salvo o token no redis? e ai quando gerar um novo token so set nele?
         const [ requester, token ] = tokenParts
         const clientData = authenticator.getClientById(requester)
 
@@ -24,7 +25,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
             return res.sendStatus(401)
         }
 
-        // TODO: deixar salvo o token no redis? e ai quando gerar um novo token so set nele?
         authenticator.verifyToken(token, (e, decoded) => {
             if(e || !decoded || typeof(decoded) == 'string'){
                 return res.sendStatus(401)

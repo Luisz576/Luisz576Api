@@ -1,7 +1,7 @@
+import validator from "../../services/validator"
 const Punishment = require('../../models/punishments/punishment')
-const validator = require('../../services/validator')
 
-module.exports = {
+export default {
     async givePunishment({player_profile, applicator_profile_uuid, punishment_type, reason, duration, comment}){
         const punishment = await Punishment.create({
             player_profile: player_profile.uuid,

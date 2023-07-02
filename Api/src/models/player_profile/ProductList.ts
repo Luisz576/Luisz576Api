@@ -1,18 +1,18 @@
-const { Luisz576Db } = require('../../services/database')
-const mongoose = require('mongoose')
+import { Luisz576Db } from "../../services/database"
+import mongoose from "mongoose"
 
-const BlockListSchema = new mongoose.Schema({
+const ProductsListSchema = new mongoose.Schema({
     player_profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayerProfile',
         required: true,
         immutable: true
     },
-    blocked_players: {
+    products: {
         type: [{
-            player_profile: {
-                type: String,
-                required: true
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product'
             },
             timestamp: {
                 type: Date,
@@ -23,4 +23,4 @@ const BlockListSchema = new mongoose.Schema({
     }
 })
 
-module.exports = Luisz576Db.model('BlockList', BlockListSchema)
+export default Luisz576Db.model('ProductsList', ProductsListSchema)

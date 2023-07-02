@@ -1,6 +1,6 @@
 export default {
-    store(){
-
+    async store(){
+        
     },
     search(){
         

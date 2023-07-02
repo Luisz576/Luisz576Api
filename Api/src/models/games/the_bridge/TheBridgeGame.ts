@@ -1,7 +1,7 @@
-const { TheBridgeDb } = require('../../services/database')
-const mongoose = require('mongoose')
+import { TheBridgeDb } from "../../../services/database"
+import mongoose from "mongoose"
 
-const TheBridgeGame = mongoose.Schema({
+const TheBridgeGame = new mongoose.Schema({
     timestamp: {
         type: Date,
         default: Date.now,
@@ -25,4 +25,4 @@ const TheBridgeGame = mongoose.Schema({
     },
 })
 
-module.exports = TheBridgeDb.model('TheBridgeGame', TheBridgeGame)
+export default TheBridgeDb.model('TheBridgeGame', TheBridgeGame)
