@@ -17,7 +17,12 @@ interface TokenDTO{
 const DEFAULT_TOKEN_TIME = 86400
 
 export default {
-    DEFAULT_TOKEN_TIME,
+    async loadClientTokenFromCache(client_id: string): Promise<string | null>{
+        return await redis.get(`client_token_${client_id}`)
+    },
+    async saveClientTokenInCache(data: TokenDTO): Promise<string> {
+        return await redis.setEx(`client_token_${data.client_id}`, data.expires, data.token)
+    },
     async generateAplicationTokenByClientSecret(client_secret: string, expiresIn?: number): Promise<string | undefined>{
         let client
         for(let i in auth_configs.clients){
@@ -37,12 +42,6 @@ export default {
             token: generated_token
         })
         return generated_token
-    },
-    async loadClientTokenFromCache(client_id: string): Promise<string | null>{
-        return await redis.get(`client_token_${client_id}`)
-    },
-    async saveClientTokenInCache(data: TokenDTO): Promise<string> {
-        return await redis.setEx(`client_token_${data.client_id}`, data.expires, data.token)
     },
     // default: 1 day
     generateJWTToken(payload: Object, expiresIn?: number): string{

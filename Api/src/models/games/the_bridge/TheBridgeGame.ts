@@ -1,7 +1,6 @@
 import { TheBridgeDb } from "../../../services/database"
 import { Schema, Document } from "mongoose"
 import { IPlayerProfile } from "../../player_profile/PlayerProfile"
-import { ReturnOrErrorPromise, left } from "../../../types/either"
 
 export interface ITheBridgePlayer {
     uuid: string
@@ -25,7 +24,7 @@ export interface ITheBridgeGameSearchProps{
 
 export interface ITheBridgeGame extends ITheBridgeGameCreateProps, Document{
     timestamp: Date
-    getPlayers(): ReturnOrErrorPromise<IPlayerProfile[]>
+    getPlayers(): Promise<IPlayerProfile[]>
 }
 
 const TheBridgeGame = new Schema({
@@ -82,8 +81,8 @@ const TheBridgeGame = new Schema({
     },
 })
 
-TheBridgeGame.methods.getPlayers = async function(): ReturnOrErrorPromise<IPlayerProfile[]>{
-    return left("Not implemented")
+TheBridgeGame.methods.getPlayers = async function(): Promise<IPlayerProfile[]>{
+    throw new Error('Not implemented')
 }
 
 export function calculateProfileNetworkXP(player: ITheBridgePlayer, winner: boolean): number{

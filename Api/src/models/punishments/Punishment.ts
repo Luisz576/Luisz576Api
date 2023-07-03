@@ -18,6 +18,7 @@ export type IPunishmentSearchProps = Partial<IPunishmentCreateProps> & {
 
 export interface IPunishment extends Required<IPunishmentSearchProps>, Document{
     created_at: Date
+    expires(): void
     getRemainingTimeInSeconds(): number
     stillValid(): boolean
 }
@@ -62,6 +63,10 @@ const PunishmentSchema = new Schema({
         immutable: true
     },
 })
+
+PunishmentSchema.methods.expires = function(){
+    this.is_valid = false
+}
 
 PunishmentSchema.methods.getRemainingTimeInSeconds = function(): number{
     if(isPunishmentWithDuration(this.punishment_type)){

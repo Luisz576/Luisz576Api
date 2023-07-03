@@ -2,6 +2,9 @@ import { Response, Request } from 'express'
 import validator from '../../services/validator'
 
 export default {
+    // TODO colocar redis nos controllers?
+    //      ou nos repositoies e ai quando chamar a funcao save no model salva no redis?
+    //      ou criar uma camada de cache?
     async store(req: Request, res: Response){
         return res.sendStatus(501)
     },

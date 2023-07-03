@@ -3,7 +3,6 @@ import { Schema, Document } from "mongoose"
 import { isBanPunishment } from "../../domain/punishmentType"
 import PunishmentRepository from "../../repositories/punishment/PunishmentRepository"
 import FriendsListRepository from "../../repositories/friends/FriendsListRepository"
-import { ReturnOrErrorPromise, left, right } from "../../types/either"
 import { IFriend } from "../friends/FriendsList"
 import { IPunishment } from "../punishments/Punishment"
 import { IBlockedPlayer } from "./BlockList"
@@ -39,13 +38,13 @@ export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>, Doc
     products_list: Schema.Types.ObjectId
     block_list: Schema.Types.ObjectId
     friends_list: Schema.Types.ObjectId
-    getFriends(): ReturnOrErrorPromise<IFriend[]>
-    areFriends(profileUUID: string): ReturnOrErrorPromise<boolean>
-    getBlocks(): ReturnOrErrorPromise<IBlockedPlayer[]>
-    isBlockedByPlayer(profileUUID: string): ReturnOrErrorPromise<boolean>
-    getPunishments(): ReturnOrErrorPromise<IPunishment[]>
-    getValidPunishments(): ReturnOrErrorPromise<IPunishment[]>
-    isBanned(): ReturnOrErrorPromise<boolean>
+    getFriends(): Promise<IFriend[]>
+    areFriends(profileUUID: string): Promise<boolean>
+    getBlocks(): Promise<IBlockedPlayer[]>
+    isBlockedByPlayer(profileUUID: string): Promise<boolean>
+    getPunishments(): Promise<IPunishment[]>
+    getValidPunishments(): Promise<IPunishment[]>
+    isBanned(): Promise<boolean>
 }
 
 const PlayerProfileSchema = new Schema({
@@ -146,71 +145,64 @@ const PlayerProfileSchema = new Schema({
     },
 })
 
-PlayerProfileSchema.methods.getFriends = async function(): ReturnOrErrorPromise<IFriend[]> {
+PlayerProfileSchema.methods.getFriends = async function(): Promise<IFriend[]> {
     const friends_list_response = await FriendsListRepository.getById(this.friends_list)
     if(friends_list_response.isRight()){
         if(friends_list_response.value){
-            return right(friends_list_response.value.friends)
+            return friends_list_response.value.friends
         }
-        return left(`Can't find FriendList ${this.friends_list}`)
+        throw new Error(`Can't find FriendList ${this.friends_list}`)
     }
-    return left(friends_list_response.value)
+    throw new Error(friends_list_response.value)
 }
 
-PlayerProfileSchema.methods.areFriends = async function(profileUUID: string): ReturnOrErrorPromise<boolean>{
-    const friends_response = await this.getFriends()
-    if(friends_response.isLeft()){
-        return left(friends_response.value)
-    }
-    const friends = friends_response.value
+PlayerProfileSchema.methods.areFriends = async function(profileUUID: string): Promise<boolean>{
+    const friends = await this.getFriends()
     for(let i in friends){
         if(friends[i].player_profile == profileUUID){
-            return right(true)
+            return true
         }
     }
-    return right(false)
+    return false
 }
 
-PlayerProfileSchema.methods.getBlocks = async function(): ReturnOrErrorPromise<IBlockedPlayer[]>{
+PlayerProfileSchema.methods.getBlocks = async function(): Promise<IBlockedPlayer[]>{
     const block_list_response = await BlockListRepository.getById(this.block_list)
     if(block_list_response.isRight()){
         if(block_list_response.value){
-            return right(block_list_response.value.blocked_players)
+            return block_list_response.value.blocked_players
         }
-        return left(`Can't find BlockList (PlayerProfile '${this._id}')`)
+        throw new Error(`Can't find BlockList (PlayerProfile '${this._id}')`)
     }
-    return left(block_list_response.value)
+    throw new Error(block_list_response.value)
 }
 
-PlayerProfileSchema.methods.isBlockedByPlayer = async function(profileUUID: string): ReturnOrErrorPromise<boolean>{
-    const blocked_players_response = await this.getBlocks()
-    if(blocked_players_response.isLeft()){
-        return left(blocked_players_response.value)
-    }
-    for(let i in blocked_players_response.value){
-        if(blocked_players_response.value[i].player_profile == profileUUID){
-            if(blocked_players_response.value[i].is_blocked){
-                return right(true)
+PlayerProfileSchema.methods.isBlockedByPlayer = async function(profileUUID: string): Promise<boolean>{
+    const blocked_players = await this.getBlocks()
+    for(let i in blocked_players){
+        if(blocked_players[i].player_profile == profileUUID){
+            if(blocked_players[i].is_blocked){
+                return true
             }
         }
     }
-    return right(false)
+    return false
 }
 
-PlayerProfileSchema.methods.getPunishments = async function(): ReturnOrErrorPromise<IPunishment[]>{
+PlayerProfileSchema.methods.getPunishments = async function(): Promise<IPunishment[]>{
     if(this.punishment){
         const punishments_response = await PunishmentRepository.search({
             player_uuid: this.uuid
         })
         if(punishments_response.isRight()){
-            return right(punishments_response.value)
+            return punishments_response.value
         }
-        return left(punishments_response.value)
+        throw new Error(punishments_response.value)
     }
-    return right([])
+    return []
 }
 
-PlayerProfileSchema.methods.getValidPunishments = async function(): ReturnOrErrorPromise<IPunishment[]>{
+PlayerProfileSchema.methods.getValidPunishments = async function(): Promise<IPunishment[]>{
     if(this.punishment){
         const punishments_response = await PunishmentRepository.search({
             player_uuid: this.uuid,
@@ -218,23 +210,23 @@ PlayerProfileSchema.methods.getValidPunishments = async function(): ReturnOrErro
             is_valid: true
         })
         if(punishments_response.isRight()){
-            return right(punishments_response.value)
+            return punishments_response.value
         }
-        return left(punishments_response.value)
+        throw new Error('punishments_response.value')
     }
-    return right([])
+    return []
 }
 
-PlayerProfileSchema.methods.isBanned = async function(): ReturnOrErrorPromise<boolean>{
+PlayerProfileSchema.methods.isBanned = async function(): Promise<boolean>{
     if(this.punishment){
         const punishments = await this.getValidPunishments()
         for(let i in punishments){
             if(isBanPunishment(punishments[i])){
-                return right(true)
+                return true
             }
         }
     }
-    return right(false)
+    return false
 }
 
 export default Luisz576Db.model<IPlayerProfile>('PlayerProfile', PlayerProfileSchema)

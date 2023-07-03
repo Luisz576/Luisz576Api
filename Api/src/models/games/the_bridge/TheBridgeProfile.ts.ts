@@ -1,7 +1,6 @@
 import TheBridgeMode from "../../../domain/games/the_bridge/TheBridgeMode"
 import { TheBridgeDb } from "../../../services/database"
 import { Schema, Document } from "mongoose"
-import { ReturnOrErrorPromise, left } from "../../../types/either"
 import { ITheBridgeGame } from "./TheBridgeGame"
 
 export interface ITheBridgeProfileCreateProps{
@@ -44,7 +43,7 @@ export type ITheBridgeProfileSearchProps = Partial<ITheBridgeProfileCreateProps>
 
 export interface ITheBridgeProfile extends Required<ITheBridgeProfileSearchProps>, Document{
     created_at: Date
-    getMatches(mode?: TheBridgeMode): ReturnOrErrorPromise<ITheBridgeGame[]>
+    getMatches(mode?: TheBridgeMode): Promise<ITheBridgeGame[]>
 }
 
 const TheBridgeProfileSchema = new Schema({
@@ -199,8 +198,8 @@ const TheBridgeProfileSchema = new Schema({
     },
 })
 
-TheBridgeProfileSchema.methods.getMatches = async function(mode?: TheBridgeMode): ReturnOrErrorPromise<ITheBridgeGame[]>{
-    return left("Not implemented")
+TheBridgeProfileSchema.methods.getMatches = async function(mode?: TheBridgeMode): Promise<ITheBridgeGame[]>{
+    throw new Error("Not implemented")
 }
 
 export default TheBridgeDb.model<ITheBridgeProfile>('TheBridgeProfile', TheBridgeProfileSchema)

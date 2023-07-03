@@ -47,21 +47,22 @@ export default {
             // if(validator.validateBoolean(is_valid)){
             //     filter.is_valid = is_valid
             // }
+            const punishments: IPunishment[] = []
             const punishmentsFinded = await Punishment.find(filter)
-            if(validator.validateBoolean(filter.is_valid)){
-                const punishments = []
-                for(let i in punishmentsFinded){
-                    if(punishmentsFinded[i].stillValid()){
-                        punishments.push(punishmentsFinded[i])
-                    }else{
-                        this.pardon({
-                            punishment: punishmentsFinded[i]
-                        })
+            for(let p of punishmentsFinded){
+                if(p.stillValid()){
+                    punishments.push(p)
+                }else{
+                    // expires
+                    p.expires()
+                    await p.save()
+                    // compare filter
+                    if(!filter.is_valid){
+                        punishments.push(p)
                     }
                 }
-                return right(punishments)
             }
-            return right(punishmentsFinded)
+            return right(punishments)
         }catch(err){
             return left(err)
         }
