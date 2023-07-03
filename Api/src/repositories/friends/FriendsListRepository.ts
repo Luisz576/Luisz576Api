@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import { Schema } from "mongoose"
 import FriendsList, { IFriendList, IFriendListCreateProps, IFriendListSearchProps } from "../../models/friends/FriendsList"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 
@@ -7,7 +7,7 @@ type MaybeIFriendListOrError = ReturnOrErrorPromise<IFriendList | null>
 
 type FriendDTO = {
     friends_list?: IFriendList,
-    friends_list_id?: mongoose.Schema.Types.ObjectId,
+    friends_list_id?: Schema.Types.ObjectId,
     player_profile_uuid: string
 }
 
@@ -23,7 +23,7 @@ export default {
             return left(err)
         }
     },
-    async getById(friends_list_id: mongoose.Schema.Types.ObjectId): MaybeIFriendListOrError{
+    async getById(friends_list_id: Schema.Types.ObjectId): MaybeIFriendListOrError{
         try{
             return right(await FriendsList.findById(friends_list_id))
         }catch(err){

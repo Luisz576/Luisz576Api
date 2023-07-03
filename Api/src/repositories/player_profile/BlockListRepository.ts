@@ -1,11 +1,11 @@
-import mongoose from "mongoose"
+import { Schema } from "mongoose"
 import BlockList, { IBlockList, IBlockListCreateProps, IBlockListSearchProps, IBlockedPlayer } from "../../models/player_profile/BlockList"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 
 type IBlockListOrError = ReturnOrErrorPromise<IBlockList>
 type MaybeIBlockListOrError = ReturnOrErrorPromise<IBlockList | null>
 type BlockDTO = Omit<IBlockedPlayer, 'timestamp'> & {
-    block_list_id: mongoose.Schema.Types.ObjectId
+    block_list_id: Schema.Types.ObjectId
 }
 
 export default {
@@ -20,7 +20,7 @@ export default {
             return left(err)
         }
     },
-    async getById(block_list_id: mongoose.Schema.Types.ObjectId): MaybeIBlockListOrError{
+    async getById(block_list_id: Schema.Types.ObjectId): MaybeIBlockListOrError{
         try{
             return right(await BlockList.findById(block_list_id))
         }catch(err){

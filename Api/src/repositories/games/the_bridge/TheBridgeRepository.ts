@@ -1,7 +1,9 @@
-import TheBridgeGame, { ITheBridgeGame, ITheBridgeGameCreateProps } from "../../../models/games/the_bridge/TheBridgeGame";
+import TheBridgeGame, { ITheBridgeGame, ITheBridgeGameCreateProps, ITheBridgeGameSearchProps } from "../../../models/games/the_bridge/TheBridgeGame";
 import { ReturnOrErrorPromise, left, right } from "../../../types/either";
 
 type ITheBridgeGameOrError = ReturnOrErrorPromise<ITheBridgeGame>
+type MaybeITheBridgeGameOrError = ReturnOrErrorPromise<ITheBridgeGame | null>
+type ITheBridgeGamesOrError = ReturnOrErrorPromise<ITheBridgeGame[]>
 
 export default {
     async store(data: ITheBridgeGameCreateProps): ITheBridgeGameOrError{
@@ -15,13 +17,18 @@ export default {
             return left(err)
         }
     },
-    async searchMatch(){
-
+    async searchMatch(filter: ITheBridgeGameSearchProps): MaybeITheBridgeGameOrError{
+        try{
+            return right(await TheBridgeGame.findOne(filter))
+        }catch(err){
+            return left(err)
+        }
     },
-    async searchMatches(){
-
+    async searchMatches(filter: ITheBridgeGameSearchProps): ITheBridgeGamesOrError{
+        try{
+            return right(await TheBridgeGame.find(filter))
+        }catch(err){
+            return left(err)
+        }
     },
-    async searchProfile(){
-
-    }
 }
