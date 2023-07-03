@@ -1,31 +1,7 @@
 import { TheBridgeDb } from "../../../services/database"
-import { Schema, Document } from "mongoose"
+import { Schema } from "mongoose"
 import { IPlayerProfile } from "../../player_profile/PlayerProfile"
-
-export interface ITheBridgePlayer {
-    uuid: string
-    placed_blocks: number
-    eaten_golden_apples: number
-    score: number
-    kills: number
-    deaths: number
-    timestamp: Date
-}
-
-export interface ITheBridgeGameCreateProps extends Required<ITheBridgeGameSearchProps>{
-    players: ITheBridgePlayer[]
-    winners: string[]
-}
-
-export interface ITheBridgeGameSearchProps{
-    game_mode?: number
-    map_name?: string
-}
-
-export interface ITheBridgeGame extends ITheBridgeGameCreateProps, Document{
-    timestamp: Date
-    getPlayers(): Promise<IPlayerProfile[]>
-}
+import { ITheBridgeGame, ITheBridgePlayer } from "../../../schemas/games/the_bridge/TheBridgeGame"
 
 const TheBridgeGame = new Schema({
     timestamp: {

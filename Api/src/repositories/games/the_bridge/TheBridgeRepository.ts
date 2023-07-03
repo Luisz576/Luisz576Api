@@ -1,4 +1,5 @@
-import TheBridgeGame, { ITheBridgeGame, ITheBridgeGameCreateProps, ITheBridgeGameSearchProps } from "../../../models/games/the_bridge/TheBridgeGame";
+import { ITheBridgeGame, ITheBridgeGameCreateProps, ITheBridgeGameSearchProps } from "../../../domain/models/games/the_bridge/TheBridgeGame";
+import TheBridgeGame from "../../../schemas/games/the_bridge/TheBridgeGame";
 import { ReturnOrErrorPromise, left, right } from "../../../types/either";
 
 type ITheBridgeGameOrError = ReturnOrErrorPromise<ITheBridgeGame>

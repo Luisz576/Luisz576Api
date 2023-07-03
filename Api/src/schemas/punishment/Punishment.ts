@@ -1,27 +1,7 @@
+import { IPunishment } from '../../domain/models/punishments/Punishment'
 import { isPunishmentWithDuration, isValidPunishment } from '../../domain/punishmentType'
 import { Luisz576Db } from '../../services/database'
-import { Schema, Document } from 'mongoose'
-
-export interface IPunishmentCreateProps{
-    player_uuid: string,
-    applicator_uuid: string
-    reason: string
-    punishment_type: number,
-    comment?: string
-    duration?: number
-}
-
-export type IPunishmentSearchProps = Partial<IPunishmentCreateProps> & {
-    is_valid?: boolean
-    deleted?: boolean
-}
-
-export interface IPunishment extends Required<IPunishmentSearchProps>, Document{
-    created_at: Date
-    expires(): void
-    getRemainingTimeInSeconds(): number
-    stillValid(): boolean
-}
+import { Schema } from 'mongoose'
 
 const PunishmentSchema = new Schema({
     player_uuid: {

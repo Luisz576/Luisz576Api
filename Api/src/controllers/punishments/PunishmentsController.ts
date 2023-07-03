@@ -1,10 +1,10 @@
-import roles from '../domain/roles'
-import { isValidPunishment } from '../domain/punishmentType'
+import roles from '../../domain/roles'
+import { isValidPunishment } from '../../domain/punishmentType'
 import { Request, Response } from 'express'
-import { getJsonError, logError } from '../errors/errors'
-import validator from '../services/validator'
-import PlayerProfileRepository from '../repositories/player_profile/PlayerProfileRepository'
-import PunishmentRepository from '../repositories/punishment/PunishmentRepository'
+import { getJsonError, logError } from '../../errors/errors'
+import validator from '../../services/validator'
+import PlayerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
+import PunishmentRepository from '../../repositories/punishment/PunishmentRepository'
 
 export default {
     async store(req: Request, res: Response){

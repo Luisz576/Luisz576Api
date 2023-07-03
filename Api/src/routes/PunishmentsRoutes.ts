@@ -1,17 +1,16 @@
 import {Router} from 'express'
 
-import authenticator_middleware from '../middlewares/AuthenticatorMiddleware'
-
-import punishments_controller from '../controllers/PunishmentsController'
+import AuthenticatorMiddleware from '../middlewares/AuthenticatorMiddleware'
+import PunishmentsController from '../controllers/punishments/PunishmentsController'
 
 const routes = Router()
 
-routes.use(authenticator_middleware)
+routes.use(AuthenticatorMiddleware)
 
 // <Punishments>
-routes.get('/:uuid', punishments_controller.search)
-routes.post('/give', punishments_controller.store)
-routes.delete('/:uuid/pardon', punishments_controller.pardon)
-routes.delete('/:uuid/pardonall', punishments_controller.pardonall)
+routes.get('/:uuid', PunishmentsController.search)
+routes.post('/give', PunishmentsController.store)
+routes.delete('/:uuid/pardon', PunishmentsController.pardon)
+routes.delete('/:uuid/pardonall', PunishmentsController.pardonall)
 
 export default routes

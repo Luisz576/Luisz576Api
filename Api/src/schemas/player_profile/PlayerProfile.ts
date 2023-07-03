@@ -1,51 +1,13 @@
 import { Luisz576Db } from "../../services/database"
-import { Schema, Document } from "mongoose"
+import { Schema } from "mongoose"
 import { isBanPunishment } from "../../domain/punishmentType"
 import PunishmentRepository from "../../repositories/punishment/PunishmentRepository"
 import FriendsListRepository from "../../repositories/friends/FriendsListRepository"
-import { IFriend } from "../friends/FriendsList"
-import { IPunishment } from "../punishments/Punishment"
-import { IBlockedPlayer } from "./BlockList"
 import BlockListRepository from "../../repositories/player_profile/BlockListRepository"
-
-export interface IPlayerProfileCreateProps{
-    uuid: string,
-    username: string
-}
-
-export interface IPlayerProfileConfigs{
-    skin: string
-    language: number
-    friend_invites_preference: boolean
-    email: string
-    discord: string
-    youtube: string
-    twitch: string
-}
-
-export type IPlayerProfileSearchProps = Partial<IPlayerProfileCreateProps> & Partial<IPlayerProfileConfigs> & {
-    account_actived?: boolean
-    network_xp?: number
-    cash?: number
-    coins?: number
-    role?: number
-    punishment?: boolean
-}
-
-export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>, Document{
-    created_at: Date
-    last_login: Date
-    products_list: Schema.Types.ObjectId
-    block_list: Schema.Types.ObjectId
-    friends_list: Schema.Types.ObjectId
-    getFriends(): Promise<IFriend[]>
-    areFriends(profileUUID: string): Promise<boolean>
-    getBlocks(): Promise<IBlockedPlayer[]>
-    isBlockedByPlayer(profileUUID: string): Promise<boolean>
-    getPunishments(): Promise<IPunishment[]>
-    getValidPunishments(): Promise<IPunishment[]>
-    isBanned(): Promise<boolean>
-}
+import { IPlayerProfile } from "../../domain/models/player_profile/PlayerProfile"
+import { IPunishment } from "../../domain/models/punishments/Punishment"
+import { IFriend } from "../../domain/models/friends/FriendsList"
+import { IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
 
 const PlayerProfileSchema = new Schema({
     // DATA

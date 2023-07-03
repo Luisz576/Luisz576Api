@@ -1,4 +1,5 @@
-import PlayerProfile, { IPlayerProfile, IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../models/player_profile/PlayerProfile"
+import { IPlayerProfile, IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../domain/models/player_profile/PlayerProfile"
+import PlayerProfile from "../../schemas/player_profile/PlayerProfile"
 import validator from "../../services/validator"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 import FriendsListRepository from "../friends/FriendsListRepository"

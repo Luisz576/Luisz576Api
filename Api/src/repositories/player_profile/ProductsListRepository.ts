@@ -1,13 +1,14 @@
-import ProductList, { IProductList, IProductListCreateProps, IProductListSearchProps } from "../../models/player_profile/ProductList"
+import { IProductsList, IProductsListCreateProps, IProductsListSearchProps } from "../../domain/models/player_profile/ProductsList"
+import ProductsList from "../../schemas/player_profile/ProductsList"
 import { ReturnOrErrorPromise, left, right } from "../../types/either"
 
-type IProductListOrError = ReturnOrErrorPromise<IProductList>
-type MaybeIProductListOrError = ReturnOrErrorPromise<IProductList | null>
+type IProductListOrError = ReturnOrErrorPromise<IProductsList>
+type MaybeIProductListOrError = ReturnOrErrorPromise<IProductsList | null>
 
 export default {
-    async store(data: IProductListCreateProps): IProductListOrError {
+    async store(data: IProductsListCreateProps): IProductListOrError {
         try{
-            const product_list = await ProductList.create(data)
+            const product_list = await ProductsList.create(data)
             if(product_list){
                 return right(product_list)
             }else{
@@ -17,16 +18,16 @@ export default {
             return left(err)
         }
     },
-    async search(filter: IProductListSearchProps): MaybeIProductListOrError{
+    async search(filter: IProductsListSearchProps): MaybeIProductListOrError{
         try{
-            return right(await ProductList.findOne(filter))
+            return right(await ProductsList.findOne(filter))
         }catch(err){
             return left(err)
         }
     },
     async searchById(id: string): MaybeIProductListOrError{
         try{
-            return right(await ProductList.findById(id))
+            return right(await ProductsList.findById(id))
         }catch(err){
             return left(err)
         }

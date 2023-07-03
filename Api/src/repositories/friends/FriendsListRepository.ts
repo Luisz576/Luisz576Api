@@ -1,6 +1,7 @@
 import { Schema } from "mongoose"
-import FriendsList, { IFriendList, IFriendListCreateProps, IFriendListSearchProps } from "../../models/friends/FriendsList"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
+import { IFriendList, IFriendListCreateProps, IFriendListSearchProps } from "../../domain/models/friends/FriendsList"
+import FriendsList from "../../schemas/friends/FriendsList"
 
 type IFriendListOrError = ReturnOrErrorPromise<IFriendList>
 type MaybeIFriendListOrError = ReturnOrErrorPromise<IFriendList | null>

@@ -1,7 +1,7 @@
-import validator from "../../services/validator"
-import Punishment, { IPunishment, IPunishmentCreateProps, IPunishmentSearchProps } from "../../models/punishments/Punishment"
+import { IPlayerProfile } from "../../domain/models/player_profile/PlayerProfile"
+import { IPunishment, IPunishmentCreateProps, IPunishmentSearchProps } from "../../domain/models/punishments/Punishment"
+import Punishment from "../../schemas/punishment/Punishment"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
-import { IPlayerProfile } from "../../models/player_profile/PlayerProfile"
 
 type CustomIPunishmentCreateProps = Omit<IPunishmentCreateProps, 'player_uuid'> & {
     player_profile: IPlayerProfile

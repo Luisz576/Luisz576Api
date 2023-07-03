@@ -1,4 +1,5 @@
-import Product, { IProduct, IProductCreateProps, IProductSearchProps } from "../../models/product/Product"
+import { IProduct, IProductCreateProps, IProductSearchProps } from "../../domain/models/product/Product"
+import Product from "../../schemas/product/Product"
 import { ReturnOrErrorPromise, left, right } from "../../types/either"
 
 type IProductOrError = ReturnOrErrorPromise<IProduct>

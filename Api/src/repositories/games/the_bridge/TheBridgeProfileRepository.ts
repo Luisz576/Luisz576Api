@@ -1,5 +1,5 @@
-import { ITheBridgeGame } from "../../../models/games/the_bridge/TheBridgeGame";
-import { ITheBridgeProfile } from "../../../models/games/the_bridge/TheBridgeProfile.ts";
+import { ITheBridgeGame } from "../../../domain/models/games/the_bridge/TheBridgeGame";
+import { ITheBridgeProfile } from "../../../domain/models/games/the_bridge/TheBridgeProfile";
 
 export default {
     async store(){

@@ -1,28 +1,6 @@
+import { IFriendInvite, IInviteFriendValidate } from "../../domain/models/friends/FriendInvite"
 import { FriendsDb } from "../../services/database"
-import { Schema, Document } from "mongoose"
-
-export interface IFriendInviteCreateProps{
-    sender: string
-    receiver: string
-}
-
-export interface IFriendInviteSearchProps extends Partial<IFriendInviteCreateProps>{
-    valid_invite?: boolean
-    accepted?: boolean
-}
-
-export interface IInviteFriendValidate{
-    isValid: boolean
-    remainingTimeInSeconds: number
-}
-
-export interface IFriendInvite extends Required<IFriendInviteSearchProps>, Document{
-    created_at: Date
-    accept(): void
-    expires(): void
-    stillValid(): IInviteFriendValidate
-    getRemainingTimeInSeconds(): number
-}
+import { Schema } from "mongoose"
 
 const FriendInviteSchema = new Schema({
     sender: {

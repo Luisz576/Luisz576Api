@@ -1,4 +1,5 @@
-import FriendInvite, { IFriendInvite, IFriendInviteCreateProps, IFriendInviteSearchProps } from "../../models/friends/FriendInvite"
+import { IFriendInvite, IFriendInviteCreateProps, IFriendInviteSearchProps } from "../../domain/models/friends/FriendInvite"
+import FriendInvite from "../../schemas/friends/FriendInvite"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 
 type IFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite>

@@ -1,8 +1,8 @@
-import { getJsonError, logError } from '../errors/errors'
+import { getJsonError, logError } from '../../errors/errors'
 import { Request, Response } from 'express'
-import validator from '../services/validator'
-import PlayerProfileRepository from '../repositories/player_profile/PlayerProfileRepository'
-import BlockListRepository from '../repositories/player_profile/BlockListRepository'
+import validator from '../../services/validator'
+import PlayerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
+import BlockListRepository from '../../repositories/player_profile/BlockListRepository'
 
 export default {
     async search(req: Request, res: Response){
@@ -11,6 +11,8 @@ export default {
             const profile_response = await PlayerProfileRepository.search({uuid})
             if(profile_response.isRight()){
                 if(profile_response.value){
+                    // TODO trocar por PlayerProfileRepository.getBlocks(player_profile)
+                    //      ou criar um usecase?
                     const blocked_players_response = await profile_response.value.getBlocks()
                     if(blocked_players_response.isRight()){
                         return res.json({

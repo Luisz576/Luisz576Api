@@ -1,19 +1,6 @@
+import { IProductsList } from "../../domain/models/player_profile/ProductsList"
 import { Luisz576Db } from "../../services/database"
-import { Schema, Document } from "mongoose"
-
-export interface IProductListCreateProps{
-    player_profile: Schema.Types.ObjectId
-}
-
-export type IProductListSearchProps = IProductListCreateProps
-
-export interface IProduct{
-    product: Schema.Types.ObjectId
-    timestamp?: Date
-}
-export interface IProductList extends IProductListCreateProps, Document{
-    products: IProduct[]
-}
+import { Schema } from "mongoose"
 
 const ProductsListSchema = new Schema({
     player_profile: {
@@ -37,4 +24,4 @@ const ProductsListSchema = new Schema({
     }
 })
 
-export default Luisz576Db.model<IProductList>('ProductsList', ProductsListSchema)
+export default Luisz576Db.model<IProductsList>('ProductsList', ProductsListSchema)

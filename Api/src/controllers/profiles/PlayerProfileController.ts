@@ -1,7 +1,7 @@
-import validator from '../services/validator'
 import { Request, Response } from 'express'
-import { getJsonError, logError } from '../errors/errors'
-import PlayerProfileRepository from '../repositories/player_profile/PlayerProfileRepository'
+import validator from '../../services/validator'
+import PlayerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
+import { getJsonError, logError } from '../../errors/errors'
 
 export default {
     async store(req: Request, res: Response){

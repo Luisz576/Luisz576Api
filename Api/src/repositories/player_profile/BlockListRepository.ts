@@ -1,6 +1,7 @@
 import { Schema } from "mongoose"
-import BlockList, { IBlockList, IBlockListCreateProps, IBlockListSearchProps, IBlockedPlayer } from "../../models/player_profile/BlockList"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
+import { IBlockList, IBlockListCreateProps, IBlockListSearchProps, IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
+import BlockList from "../../schemas/player_profile/BlockList"
 
 type IBlockListOrError = ReturnOrErrorPromise<IBlockList>
 type MaybeIBlockListOrError = ReturnOrErrorPromise<IBlockList | null>

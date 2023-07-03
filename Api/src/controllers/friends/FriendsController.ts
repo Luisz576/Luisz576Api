@@ -1,8 +1,8 @@
-import { getJsonError, logError } from '../errors/errors'
 import { Request, Response } from 'express'
-import validator from '../services/validator'
-import PlayerProfileRepository from '../repositories/player_profile/PlayerProfileRepository'
-import FriendsListRepository from '../repositories/friends/FriendsListRepository'
+import validator from '../../services/validator'
+import PlayerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
+import FriendsListRepository from '../../repositories/friends/FriendsListRepository'
+import { getJsonError, logError } from '../../errors/errors'
 
 export default {
     async search(req: Request, res: Response){

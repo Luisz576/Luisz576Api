@@ -1,15 +1,16 @@
-import roles from '../domain/roles'
-import { validateLanguage } from '../domain/languages'
+import roles from '../../domain/roles'
+import { validateLanguage } from '../../domain/languages'
 import { Request, Response } from 'express'
-import { getJsonError, logError } from '../errors/errors'
-import validator from '../services/validator'
-import PlayerProfileRepository from '../repositories/player_profile/PlayerProfileRepository'
+import { getJsonError, logError } from '../../errors/errors'
+import validator from '../../services/validator'
+import PlayerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
 
 export default {
     async updateSkin(req: Request, res: Response){
         const { uuid } = req.params
         const { skin } = req.body
         if(validator.validateUUID(uuid)){
+            // TODO criar usecases com a implementação?
             const update_response = await PlayerProfileRepository.updateConfigsAndSocial({
                 uuid,
                 skin
