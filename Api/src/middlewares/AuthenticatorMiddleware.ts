@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import authenticator from '../services/authenticator'
 import { logError } from "../errors/errors"
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
     const { auth_token } = req.headers
 
     if(typeof(auth_token) != 'string'){
@@ -17,11 +17,18 @@ export default (req: Request, res: Response, next: NextFunction) => {
             return res.sendStatus(401)
         }
 
-        // TODO: deixar salvo o token no redis? e ai quando gerar um novo token so set nele?
         const [ requester, token ] = tokenParts
         const clientData = authenticator.getClientById(requester)
 
         if(!clientData){
+            return res.sendStatus(401)
+        }
+
+        const getCacheToken = await authenticator.loadClientTokenFromCache(requester)
+        if(getCacheToken){
+            if(auth_token == getCacheToken){
+                return next()
+            }
             return res.sendStatus(401)
         }
 
@@ -32,7 +39,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
             if(decoded.secret){
                 if(decoded.secret == clientData.secret){
-                    return next();
+                    return next()
                 }
             }
             return res.sendStatus(401)
