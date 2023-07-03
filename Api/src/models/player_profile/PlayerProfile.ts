@@ -189,7 +189,9 @@ PlayerProfileSchema.methods.isBlockedByPlayer = async function(profileUUID: stri
     }
     for(let i in blocked_players_response.value){
         if(blocked_players_response.value[i].player_profile == profileUUID){
-            return right(true)
+            if(blocked_players_response.value[i].is_blocked){
+                return right(true)
+            }
         }
     }
     return right(false)

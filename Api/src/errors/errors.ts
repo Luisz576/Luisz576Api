@@ -53,11 +53,19 @@ const errors = [
     }),
     new LogError({
         id: 210,
-        error_name: "Applicator isn't a ADM",
+        error_name: "Applicator isn't an ADM",
     }),
     new LogError({
         id: 220,
         error_name: "Player banned",
+    }),
+    new LogError({
+        id: 260,
+        error_name: "Player is already blocked"
+    }),
+    new LogError({
+        id: 270,
+        error_name: "Player isn't blocked"
     }),
 ]
 

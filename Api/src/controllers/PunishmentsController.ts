@@ -20,7 +20,6 @@ export default {
                         const applicator_profile = applicator_profile_response.value
                         if(applicator_profile){
                             if(roles.isAdmin(applicator_profile.role)){
-                                //TODO validar se ja nao tem essa punição
                                 const punishment_response = await PunishmentRepository.store({
                                     player_profile: profile_response.value,
                                     applicator_uuid: applicator_profile.uuid,
