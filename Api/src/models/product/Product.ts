@@ -1,5 +1,5 @@
 import { Luisz576Db } from "../../services/database"
-import mongoose from "mongoose"
+import { Schema, Document } from "mongoose"
 
 export interface IProductCreateProps{
     name: string
@@ -11,13 +11,13 @@ export interface IProductCreateProps{
     min_role?: number
 }
 
-export interface IProduct extends Required<IProductCreateProps>, mongoose.Document{
+export interface IProduct extends Required<IProductCreateProps>, Document{
     created_at: Date
 }
 
 export type IProductSearchProps = Partial<IProductCreateProps>
 
-const ProductSchema = new mongoose.Schema({
+const ProductSchema = new Schema({
     name: {
         type: String,
         unique: true,

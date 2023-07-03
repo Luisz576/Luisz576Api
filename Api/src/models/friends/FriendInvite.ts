@@ -1,5 +1,5 @@
 import { FriendsDb } from "../../services/database"
-import mongoose from "mongoose"
+import { Schema, Document } from "mongoose"
 
 export interface IFriendInviteCreateProps{
     sender: string
@@ -16,7 +16,7 @@ export interface IInviteFriendValidate{
     remainingTimeInSeconds: number
 }
 
-export interface IFriendInvite extends Required<IFriendInviteSearchProps>, mongoose.Document{
+export interface IFriendInvite extends Required<IFriendInviteSearchProps>, Document{
     created_at: Date
     accept(): void
     expires(): void
@@ -24,7 +24,7 @@ export interface IFriendInvite extends Required<IFriendInviteSearchProps>, mongo
     getRemainingTimeInSeconds(): number
 }
 
-const FriendInviteSchema = new mongoose.Schema({
+const FriendInviteSchema = new Schema({
     sender: {
         type: String,
         required: true,

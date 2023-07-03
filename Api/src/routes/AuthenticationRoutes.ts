@@ -1,8 +1,8 @@
-import express from 'express'
+import {Router} from 'express'
 
 import authentication_controller from '../controllers/auth/AuthenticationController'
 
-const routes = express.Router()
+const routes = Router()
 
 // <Authentication>
 routes.post('/token', authentication_controller.store)

@@ -1,23 +1,23 @@
 import { Luisz576Db } from "../../services/database"
-import mongoose from "mongoose"
+import { Schema, Document } from "mongoose"
 
 export interface IProductListCreateProps{
-    player_profile: mongoose.Schema.Types.ObjectId
+    player_profile: Schema.Types.ObjectId
 }
 
 export type IProductListSearchProps = IProductListCreateProps
 
 export interface IProduct{
-    product: mongoose.Schema.Types.ObjectId
+    product: Schema.Types.ObjectId
     timestamp?: Date
 }
-export interface IProductList extends IProductListCreateProps, mongoose.Document{
+export interface IProductList extends IProductListCreateProps, Document{
     products: IProduct[]
 }
 
-const ProductsListSchema = new mongoose.Schema({
+const ProductsListSchema = new Schema({
     player_profile: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'PlayerProfile',
         required: true,
         immutable: true
@@ -25,7 +25,7 @@ const ProductsListSchema = new mongoose.Schema({
     products: {
         type: [{
             product: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'Product'
             },
             timestamp: {

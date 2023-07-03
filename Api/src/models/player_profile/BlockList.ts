@@ -1,8 +1,8 @@
 import { Luisz576Db } from "../../services/database"
-import mongoose from "mongoose"
+import { Schema, Document } from "mongoose"
 
 export interface IBlockListCreateProps{
-    player_profile: mongoose.Schema.Types.ObjectId
+    player_profile: Schema.Types.ObjectId
 }
 
 export type IBlockListSearchProps = IBlockListCreateProps
@@ -12,15 +12,15 @@ export interface IBlockedPlayer{
     is_blocked?: boolean,
     timestamp?: Date
 }
-export interface IBlockList extends IBlockListCreateProps, mongoose.Document{
+export interface IBlockList extends IBlockListCreateProps, Document{
     blocked_players: IBlockedPlayer[]
     block(playerUUID: string): boolean
     unblock(playerUUID: string): boolean
 }
 
-const BlockListSchema = new mongoose.Schema({
+const BlockListSchema = new Schema({
     player_profile: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'PlayerProfile',
         required: true,
         immutable: true

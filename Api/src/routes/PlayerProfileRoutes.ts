@@ -1,4 +1,4 @@
-import express from 'express'
+import {Router} from 'express'
 
 import authenticator_middleware from '../middlewares/AuthenticatorMiddleware'
 
@@ -8,7 +8,7 @@ import friends_controller from '../controllers/FriendsController'
 import friend_invites_controller from '../controllers/FriendInvitesController'
 import blocks_controller from '../controllers/BlocksController'
 
-const routes = express.Router()
+const routes = Router()
 
 routes.use(authenticator_middleware)
 

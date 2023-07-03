@@ -1,6 +1,6 @@
 import { isPunishmentWithDuration, isValidPunishment } from '../../domain/punishmentType'
 import { Luisz576Db } from '../../services/database'
-import mongoose from 'mongoose'
+import { Schema, Document } from 'mongoose'
 
 export interface IPunishmentCreateProps{
     player_uuid: string,
@@ -16,13 +16,13 @@ export type IPunishmentSearchProps = Partial<IPunishmentCreateProps> & {
     deleted?: boolean
 }
 
-export interface IPunishment extends Required<IPunishmentSearchProps>, mongoose.Document{
+export interface IPunishment extends Required<IPunishmentSearchProps>, Document{
     created_at: Date
     getRemainingTimeInSeconds(): number
     stillValid(): boolean
 }
 
-const PunishmentSchema = new mongoose.Schema({
+const PunishmentSchema = new Schema({
     player_uuid: {
         type: String,
         required: true

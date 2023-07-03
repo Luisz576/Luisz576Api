@@ -89,6 +89,7 @@ export default {
                     //
                     const block_profile_response = await PlayerProfileRepository.search({uuid: unblock_player})
                     if(block_profile_response.isRight()){
+                        // unblock
                         const unblock_response = await BlockListRepository.unblock({
                             block_list_id: profile_response.value.block_list,
                             player_profile: unblock_player

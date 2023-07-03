@@ -1,5 +1,5 @@
 import { Luisz576Db } from "../../services/database"
-import mongoose from "mongoose"
+import { Schema, Document } from "mongoose"
 import { isBanPunishment } from "../../domain/punishmentType"
 import PunishmentRepository from "../../repositories/punishment/PunishmentRepository"
 import FriendsListRepository from "../../repositories/friends/FriendsListRepository"
@@ -33,12 +33,12 @@ export type IPlayerProfileSearchProps = Partial<IPlayerProfileCreateProps> & Par
     punishment?: boolean
 }
 
-export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>, mongoose.Document{
+export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>, Document{
     created_at: Date
     last_login: Date
-    products_list: mongoose.Schema.Types.ObjectId
-    block_list: mongoose.Schema.Types.ObjectId
-    friends_list: mongoose.Schema.Types.ObjectId
+    products_list: Schema.Types.ObjectId
+    block_list: Schema.Types.ObjectId
+    friends_list: Schema.Types.ObjectId
     getFriends(): ReturnOrErrorPromise<IFriend[]>
     areFriends(profileUUID: string): ReturnOrErrorPromise<boolean>
     getBlocks(): ReturnOrErrorPromise<IBlockedPlayer[]>
@@ -48,7 +48,7 @@ export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>, mon
     isBanned(): ReturnOrErrorPromise<boolean>
 }
 
-const PlayerProfileSchema = new mongoose.Schema({
+const PlayerProfileSchema = new Schema({
     // DATA
     uuid: {
         type: String,
@@ -95,7 +95,7 @@ const PlayerProfileSchema = new mongoose.Schema({
         min: 0
     },
     products_list: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'ProductsList'
     },
     // INFO
@@ -131,12 +131,12 @@ const PlayerProfileSchema = new mongoose.Schema({
     },
     // Blocks
     block_list: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'BlockList',
     },
     // Friends
     friends_list: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'FriendsList',
     },
     // Flags

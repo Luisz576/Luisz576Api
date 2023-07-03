@@ -1,8 +1,8 @@
 import { FriendsDb } from "../../services/database"
-import mongoose from "mongoose"
+import { Schema, Document } from "mongoose"
 
 export interface IFriendListCreateProps{
-    player_profile: mongoose.Schema.Types.ObjectId
+    player_profile: Schema.Types.ObjectId
 }
 
 export type IFriendListSearchProps = IFriendListCreateProps
@@ -11,13 +11,13 @@ export interface IFriend{
     player_profile: string
     timestamp?: Date
 }
-export interface IFriendList extends IFriendListCreateProps, mongoose.Document{
+export interface IFriendList extends IFriendListCreateProps, Document{
     friends: IFriend[]
 }
 
-const FriendsListSchema = new mongoose.Schema({
+const FriendsListSchema = new Schema({
     player_profile: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'PlayerProfile',
         required: true,
         immutable: true

@@ -1,10 +1,10 @@
-import express from 'express'
+import {Router} from 'express'
 
 import authenticator_middleware from '../middlewares/AuthenticatorMiddleware'
 
 import punishments_controller from '../controllers/PunishmentsController'
 
-const routes = express.Router()
+const routes = Router()
 
 routes.use(authenticator_middleware)
 
