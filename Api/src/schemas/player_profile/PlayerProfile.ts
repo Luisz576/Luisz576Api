@@ -1,5 +1,5 @@
 import { Luisz576Db } from "../../services/database"
-import { Schema } from "mongoose"
+import { Document, Schema } from "mongoose"
 import { isBanPunishment } from "../../domain/punishmentType"
 import PunishmentRepository from "../../repositories/punishment/PunishmentRepository"
 import FriendsListRepository from "../../repositories/friends/FriendsListRepository"
@@ -9,7 +9,7 @@ import { IPunishment } from "../../domain/models/punishments/Punishment"
 import { IFriend } from "../../domain/models/friends/FriendsList"
 import { IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
 
-const PlayerProfileSchema = new Schema({
+const PlayerProfileSchema = new Schema<IPlayerProfile<Schema.Types.ObjectId>>({
     // DATA
     uuid: {
         type: String,
@@ -191,4 +191,5 @@ PlayerProfileSchema.methods.isBanned = async function(): Promise<boolean>{
     return false
 }
 
-export default Luisz576Db.model<IPlayerProfile>('PlayerProfile', PlayerProfileSchema)
+export type IPlayerProfileModel = IPlayerProfile<Schema.Types.ObjectId> & Document
+export default Luisz576Db.model<IPlayerProfileModel>('PlayerProfile', PlayerProfileSchema)

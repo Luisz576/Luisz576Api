@@ -1,15 +1,13 @@
-import { Document, Schema } from "mongoose"
-
 export interface IProductsListCreateProps{
-    player_profile: Schema.Types.ObjectId
+    player_uuid: string
 }
 
 export type IProductsListSearchProps = IProductsListCreateProps
 
 export interface IProductItem{
-    product: Schema.Types.ObjectId
+    product: string
     timestamp?: Date
 }
-export interface IProductsList extends IProductsListCreateProps, Document{
+export interface IProductsList extends IProductsListCreateProps{
     products: IProductItem[]
 }

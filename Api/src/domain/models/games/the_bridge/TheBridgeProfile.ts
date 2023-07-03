@@ -1,13 +1,12 @@
-import { Document, Schema } from "mongoose"
 import { ITheBridgeGame } from "../../../models/games/the_bridge/TheBridgeGame"
 import TheBridgeMode from "../../../games/the_bridge/TheBridgeMode"
 
 export interface ITheBridgeProfileCreateProps{
-    player_profile: Schema.Types.ObjectId
+    player_uuid: string
     uuid: string
 }
 
-export type ITheBridgeProfileSearchProps = Partial<ITheBridgeProfileCreateProps> & {
+export type ITheBridgeProfileSearchProps= Partial<ITheBridgeProfileCreateProps> & {
     total_placed_blocks?: number
     total_eaten_golden_apples?: number
     total_score?: number
@@ -40,7 +39,8 @@ export type ITheBridgeProfileSearchProps = Partial<ITheBridgeProfileCreateProps>
     normal_mode_2v2v2v2_kills?: number
 }
 
-export interface ITheBridgeProfile extends Required<ITheBridgeProfileSearchProps>, Document{
+// TODO desacoplar
+export interface ITheBridgeProfile<ID> extends Required<ITheBridgeProfileSearchProps>{
     created_at: Date
-    getMatches(mode?: TheBridgeMode): Promise<ITheBridgeGame[]>
+    getMatches(mode?: TheBridgeMode): Promise<ITheBridgeGame<ID>[]>
 }

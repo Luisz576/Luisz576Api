@@ -1,15 +1,15 @@
-import { Schema } from "mongoose"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
-import { IBlockList, IBlockListCreateProps, IBlockListSearchProps, IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
-import BlockList from "../../schemas/player_profile/BlockList"
+import { IBlockListCreateProps, IBlockListSearchProps, IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
+import BlockList, { IBlockListModel } from "../../schemas/player_profile/BlockList"
+import { IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository"
 
-type IBlockListOrError = ReturnOrErrorPromise<IBlockList>
-type MaybeIBlockListOrError = ReturnOrErrorPromise<IBlockList | null>
+type IBlockListOrError = ReturnOrErrorPromise<IBlockListModel>
+type MaybeIBlockListOrError = ReturnOrErrorPromise<IBlockListModel | null>
 type BlockDTO = Omit<IBlockedPlayer, 'timestamp'> & {
-    block_list_id: Schema.Types.ObjectId
+    block_list: IBlockListModel
 }
 
-export default {
+class BlockListRepository implements IBlockListRepository {
     async store(data: IBlockListCreateProps): IBlockListOrError{
         try{
             const block_list = await BlockList.create(data)
@@ -20,51 +20,34 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
-    async getById(block_list_id: Schema.Types.ObjectId): MaybeIBlockListOrError{
-        try{
-            return right(await BlockList.findById(block_list_id))
-        }catch(err){
-            return left(err)
-        }
-    },
+    }
     async search(filter: IBlockListSearchProps): MaybeIBlockListOrError{
         try{
             return right(await BlockList.findOne(filter))
         }catch(err){
             return left(err)
         }
-    },
+    }
     async block(data: BlockDTO): OnlyExecutePromise{
         try{
-            const block_list_response = await this.getById(data.block_list_id)
-            if(block_list_response.isRight()){
-                if(block_list_response.value){
-                    block_list_response.value.block(data.player_profile)
-                    block_list_response.value.save()
-                    return right(null)
-                }
-                return left(`Can't get BlockList '${data.block_list_id}'`)
-            }
-            return left(block_list_response.value)
+            data.block_list.block(data.player_uuid)
+            data.block_list.save()
+            return right(null)
         }catch(err){
             return left(err)
         }
-    },
+    }
     async unblock(data: BlockDTO): OnlyExecutePromise{
         try{
-            const block_list_response = await this.getById(data.block_list_id)
-            if(block_list_response.isRight()){
-                if(block_list_response.value){
-                    block_list_response.value.unblock(data.player_profile)
-                    block_list_response.value.save()
-                    return right(null)
-                }
-                return left(`Can't get BlockList '${data.block_list_id}'`)
-            }
-            return left(block_list_response.value)
+            data.block_list.unblock(data.player_uuid)
+            data.block_list.save()
+            return right(null)
         }catch(err){
             return left(err)
         }
     }
 }
+
+const blockListRepository = new BlockListRepository()
+
+export default blockListRepository

@@ -1,11 +1,10 @@
 import { IBlockList } from "../../domain/models/player_profile/BlocksList"
 import { Luisz576Db } from "../../services/database"
-import { Schema } from "mongoose"
+import { Document, Schema } from "mongoose"
 
-const BlockListSchema = new Schema({
-    player_profile: {
-        type: Schema.Types.ObjectId,
-        ref: 'PlayerProfile',
+const BlockListSchema = new Schema<IBlockList>({
+    player_uuid: {
+        type: String,
         required: true,
         immutable: true
     },
@@ -51,4 +50,5 @@ BlockListSchema.methods.unblock = function(playerUUID: string): boolean {
     return false
 }
 
+export type IBlockListModel = IBlockList & Document
 export default Luisz576Db.model<IBlockList>('BlockList', BlockListSchema)

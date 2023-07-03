@@ -1,9 +1,9 @@
 import { IPunishment } from '../../domain/models/punishments/Punishment'
 import { isPunishmentWithDuration, isValidPunishment } from '../../domain/punishmentType'
 import { Luisz576Db } from '../../services/database'
-import { Schema } from 'mongoose'
+import { Document, Schema } from 'mongoose'
 
-const PunishmentSchema = new Schema({
+const PunishmentSchema = new Schema<IPunishment>({
     player_uuid: {
         type: String,
         required: true
@@ -65,4 +65,5 @@ PunishmentSchema.methods.stillValid = function(): boolean{
     return isValidPunishment(this.punishment_type, this.getRemainingTimeInSeconds())
 }
 
-export default Luisz576Db.model<IPunishment>('Punishment', PunishmentSchema)
+export type IPunishmentModel = IPunishment & Document
+export default Luisz576Db.model<IPunishmentModel>('Punishment', PunishmentSchema)

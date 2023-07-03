@@ -1,4 +1,3 @@
-import { Document } from "mongoose"
 import { IPlayerProfile } from "../../../models/player_profile/PlayerProfile"
 
 export interface ITheBridgePlayer {
@@ -21,7 +20,8 @@ export interface ITheBridgeGameSearchProps{
     map_name?: string
 }
 
-export interface ITheBridgeGame extends ITheBridgeGameCreateProps, Document{
+// TODO desacoplar
+export interface ITheBridgeGame<ID> extends ITheBridgeGameCreateProps{
     timestamp: Date
-    getPlayers(): Promise<IPlayerProfile[]>
+    getPlayers(): Promise<IPlayerProfile<ID>[]>
 }

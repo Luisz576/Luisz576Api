@@ -1,9 +1,9 @@
+import { ITheBridgeGame, ITheBridgePlayer } from "../../../domain/models/games/the_bridge/TheBridgeGame"
+import { IPlayerProfile } from "../../../domain/models/player_profile/PlayerProfile"
 import { TheBridgeDb } from "../../../services/database"
-import { Schema } from "mongoose"
-import { IPlayerProfile } from "../../player_profile/PlayerProfile"
-import { ITheBridgeGame, ITheBridgePlayer } from "../../../schemas/games/the_bridge/TheBridgeGame"
+import { Document, Schema } from "mongoose"
 
-const TheBridgeGame = new Schema({
+const TheBridgeGame = new Schema<ITheBridgeGame<Schema.Types.ObjectId>>({
     timestamp: {
         type: Date,
         default: Date.now,
@@ -57,7 +57,7 @@ const TheBridgeGame = new Schema({
     },
 })
 
-TheBridgeGame.methods.getPlayers = async function(): Promise<IPlayerProfile[]>{
+TheBridgeGame.methods.getPlayers = async function(): Promise<IPlayerProfile<Schema.Types.ObjectId>[]>{
     throw new Error('Not implemented')
 }
 
@@ -66,4 +66,5 @@ export function calculateProfileNetworkXP(player: ITheBridgePlayer, winner: bool
     return 0
 }
 
-export default TheBridgeDb.model<ITheBridgeGame>('TheBridgeGame', TheBridgeGame)
+export type ITheBridgeGameModel = ITheBridgeGame<Schema.Types.ObjectId> & Document
+export default TheBridgeDb.model<ITheBridgeGameModel>('TheBridgeGame', TheBridgeGame)

@@ -1,19 +1,18 @@
 import { IProductsList } from "../../domain/models/player_profile/ProductsList"
 import { Luisz576Db } from "../../services/database"
-import { Schema } from "mongoose"
+import { Document, Schema } from "mongoose"
 
-const ProductsListSchema = new Schema({
-    player_profile: {
-        type: Schema.Types.ObjectId,
-        ref: 'PlayerProfile',
+const ProductsListSchema = new Schema<IProductsList>({
+    player_uuid: {
+        type: String,
         required: true,
         immutable: true
     },
     products: {
         type: [{
-            product: {
-                type: Schema.Types.ObjectId,
-                ref: 'Product'
+            product_name: {
+                type: String,
+                required: true
             },
             timestamp: {
                 type: Date,
@@ -24,4 +23,5 @@ const ProductsListSchema = new Schema({
     }
 })
 
-export default Luisz576Db.model<IProductsList>('ProductsList', ProductsListSchema)
+export type IProductsListModel = IProductsList & Document
+export default Luisz576Db.model<IProductsListModel>('ProductsList', ProductsListSchema)

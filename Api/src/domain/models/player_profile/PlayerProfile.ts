@@ -1,7 +1,6 @@
-import { Document, Schema } from "mongoose"
 import { IFriend } from "../friends/FriendsList"
-import { IBlockedPlayer } from "../../../schemas/player_profile/BlockList"
 import { IPunishment } from "../punishments/Punishment"
+import { IBlockedPlayer } from "./BlocksList"
 
 export interface IPlayerProfileCreateProps{
     uuid: string,
@@ -27,12 +26,13 @@ export type IPlayerProfileSearchProps = Partial<IPlayerProfileCreateProps> & Par
     punishment?: boolean
 }
 
-export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>, Document{
+// TODO desacoplar ID?
+export interface IPlayerProfile<ID> extends Required<IPlayerProfileSearchProps>{
     created_at: Date
     last_login: Date
-    products_list: Schema.Types.ObjectId
-    block_list: Schema.Types.ObjectId
-    friends_list: Schema.Types.ObjectId
+    products_list: ID
+    block_list: ID
+    friends_list: ID
     getFriends(): Promise<IFriend[]>
     areFriends(profileUUID: string): Promise<boolean>
     getBlocks(): Promise<IBlockedPlayer[]>

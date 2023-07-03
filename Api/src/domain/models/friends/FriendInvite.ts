@@ -1,5 +1,3 @@
-import { Document } from "mongoose"
-
 export interface IFriendInviteCreateProps{
     sender: string
     receiver: string
@@ -15,7 +13,7 @@ export interface IInviteFriendValidate{
     remainingTimeInSeconds: number
 }
 
-export interface IFriendInvite extends Required<IFriendInviteSearchProps>, Document{
+export interface IFriendInvite extends Required<IFriendInviteSearchProps>{
     created_at: Date
     accept(): void
     expires(): void

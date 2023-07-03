@@ -1,8 +1,8 @@
 import { IProduct } from "../../domain/models/product/Product"
 import { Luisz576Db } from "../../services/database"
-import { Schema } from "mongoose"
+import { Document, Schema } from "mongoose"
 
-const ProductSchema = new Schema({
+const ProductSchema = new Schema<IProduct>({
     name: {
         type: String,
         unique: true,
@@ -41,4 +41,5 @@ const ProductSchema = new Schema({
     },
 })
 
-export default Luisz576Db.model<IProduct>('Product', ProductSchema)
+export type IProductModel = IProduct & Document
+export default Luisz576Db.model<IProductModel>('Product', ProductSchema)

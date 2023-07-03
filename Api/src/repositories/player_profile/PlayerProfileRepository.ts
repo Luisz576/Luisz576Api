@@ -1,22 +1,21 @@
-import { IPlayerProfile, IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../domain/models/player_profile/PlayerProfile"
-import PlayerProfile from "../../schemas/player_profile/PlayerProfile"
+import { Schema } from "mongoose"
+import { IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../domain/models/player_profile/PlayerProfile"
+import { IPlayerProfileConfigData, IPlayerProfileRepository, SessionProps } from "../../domain/repositories/player_profile/PlayerProfileRepository"
+import PlayerProfile, { IPlayerProfileModel } from "../../schemas/player_profile/PlayerProfile"
 import validator from "../../services/validator"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 import FriendsListRepository from "../friends/FriendsListRepository"
 import BlockListRepository from "./BlockListRepository"
 import ProductsListRepository from "./ProductsListRepository"
 
-type IPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfile>
-type MaybeIPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfile | null>
-interface SessionProps{
-    player_profile?: IPlayerProfile
-    uuid?: string
-}
-type IPlayerProfileConfigData = Partial<IPlayerProfileConfigs> & {
-    uuid: string
+type IPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfileModel>
+type MaybeIPlayerProfileOrErrorReturn = ReturnOrErrorPromise<IPlayerProfileModel | null>
+interface UpdateRoleProps{
+    player_profile: IPlayerProfileModel,
+    role: number
 }
 
-export default {
+class PlayerProfileRepository implements IPlayerProfileRepository<Schema.Types.ObjectId>{
     async store(data: IPlayerProfileCreateProps): IPlayerProfileOrErrorReturn{
         try{
             const profile = await PlayerProfile.create({
@@ -25,9 +24,9 @@ export default {
             })
             if(profile){
                 // talvez jogar pro default dos campos no PlayerProfileScheme?
-                const friends_list_response = await FriendsListRepository.store({ player_profile: profile._id })
-                const block_list_response = await BlockListRepository.store({ player_profile: profile._id })
-                const products_list_response = await ProductsListRepository.store({ player_profile: profile._id })
+                const friends_list_response = await FriendsListRepository.store({ player_uuid: profile.uuid  })
+                const block_list_response = await BlockListRepository.store({ player_uuid: profile.uuid })
+                const products_list_response = await ProductsListRepository.store({ player_uuid: profile.uuid })
                 if(friends_list_response.isRight() && block_list_response.isRight() && products_list_response.isRight()){
                     profile.friends_list = friends_list_response.value._id
                     profile.block_list = block_list_response.value._id
@@ -41,50 +40,40 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
+    }
     async getById(player_profile_id: string): MaybeIPlayerProfileOrErrorReturn{
         try{
             return right(await PlayerProfile.findById(player_profile_id))
         }catch(err){
             return left(err)
         }
-    },
+    }
     async search(filter: IPlayerProfileSearchProps): MaybeIPlayerProfileOrErrorReturn{
         try{
             return right(await PlayerProfile.findOne(filter))
         }catch(err){
             return left(err)
         }
-    },
+    }
     async session(session: SessionProps): OnlyExecutePromise{
         try{
-            let profile: IPlayerProfile | null
-            if(session.player_profile){
-                profile = session.player_profile
-            }else{
-                if(session.uuid){
-                    const search_response = await this.search({
-                        uuid: session.uuid
-                    })
-                    if(search_response.isRight()){
-                        profile = search_response.value 
-                    }else{
-                        return left(search_response.value)
-                    }
-                }else{
-                    return left("No parameter was passed")
+            const search_response = await this.search({
+                uuid: session.uuid
+            })
+            if(search_response.isRight()){
+                if(search_response.value){
+                    const profile = search_response.value
+                    profile.last_login = new Date(Date.now())
+                    await profile.save()
+                    return right(null)
                 }
+                return left("PlayerProfile not founded")
             }
-            if(profile){
-                profile.last_login = new Date(Date.now())
-                await profile.save()
-                return right(null)
-            }
-            return left("PlayerProfile not founded")
+            return left(search_response.value)
         }catch(err){
             return left(err)
         }
-    },
+    }
     async updateConfigsAndSocial(data: IPlayerProfileConfigData): ReturnOrErrorPromise<boolean>{
         try{
             // filter
@@ -114,8 +103,8 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
-    async updateRole(data: {player_profile: IPlayerProfile, role: number}): OnlyExecutePromise{
+    }
+    async updateRole(data: UpdateRoleProps): OnlyExecutePromise{
         try{
             data.player_profile.role = data.role
             await data.player_profile.save()
@@ -125,3 +114,7 @@ export default {
         }
     }
 }
+
+const playerProfileRepository = new PlayerProfileRepository()
+
+export default playerProfileRepository

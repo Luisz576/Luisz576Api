@@ -1,8 +1,8 @@
 import { IFriendInvite, IInviteFriendValidate } from "../../domain/models/friends/FriendInvite"
 import { FriendsDb } from "../../services/database"
-import { Schema } from "mongoose"
+import { Document, Schema } from "mongoose"
 
-const FriendInviteSchema = new Schema({
+const FriendInviteSchema = new Schema<IFriendInvite>({
     sender: {
         type: String,
         required: true,
@@ -60,4 +60,5 @@ FriendInviteSchema.methods.expires = function(){
     this.valid_invite = false
 }
 
-export default FriendsDb.model<IFriendInvite>('FriendInvite', FriendInviteSchema)
+export type IFriendInviteModel = IFriendInvite & Document
+export default FriendsDb.model<IFriendInviteModel>('FriendInvite', FriendInviteSchema)

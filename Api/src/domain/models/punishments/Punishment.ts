@@ -1,5 +1,3 @@
-import { Document } from 'mongoose'
-
 export interface IPunishmentCreateProps{
     player_uuid: string,
     applicator_uuid: string
@@ -14,7 +12,7 @@ export type IPunishmentSearchProps = Partial<IPunishmentCreateProps> & {
     deleted?: boolean
 }
 
-export interface IPunishment extends Required<IPunishmentSearchProps>, Document{
+export interface IPunishment extends Required<IPunishmentSearchProps>{
     created_at: Date
     expires(): void
     getRemainingTimeInSeconds(): number

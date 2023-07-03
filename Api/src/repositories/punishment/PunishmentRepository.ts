@@ -1,19 +1,21 @@
-import { IPlayerProfile } from "../../domain/models/player_profile/PlayerProfile"
 import { IPunishment, IPunishmentCreateProps, IPunishmentSearchProps } from "../../domain/models/punishments/Punishment"
-import Punishment from "../../schemas/punishment/Punishment"
+import { IPunishmentRepository } from "../../domain/repositories/punishment/PunishmentRepository"
+import { IPlayerProfileModel } from "../../schemas/player_profile/PlayerProfile"
+import Punishment, { IPunishmentModel } from "../../schemas/punishment/Punishment"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 
-type CustomIPunishmentCreateProps = Omit<IPunishmentCreateProps, 'player_uuid'> & {
-    player_profile: IPlayerProfile
+type CustomIPunishmentCreateProps = IPunishmentCreateProps & {
+    player_profile: IPlayerProfileModel
 }
-type IPunishmentOrError = ReturnOrErrorPromise<IPunishment>
-type MaybeIPunishmentsOrError = ReturnOrErrorPromise<IPunishment[]>
+type IPunishmentOrError = ReturnOrErrorPromise<IPunishmentModel>
+type MaybeIPunishmentOrError = ReturnOrErrorPromise<IPunishmentModel | null>
+type IPunishmentsOrError = ReturnOrErrorPromise<IPunishmentModel[]>
 
-export default {
+class PunishmentRepository implements IPunishmentRepository{
     async store(data: CustomIPunishmentCreateProps): IPunishmentOrError{
         try{
             const punishment = await Punishment.create({
-                player_uuid: data.player_profile.uuid,
+                player_uuid: data.player_uuid,
                 applicator_uuid: data.applicator_uuid,
                 punishment_type: data.punishment_type,
                 reason: data.reason,
@@ -29,11 +31,15 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
-    async getById(punishment_id: string){
-        return await Punishment.findById(punishment_id)
-    },
-    async search(filter: IPunishmentSearchProps): MaybeIPunishmentsOrError{
+    }
+    async getById(punishment_id: string): MaybeIPunishmentOrError{
+        try{
+            return right(await Punishment.findById(punishment_id))
+        }catch(err){
+            return left(err)
+        }
+    }
+    async search(filter: IPunishmentSearchProps): IPunishmentsOrError{
         try{
             // const filter = {
             //     player_profile: player_profile_uuid
@@ -47,7 +53,7 @@ export default {
             // if(validator.validateBoolean(is_valid)){
             //     filter.is_valid = is_valid
             // }
-            const punishments: IPunishment[] = []
+            const punishments: IPunishmentModel[] = []
             const punishmentsFinded = await Punishment.find(filter)
             for(let p of punishmentsFinded){
                 if(p.stillValid()){
@@ -66,8 +72,8 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
-    async pardon(data: {punishment?: IPunishment, punishment_id?: string}): OnlyExecutePromise{
+    }
+    async pardon(data: {punishment?: IPunishmentModel, punishment_id?: string}): OnlyExecutePromise{
         try{
             // punishment
             if(data.punishment){
@@ -86,7 +92,7 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
+    }
     async pardonAllOfPlayer(player_uuid: string): OnlyExecutePromise{
         try{
             const punishments_response = await this.search({
@@ -109,3 +115,7 @@ export default {
         }
     }
 }
+
+const punishmentRepository = new PunishmentRepository()
+
+export default punishmentRepository

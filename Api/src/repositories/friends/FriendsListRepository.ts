@@ -1,18 +1,17 @@
-import { Schema } from "mongoose"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
-import { IFriendList, IFriendListCreateProps, IFriendListSearchProps } from "../../domain/models/friends/FriendsList"
-import FriendsList from "../../schemas/friends/FriendsList"
+import { IFriendListCreateProps, IFriendListSearchProps } from "../../domain/models/friends/FriendsList"
+import FriendsList, { IFriendListModel } from "../../schemas/friends/FriendsList"
+import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository"
 
-type IFriendListOrError = ReturnOrErrorPromise<IFriendList>
-type MaybeIFriendListOrError = ReturnOrErrorPromise<IFriendList | null>
+type IFriendListOrError = ReturnOrErrorPromise<IFriendListModel>
+type MaybeIFriendListOrError = ReturnOrErrorPromise<IFriendListModel | null>
 
-type FriendDTO = {
-    friends_list?: IFriendList,
-    friends_list_id?: Schema.Types.ObjectId,
+type FriendListDTO = {
+    friends_list: IFriendListModel,
     player_profile_uuid: string
 }
 
-export default {
+class FriendsListRepository implements IFriendsListRepository{
     async store(data: IFriendListCreateProps): IFriendListOrError{
         try{
             const friend_list = await FriendsList.create(data)
@@ -23,85 +22,47 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
-    async getById(friends_list_id: Schema.Types.ObjectId): MaybeIFriendListOrError{
-        try{
-            return right(await FriendsList.findById(friends_list_id))
-        }catch(err){
-            return left(err)
-        }
-    },
+    }
     async search(filter: IFriendListSearchProps): MaybeIFriendListOrError{
         try{
             return right(await FriendsList.findOne(filter))
         }catch(err){
             return left(err)
         }
-    },
-    async insertFriend(data: FriendDTO): OnlyExecutePromise{
+    }
+    async insertFriend(data: FriendListDTO): OnlyExecutePromise{
         try{
-            if(data.friends_list){
-                data.friends_list.friends.push({
-                    player_profile: data.player_profile_uuid,
-                })
-                await data.friends_list.save()
-                return right(null)
-            }
-            if(!data.friends_list_id){
-                return left("Some parameter wasn't passed (insertFriend)")
-            }
-            const friends_list_response = await this.getById(data.friends_list_id)
-            if(friends_list_response.isRight()){
-                if(friends_list_response.value){
-                    friends_list_response.value.friends.push({
-                        player_profile: data.player_profile_uuid,
-                    })
-                    await friends_list_response.value.save()
-                    return right(null)
-                }
-                return left("FriendList not founded (insertFriend)")
-            }
-            return left(friends_list_response.value)
+            data.friends_list.friends.push({
+                player_profile: data.player_profile_uuid,
+            })
+            await data.friends_list.save()
+            return right(null)
         }catch(err){
             return left(err)
         }
-    },
-    async removeFriend(data: FriendDTO): OnlyExecutePromise{
+    }
+    async removeFriend(data: FriendListDTO): OnlyExecutePromise{
         try{
-            let friendsList: IFriendList | undefined
-            if(data.friends_list){
-                friendsList = data.friends_list
-            }else if(data.friends_list_id){
-                const friends_list_response = await this.getById(data.friends_list_id)
-                if(friends_list_response.isRight()){
-                    if(friends_list_response.value){
-                        friendsList = friends_list_response.value
-                    }else{
-                        return left("Can't find FriendList (removeFriend)")
-                    }
+            let targetIndex: number = -1
+            const friends = data.friends_list.friends
+            for(let i = 0; i < friends.length; i++){
+                if(friends[i].player_profile == data.player_profile_uuid){
+                    targetIndex = i
+                    break
                 }
-            }else{
-                return left("No parameter was passed (removeFriend)")
             }
-            if(friendsList){
-                let targetIndex: number = -1
-                const friends = friendsList.friends
-                for(let i = 0; i < friends.length; i++){
-                    if(friends[i].player_profile == data.player_profile_uuid){
-                        targetIndex = i
-                        break
-                    }
-                }
-                if(targetIndex == -1){
-                    return left("Players aren't friends (removeFriend)")
-                }
-                friends.splice(targetIndex, 1)
-                await friendsList.save()
-                return right(null)
+            if(targetIndex == -1){
+                return left("Players aren't friends (removeFriend)")
             }
-            return left("FriendList not founded (removeFriend)")
+            friends.splice(targetIndex, 1)
+            await data.friends_list.save()
+            return right(null)
         }catch(err){
             return left(err)
         }
     }
 }
+
+const friendListRepository = new FriendsListRepository()
+
+export default friendListRepository

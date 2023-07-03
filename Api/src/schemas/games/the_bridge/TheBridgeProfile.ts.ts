@@ -1,13 +1,12 @@
 import TheBridgeMode from "../../../domain/games/the_bridge/TheBridgeMode"
+import { ITheBridgeGame } from "../../../domain/models/games/the_bridge/TheBridgeGame"
+import { ITheBridgeProfile } from "../../../domain/models/games/the_bridge/TheBridgeProfile"
 import { TheBridgeDb } from "../../../services/database"
-import { Schema } from "mongoose"
-import { ITheBridgeGame } from "./TheBridgeGame"
-import { ITheBridgeProfile } from "../../../schemas/games/the_bridge/TheBridgeProfile"
+import { Document, Schema } from "mongoose"
 
-const TheBridgeProfileSchema = new Schema({
-    player_profile: {
-        type: Schema.Types.ObjectId,
-        ref: 'PlayerProfile',
+const TheBridgeProfileSchema = new Schema<ITheBridgeProfile<Schema.Types.ObjectId>>({
+    player_uuid: {
+        type: String,
         required: true,
         immutable: true
     },
@@ -156,8 +155,9 @@ const TheBridgeProfileSchema = new Schema({
     },
 })
 
-TheBridgeProfileSchema.methods.getMatches = async function(mode?: TheBridgeMode): Promise<ITheBridgeGame[]>{
+TheBridgeProfileSchema.methods.getMatches = async function(mode?: TheBridgeMode): Promise<ITheBridgeGame<Schema.Types.ObjectId>[]>{
     throw new Error("Not implemented")
 }
 
-export default TheBridgeDb.model<ITheBridgeProfile>('TheBridgeProfile', TheBridgeProfileSchema)
+export type ITheBridgeProfileModel = ITheBridgeProfile<Schema.Types.ObjectId> & Document
+export default TheBridgeDb.model<ITheBridgeProfileModel>('TheBridgeProfile', TheBridgeProfileSchema)

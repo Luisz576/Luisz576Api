@@ -1,12 +1,13 @@
-import { IFriendInvite, IFriendInviteCreateProps, IFriendInviteSearchProps } from "../../domain/models/friends/FriendInvite"
-import FriendInvite from "../../schemas/friends/FriendInvite"
+import { IFriendInviteCreateProps, IFriendInviteSearchProps } from "../../domain/models/friends/FriendInvite"
+import { IFriendInviteRepository } from "../../domain/repositories/friends/FriendInviteRepository"
+import FriendInvite, { IFriendInviteModel } from "../../schemas/friends/FriendInvite"
 import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 
-type IFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite>
-type IFriendInvitesOrError = ReturnOrErrorPromise<IFriendInvite[]>
-type MayberIFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite | null>
+type IFriendInviteOrError = ReturnOrErrorPromise<IFriendInviteModel>
+type IFriendInvitesOrError = ReturnOrErrorPromise<IFriendInviteModel[]>
+type MayberIFriendInviteOrError = ReturnOrErrorPromise<IFriendInviteModel | null>
 
-export default {
+class FriendInviteRepository implements IFriendInviteRepository{
     async create(data: IFriendInviteCreateProps): IFriendInviteOrError{
         try{
             const friend_invite = await FriendInvite.create(data)
@@ -17,22 +18,22 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
+    }
     async searchOne(filter: IFriendInviteSearchProps): MayberIFriendInviteOrError{
         try{
             return right(await FriendInvite.findOne(filter))
         }catch(err){
             return left(err)
         }
-    },
+    }
     async searchAll(filter: IFriendInviteSearchProps): IFriendInvitesOrError{
         try{
             return right(await FriendInvite.find(filter))
         }catch(err){
             return left(err)
         }
-    },
-    async expiresInvite(friend_invite: IFriendInvite): OnlyExecutePromise{
+    }
+    async expiresInvite(friend_invite: IFriendInviteModel): OnlyExecutePromise{
         try{
             friend_invite.expires()
             await friend_invite.save()
@@ -40,8 +41,8 @@ export default {
         }catch(err){
             return left(err)
         }
-    },
-    async acceptInvite(friend_invite: IFriendInvite): OnlyExecutePromise{
+    }
+    async acceptInvite(friend_invite: IFriendInviteModel): OnlyExecutePromise{
         try{
             friend_invite.accept()
             await friend_invite.save()
@@ -51,3 +52,7 @@ export default {
         }
     }
 }
+
+const friendInviteRepository = new FriendInviteRepository()
+
+export default friendInviteRepository
