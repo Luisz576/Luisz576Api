@@ -1,5 +1,5 @@
 import { Response, Request } from 'express'
-import validator from '../../services/validator'
+import validator from '../../../services/validator'
 
 export default {
     // TODO colocar redis nos controllers?

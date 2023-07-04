@@ -1,9 +1,8 @@
-import roles from '../../domain/roles'
-import { validateLanguage } from '../../domain/languages'
+import roles from '../../../domain/roles'
+import { validateLanguage } from '../../../domain/languages'
 import { Request, Response } from 'express'
-import { getJsonError, logError } from '../../errors/errors'
-import validator from '../../services/validator'
-import PlayerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
+import { getJsonError, logError } from '../../../domain/errors/errors'
+import validator from '../../../services/validator'
 
 export default {
     async updateSkin(req: Request, res: Response){

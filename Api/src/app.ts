@@ -4,10 +4,10 @@ import express from 'express'
 import http from 'http'
 import cors from 'cors'
 
-import PlayerProfileRoutes from './routes/PlayerProfileRoutes'
-import PunishmentsRoutes from './routes/PunishmentsRoutes'
-import AuthenticationRoutes from './routes/AuthenticationRoutes'
-import TheBridgeRoutes from './routes/TheBridgeRoutes'
+import PlayerProfileRoutes from './application/routes/PlayerProfileRoutes'
+import PunishmentsRoutes from './application/routes/PunishmentsRoutes'
+import AuthenticationRoutes from './application/routes/AuthenticationRoutes'
+import TheBridgeRoutes from './application/routes/TheBridgeRoutes'
 
 const app = express()
 const server = new http.Server(app)

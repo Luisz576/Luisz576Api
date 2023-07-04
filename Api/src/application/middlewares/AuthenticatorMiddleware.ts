@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 
-import authenticator from '../services/authenticator'
-import { logError } from "../errors/errors"
+import authenticator from '../../services/authenticator'
+import { logError } from "../../domain/errors/errors"
 
 export default async (req: Request, res: Response, next: NextFunction) => {
     const { auth_token } = req.headers

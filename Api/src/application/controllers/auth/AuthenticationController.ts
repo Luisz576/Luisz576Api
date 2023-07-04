@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import authenticator from '../../services/authenticator'
+import authenticator from '../../../services/authenticator'
 
 export default {
     async store(req: Request, res: Response){

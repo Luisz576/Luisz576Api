@@ -1,4 +1,3 @@
-import { OnlyExecutePromise, ReturnOrErrorPromise } from "../../../types/either"
 import { IFriendInvite, IFriendInviteCreateProps, IFriendInviteSearchProps } from "../../models/friends/FriendInvite"
 
 type IFriendInviteOrError = ReturnOrErrorPromise<IFriendInvite>

@@ -1,4 +1,3 @@
-import { ReturnOrErrorPromise } from "../../../../types/either"
 import { ITheBridgeGame, ITheBridgeGameCreateProps, ITheBridgeGameSearchProps } from "../../../models/games/the_bridge/TheBridgeGame"
 
 export type ITheBridgeGameOrError<ID> = ReturnOrErrorPromise<ITheBridgeGame<ID>>
