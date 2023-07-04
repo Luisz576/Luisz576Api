@@ -10,8 +10,8 @@ class ProductsListRepository implements IProductsListRepository{
         }
         throw new Error("Can't create ProductList")
     }
-    async search(filter: IProductsListSearchProps): Promise<IProductsListModel | null>{
-        return await ProductsList.findOne(filter)
+    async getById(id: string): Promise<IProductsListModel | null>{
+        return await ProductsList.findById(id)
     }
     async searchById(id: string): Promise<IProductsListModel | null>{
         return await ProductsList.findById(id)

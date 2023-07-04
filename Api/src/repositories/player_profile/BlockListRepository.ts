@@ -14,8 +14,8 @@ class BlockListRepository implements IBlockListRepository {
         }
         throw new Error("Can't create Block List")
     }
-    async search(filter: IBlockListSearchProps): Promise<IBlockListModel | null>{
-        return await BlockList.findOne(filter)
+    async getById(id: string): Promise<IBlockListModel | null>{
+        return await BlockList.findById(id)
     }
     async block(data: BlockDTO): Promise<void>{
         data.block_list.block(data.player_uuid)

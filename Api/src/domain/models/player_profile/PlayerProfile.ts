@@ -4,7 +4,10 @@ import { IBlockedPlayer } from "./BlocksList"
 
 export interface IPlayerProfileCreateProps{
     uuid: string,
-    username: string
+    username: string,
+    products_list: string
+    block_list: string
+    friends_list: string
 }
 
 export interface IPlayerProfileConfigs{
@@ -27,12 +30,9 @@ export type IPlayerProfileSearchProps = Partial<IPlayerProfileCreateProps> & Par
 }
 
 // TODO desacoplar ID?
-export interface IPlayerProfile<ID> extends Required<IPlayerProfileSearchProps>{
+export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>{
     created_at: Date
     last_login: Date
-    products_list: ID
-    block_list: ID
-    friends_list: ID
     getFriends(): Promise<IFriend[]>
     areFriends(profileUUID: string): Promise<boolean>
     getBlocks(): Promise<IBlockedPlayer[]>

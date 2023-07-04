@@ -1,10 +1,10 @@
-import TheBridgeMode from "../../../domain/games/the_bridge/TheBridgeMode"
+import TheBridgeMode from "../../../domain/models/games/the_bridge/TheBridgeMode"
 import { ITheBridgeGame } from "../../../domain/models/games/the_bridge/TheBridgeGame"
 import { ITheBridgeProfile } from "../../../domain/models/games/the_bridge/TheBridgeProfile"
 import { TheBridgeDb } from "../../../services/database"
 import { Document, Schema } from "mongoose"
 
-const TheBridgeProfileSchema = new Schema<ITheBridgeProfile<Schema.Types.ObjectId>>({
+const TheBridgeProfileSchema = new Schema<ITheBridgeProfile>({
     player_uuid: {
         type: String,
         required: true,
@@ -155,9 +155,9 @@ const TheBridgeProfileSchema = new Schema<ITheBridgeProfile<Schema.Types.ObjectI
     },
 })
 
-TheBridgeProfileSchema.methods.getMatches = async function(mode?: TheBridgeMode): Promise<ITheBridgeGame<Schema.Types.ObjectId>[]>{
+TheBridgeProfileSchema.methods.getMatches = async function(mode?: TheBridgeMode): Promise<ITheBridgeGame[]>{
     throw new Error("Not implemented")
 }
 
-export type ITheBridgeProfileModel = ITheBridgeProfile<Schema.Types.ObjectId> & Document
+export type ITheBridgeProfileModel = ITheBridgeProfile & Document
 export default TheBridgeDb.model<ITheBridgeProfileModel>('TheBridgeProfile', TheBridgeProfileSchema)

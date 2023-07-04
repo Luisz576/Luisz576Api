@@ -1,21 +1,30 @@
-import { IPunishment, IPunishmentCreateProps } from "../../domain/models/punishments/Punishment";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { IPunishmentRepository } from "../../domain/repositories/punishment/PunishmentRepository";
 import roles from "../../domain/roles";
 import { PromiseEither, left, right } from "../../types/either";
 
-export class GivePunishment{
+type PardonAllPunishmentsOfPlayerRequest = {
+    player_uuid: string,
+    applicator_uuid: string
+}
+
+export class PardonAllPunishmentsOfPlayer{
     constructor(
         private punishmentRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: IPunishmentCreateProps): PromiseEither<any, IPunishment>{
+    async execute(data: PardonAllPunishmentsOfPlayerRequest): PromiseEither<any, null>{
         try{
             const player_profile = await this.playerProfileRepository.searchOne({
                 uuid: data.player_uuid
             })
     
             if(!player_profile){
+                // TODO sistema de erro customizado
+                return left(new Error(""))
+            }
+
+            if(!player_profile.punishment){
                 // TODO sistema de erro customizado
                 return left(new Error(""))
             }
@@ -33,10 +42,9 @@ export class GivePunishment{
                 // TODO sistema de erro customizado
                 return left(new Error(""))
             }
-    
-            await this.playerProfileRepository.setHasPunishment(player_profile)
-            const punishment = await this.punishmentRepository.store(data)
-            return right(punishment)
+
+            await this.punishmentRepository.pardonAllOfPlayer(data.player_uuid)
+            return right(null)
         }catch(err){
             return left(err)
         }

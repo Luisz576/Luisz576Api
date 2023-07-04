@@ -21,7 +21,7 @@ export interface ITheBridgeGameSearchProps{
 }
 
 // TODO desacoplar
-export interface ITheBridgeGame<ID> extends ITheBridgeGameCreateProps{
+export interface ITheBridgeGame extends ITheBridgeGameCreateProps{
     timestamp: Date
-    getPlayers(): Promise<IPlayerProfile<ID>[]>
+    getPlayers(): Promise<IPlayerProfile[]>
 }

@@ -10,7 +10,6 @@ routes.use(AuthenticatorMiddleware)
 // <Punishments>
 routes.get('/:uuid', PunishmentsController.search)
 routes.post('/give', PunishmentsController.store)
-routes.delete('/:uuid/pardon', PunishmentsController.pardon)
 routes.delete('/:uuid/pardonall', PunishmentsController.pardonall)
 
 export default routes

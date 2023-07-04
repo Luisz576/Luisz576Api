@@ -1,5 +1,5 @@
 import { ITheBridgeGame } from "../../../models/games/the_bridge/TheBridgeGame"
-import TheBridgeMode from "../../../games/the_bridge/TheBridgeMode"
+import TheBridgeMode from "./TheBridgeMode"
 
 export interface ITheBridgeProfileCreateProps{
     player_uuid: string
@@ -40,7 +40,7 @@ export type ITheBridgeProfileSearchProps= Partial<ITheBridgeProfileCreateProps> 
 }
 
 // TODO desacoplar
-export interface ITheBridgeProfile<ID> extends Required<ITheBridgeProfileSearchProps>{
+export interface ITheBridgeProfile extends Required<ITheBridgeProfileSearchProps>{
     created_at: Date
-    getMatches(mode?: TheBridgeMode): Promise<ITheBridgeGame<ID>[]>
+    getMatches(mode?: TheBridgeMode): Promise<ITheBridgeGame[]>
 }

@@ -1,4 +1,4 @@
-import { IBlockList, IBlockListCreateProps, IBlockListSearchProps, IBlockedPlayer } from "../../models/player_profile/BlocksList"
+import { IBlockList, IBlockListCreateProps, IBlockedPlayer } from "../../models/player_profile/BlocksList"
 
 export type BlockDTO = Omit<IBlockedPlayer, 'timestamp'> & {
     block_list: IBlockList
@@ -6,7 +6,7 @@ export type BlockDTO = Omit<IBlockedPlayer, 'timestamp'> & {
 
 export interface IBlockListRepository{
     store(data: IBlockListCreateProps): Promise<IBlockList>
-    search(filter: IBlockListSearchProps): Promise<IBlockList | null>
+    getById(id: string): Promise<IBlockList | null>
     block(data: BlockDTO): Promise<void>
     unblock(data: BlockDTO): Promise<void>
 }

@@ -1,10 +1,6 @@
-import { OnlyExecutePromise, ReturnOrErrorPromise, left, right } from "../../types/either"
 import { IFriendListCreateProps, IFriendListSearchProps } from "../../domain/models/friends/FriendsList"
 import FriendsList, { IFriendListModel } from "../../schemas/friends/FriendsList"
 import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository"
-
-type IFriendListOrError = ReturnOrErrorPromise<IFriendListModel>
-type MaybeIFriendListOrError = ReturnOrErrorPromise<IFriendListModel | null>
 
 type FriendListDTO = {
     friends_list: IFriendListModel,
@@ -12,54 +8,39 @@ type FriendListDTO = {
 }
 
 class FriendsListRepository implements IFriendsListRepository{
-    async store(data: IFriendListCreateProps): IFriendListOrError{
-        try{
-            const friend_list = await FriendsList.create(data)
-            if(friend_list){
-                return right(friend_list)
-            }
-            return left("Can't create FriendList (store)")
-        }catch(err){
-            return left(err)
+    async store(data: IFriendListCreateProps): Promise<IFriendListModel>{
+        const friend_list = await FriendsList.create(data)
+        if(friend_list){
+            return friend_list
         }
+        throw new Error("Can't create FriendList (store)")
     }
-    async search(filter: IFriendListSearchProps): MaybeIFriendListOrError{
-        try{
-            return right(await FriendsList.findOne(filter))
-        }catch(err){
-            return left(err)
-        }
+    async getById(id: string): Promise<IFriendListModel | null>{
+        return await FriendsList.findById(id)
     }
-    async insertFriend(data: FriendListDTO): OnlyExecutePromise{
-        try{
-            data.friends_list.friends.push({
-                player_profile: data.player_profile_uuid,
-            })
-            await data.friends_list.save()
-            return right(null)
-        }catch(err){
-            return left(err)
-        }
+    async search(filter: IFriendListSearchProps): Promise<IFriendListModel | null>{
+        return await FriendsList.findOne(filter)
     }
-    async removeFriend(data: FriendListDTO): OnlyExecutePromise{
-        try{
-            let targetIndex: number = -1
-            const friends = data.friends_list.friends
-            for(let i = 0; i < friends.length; i++){
-                if(friends[i].player_profile == data.player_profile_uuid){
-                    targetIndex = i
-                    break
-                }
+    async insertFriend(data: FriendListDTO): Promise<void>{
+        data.friends_list.friends.push({
+            player_profile: data.player_profile_uuid,
+        })
+        await data.friends_list.save()
+    }
+    async removeFriend(data: FriendListDTO): Promise<void>{
+        let targetIndex: number = -1
+        const friends = data.friends_list.friends
+        for(let i = 0; i < friends.length; i++){
+            if(friends[i].player_profile == data.player_profile_uuid){
+                targetIndex = i
+                break
             }
-            if(targetIndex == -1){
-                return left("Players aren't friends (removeFriend)")
-            }
-            friends.splice(targetIndex, 1)
-            await data.friends_list.save()
-            return right(null)
-        }catch(err){
-            return left(err)
         }
+        if(targetIndex == -1){
+            throw new Error("Players aren't friends (removeFriend)")
+        }
+        friends.splice(targetIndex, 1)
+        await data.friends_list.save()
     }
 }
 

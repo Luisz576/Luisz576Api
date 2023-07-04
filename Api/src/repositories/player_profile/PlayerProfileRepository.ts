@@ -1,4 +1,3 @@
-import { Schema } from "mongoose"
 import { IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../domain/models/player_profile/PlayerProfile"
 import { IPlayerProfileRepository, SearchByProfileIdRequest, UpdatePlayerProfileConfigRequest } from "../../domain/repositories/player_profile/PlayerProfileRepository"
 import PlayerProfile, { IPlayerProfileModel } from "../../schemas/player_profile/PlayerProfile"
@@ -12,7 +11,7 @@ interface UpdateRoleProps{
     role: number
 }
 
-class PlayerProfileRepository implements IPlayerProfileRepository<Schema.Types.ObjectId>{
+class PlayerProfileRepository implements IPlayerProfileRepository{
     async store(data: IPlayerProfileCreateProps): Promise<IPlayerProfileModel>{
         const profile = await PlayerProfile.create({
             uuid: data.uuid,

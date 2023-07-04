@@ -9,7 +9,7 @@ import { IPunishment } from "../../domain/models/punishments/Punishment"
 import { IFriend } from "../../domain/models/friends/FriendsList"
 import { IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
 
-const PlayerProfileSchema = new Schema<IPlayerProfile<Schema.Types.ObjectId>>({
+const PlayerProfileSchema = new Schema<IPlayerProfile>({
     // DATA
     uuid: {
         type: String,
@@ -56,8 +56,9 @@ const PlayerProfileSchema = new Schema<IPlayerProfile<Schema.Types.ObjectId>>({
         min: 0
     },
     products_list: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductsList'
+        type: String,
+        required: true,
+        unique: true
     },
     // INFO
     created_at: {
@@ -92,13 +93,15 @@ const PlayerProfileSchema = new Schema<IPlayerProfile<Schema.Types.ObjectId>>({
     },
     // Blocks
     block_list: {
-        type: Schema.Types.ObjectId,
-        ref: 'BlockList',
+        type: String,
+        required: true,
+        unique: true
     },
     // Friends
     friends_list: {
-        type: Schema.Types.ObjectId,
-        ref: 'FriendsList',
+        type: String,
+        required: true,
+        unique: true
     },
     // Flags
     punishment: {
@@ -191,5 +194,5 @@ PlayerProfileSchema.methods.isBanned = async function(): Promise<boolean>{
     return false
 }
 
-export type IPlayerProfileModel = IPlayerProfile<Schema.Types.ObjectId> & Document
+export type IPlayerProfileModel = IPlayerProfile & Document
 export default Luisz576Db.model<IPlayerProfileModel>('PlayerProfile', PlayerProfileSchema)
