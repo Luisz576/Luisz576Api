@@ -11,10 +11,10 @@ export default {
     validateEmail(email: string): boolean{
         return /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/gm.test(email);
     },
-    validateBoolean(bool: any): boolean{
+    validateBoolean(bool: any): bool is boolean{
         return bool === false || bool === true
     },
-    validateString(s: any): boolean{
+    validateString(s: any): s is string{
         return typeof(s) == 'string' && s != null
     }
 }

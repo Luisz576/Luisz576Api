@@ -4,17 +4,14 @@ export type SearchByProfileIdRequest = {
     uuid: string
 }
 export type UpdateRoleRequest = {
-    player_profile: IPlayerProfile,
+    player_uuid: string,
     role: number
-}
-export type UpdatePlayerProfileConfigRequest = Partial<IPlayerProfileConfigs> & {
-    uuid: string
 }
 
 export interface IPlayerProfileRepository{
     store(data: IPlayerProfileCreateProps): Promise<IPlayerProfile>
     searchOne(filter: IPlayerProfileSearchProps): Promise<IPlayerProfile | null>
-    updateConfigsAndSocial(data: UpdatePlayerProfileConfigRequest): Promise<void>
+    updateConfigsAndSocial(uuid: string, data: Partial<IPlayerProfileConfigs>): Promise<void>
     session(session: SearchByProfileIdRequest): Promise<void>
     updateRole(data: UpdateRoleRequest): Promise<void>
     setHasPunishment(data: SearchByProfileIdRequest): Promise<void>

@@ -1,24 +1,8 @@
 import { IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../domain/models/player_profile/PlayerProfile"
-import { IPlayerProfileRepository, SearchByProfileIdRequest, UpdatePlayerProfileConfigRequest } from "../../domain/repositories/player_profile/PlayerProfileRepository"
+import { IPlayerProfileRepository, SearchByProfileIdRequest, UpdateRoleRequest } from "../../domain/repositories/player_profile/PlayerProfileRepository"
 import PlayerProfile, { IPlayerProfileModel } from "../../schemas/player_profile/PlayerProfile"
-import validator from "../../services/validator"
-import FriendsListRepository from "../friends/FriendsListRepository"
-import BlockListRepository from "./BlockListRepository"
-import ProductsListRepository from "./ProductsListRepository"
-
-interface UpdateRoleProps{
-    player_profile: IPlayerProfileModel,
-    role: number
-}
-
-class PlayerProfileRepository implements IPlayerProfileRepository{
-    async store(data: IPlayerProfileCreateProps): Promise<IPlayerProfileModel>{
-        const profile = await PlayerProfile.create({
-            uuid: data.uuid,
-            username: data.username
-        })
-        if(profile){
-            // jogar isso pro usecase e alterar no props create do playerprofile para ter os ids
+/*
+// jogar isso pro usecase e alterar no props create do playerprofile para ter os ids
             const friends_list_response = await FriendsListRepository.store({ player_uuid: profile.uuid  })
             const block_list_response = await BlockListRepository.store({ player_uuid: profile.uuid })
             const products_list_response = await ProductsListRepository.store({ player_uuid: profile.uuid })
@@ -30,6 +14,12 @@ class PlayerProfileRepository implements IPlayerProfileRepository{
                 return profile
             }
             throw new Error(`Some list wasn't generated for player '${data.username}' (${data.uuid})`)
+*/
+class PlayerProfileRepository implements IPlayerProfileRepository{
+    async store(data: IPlayerProfileCreateProps): Promise<IPlayerProfileModel>{
+        const profile = await PlayerProfile.create(data)
+        if(profile){
+            return profile
         }
         throw new Error(`Can't create profile for '${data.username}' (${data.uuid})`)
     }
@@ -47,35 +37,25 @@ class PlayerProfileRepository implements IPlayerProfileRepository{
         }
         throw new Error("PlayerProfile not founded")
     }
-    async updateConfigsAndSocial(data: UpdatePlayerProfileConfigRequest): Promise<void>{
-        // filter
-        const filter: Partial<IPlayerProfileConfigs> = {
-            ...(data.language && { language: data.language }),
-            ...(data.email && { email: data.email }),
-            ...(data.discord && { discord: data.discord }),
-            ...(data.youtube && { youtube: data.youtube }),
-            ...(data.twitch && { twitch: data.twitch }),
-        }
-        if(validator.validateString(data.skin)){
-            filter.skin = data.skin
-        }
-        if(validator.validateBoolean(data.friend_invites_preference)){
-            filter.friend_invites_preference = data.friend_invites_preference
-        }
-        // update
+    async updateConfigsAndSocial(uuid: string, data: Partial<IPlayerProfileConfigs>): Promise<void>{
         const profile = await PlayerProfile.findOneAndUpdate({
-            uuid: data.uuid
-        }, filter, {
-            new: true
-        })
+            uuid
+        }, data)
         if(profile){
             return
         }
         throw new Error("PlayerProfile not founded")
     }
-    async updateRole(data: UpdateRoleProps): Promise<void>{
-        data.player_profile.role = data.role
-        await data.player_profile.save()
+    async updateRole(data: UpdateRoleRequest): Promise<void>{
+        const profile = await PlayerProfile.findOneAndUpdate({
+            uuid: data.player_uuid
+        }, {
+            role: data.role
+        })
+        if(profile){
+            return
+        }
+        throw new Error("PlayerProfile not founded")
     }
     async setHasPunishment(data: SearchByProfileIdRequest): Promise<void> {
         const player_profile = await this.searchOne({
