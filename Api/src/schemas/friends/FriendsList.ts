@@ -10,7 +10,7 @@ const FriendsListSchema = new Schema<IFriendList>({
     },
     friends: {
         type: [{
-            player_profile: {
+            player_uuid: {
                 type: String,
                 required: true
             },

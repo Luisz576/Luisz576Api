@@ -4,102 +4,51 @@ import validator from '../../../services/validator'
 import FriendInviteRepository from '../../../repositories/friends/FriendInviteRepository'
 import PlayerProfileRepository from '../../../repositories/player_profile/PlayerProfileRepository'
 import FriendsListRepository from '../../../repositories/friends/FriendsListRepository'
+import { CreateFriendInvite } from '../../../usecases/friends/CreateFriendInvite'
+import friendInviteRepository from '../../../repositories/friends/FriendInviteRepository'
+import playerProfileRepository from '../../../repositories/player_profile/PlayerProfileRepository'
+import { GetAllFriendInvitesOfPlayerProfile } from '../../../usecases/friends/GetAllFriendInvitesOfPlayerProfile'
 
-export default {
+class FriendInvitesController{
+    constructor(
+        private createFriendInvite: CreateFriendInvite,
+        private getAllFriendInvitesOfPlayerProfile: GetAllFriendInvitesOfPlayerProfile
+    ){}
     async search(req: Request, res: Response){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
-            const friend_invites_response = await FriendInviteRepository.searchAll({
-                receiver: uuid
+            const invites_response = await this.getAllFriendInvitesOfPlayerProfile.execute({
+                uuid,
+                accepted: false,
+                is_valid: true
             })
-            if(friend_invites_response.isRight()){
+            if(invites_response.isRight()){
                 return res.json({
-                    status: "200",
-                    uuid,
-                    friend_invites: friend_invites_response.value
+                    status: 200,
+                    invites: invites_response.value
                 })
             }
-            logError(friend_invites_response.value, 'FriendInvitesController', 'search', 'FriendInviteRepository.searchAll')
+            logError(invites_response.value, 'FriendInvitesController', 'search', 'GetAllFriendInvitesOfPlayerProfile')
             return res.sendStatus(500)
         }
         return res.sendStatus(400)
-    },
+    }
     async store(req: Request, res: Response){
-        const { new_friend_uuid } = req.body
         const { uuid } = req.params
+        const { new_friend_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(new_friend_uuid)){
-            const profile_response = await PlayerProfileRepository.search({
-                uuid
+            const create_response = await this.createFriendInvite.execute({
+                sender_uuid: uuid,
+                receiver_uuid: new_friend_uuid
             })
-            if(profile_response.isRight()){
-                const profile = profile_response.value
-                if(profile){
-                    const friend_profile_response = await PlayerProfileRepository.search({
-                        uuid: new_friend_uuid
-                    })
-                    if(friend_profile_response.isRight()){
-                        const friendProfile = friend_profile_response.value
-                        if(friendProfile){
-                            // ve se ja nao sao amigos
-                            const are_friends_response = await profile.areFriends(friendProfile.uuid)
-                            if(are_friends_response.isRight()){
-                                if(are_friends_response.value){
-                                    return res.json(getJsonError(115))
-                                }
-                            }else{
-                                logError(are_friends_response.value, 'FriendInvitesController', 'store', 'PlayerProfile.areFriends')
-                                return res.sendStatus(500)
-                            }
-                            // ve se esta com os pedidos de amizade ativos
-                            if(friendProfile.friend_invites_preference){
-                                // ver se ja nao tem um convite ativo
-                                const valid_friend_invite_response = await FriendInviteRepository.searchOne({
-                                    sender: uuid,
-                                    receiver: friendProfile.uuid,
-                                    valid_invite: true,
-                                    accepted: false
-                                })
-                                if(valid_friend_invite_response.isRight()){
-                                    // ja existe
-                                    if(valid_friend_invite_response.value){
-                                        return res.json(getJsonError(120, {
-                                            values: {
-                                                "remaining_time": valid_friend_invite_response.value.getRemainingTimeInSeconds()
-                                            },
-                                        }))
-                                    }
-                                }else{
-                                    logError(valid_friend_invite_response.value, 'FriendInvitesController', 'store', 'FriendInviteRepository.searchOne')
-                                    return res.sendStatus(500)
-                                }
-    
-                                // create invite
-                                const friend_invite_create_response = await FriendInviteRepository.create({
-                                    sender: profile.uuid,
-                                    receiver: friendProfile.uuid
-                                })
-                                if(friend_invite_create_response.isRight()){
-                                    return res.sendStatus(201)
-                                }
-                                logError(friend_invite_create_response.value, 'FriendInvitesController', 'store', 'FriendInviteRepository.create')
-                                return res.sendStatus(500)
-                            }
-                            return res.json(getJsonError(110))
-                        }
-                        return res.json(getJsonError(15, {
-                            values: {
-                                "uuid_target": new_friend_uuid
-                            }
-                        }))
-                    }
-                }
-                return res.json(getJsonError(10, {values: { uuid }}))
+            if(create_response.isRight()){
+                return res.sendStatus(200)
             }
-            logError(profile_response.value, 'FriendInvitesController', 'store', 'PlayerProfileRepository.search')
+            logError(create_response.value, 'FriendInvitesController', 'store', 'CreateFriendInvite')
             return res.sendStatus(500)
         }
         return res.sendStatus(400)
-    },
+    }
     async accept(req: Request, res: Response){
         const { uuid, friend_uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
@@ -171,5 +120,12 @@ export default {
             return res.sendStatus(500)
         }
         return res.sendStatus(400)
-    },
+    }
 }
+
+const friendInvitesController = new FriendInvitesController(
+    new CreateFriendInvite(friendInviteRepository, playerProfileRepository),
+    new GetAllFriendInvitesOfPlayerProfile(friendInviteRepository),
+)
+
+export default friendInvitesController

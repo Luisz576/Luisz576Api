@@ -1,5 +1,5 @@
 import { IPlayerProfileConfigs, IPlayerProfileCreateProps, IPlayerProfileSearchProps } from "../../domain/models/player_profile/PlayerProfile"
-import { IPlayerProfileRepository, SearchByProfileIdRequest, UpdateRoleRequest } from "../../domain/repositories/player_profile/PlayerProfileRepository"
+import { IPlayerProfileRepository, UpdateRoleRequest } from "../../domain/repositories/player_profile/PlayerProfileRepository"
 import PlayerProfile, { IPlayerProfileModel } from "../../schemas/player_profile/PlayerProfile"
 /*
 // jogar isso pro usecase e alterar no props create do playerprofile para ter os ids
@@ -26,13 +26,13 @@ class PlayerProfileRepository implements IPlayerProfileRepository{
     async searchOne(filter: IPlayerProfileSearchProps): Promise<IPlayerProfileModel | null>{
         return await PlayerProfile.findOne(filter)
     }
-    async session(session: SearchByProfileIdRequest): Promise<void>{
-        const player_profile = await this.searchOne({
-            uuid: session.uuid
+    async session(uuid: string): Promise<void>{
+        const profile = await PlayerProfile.findOneAndUpdate({
+            uuid
+        }, {
+            last_login: new Date(Date.now())
         })
-        if(player_profile){
-            player_profile.last_login = new Date(Date.now())
-            await player_profile.save()
+        if(profile){
             return
         }
         throw new Error("PlayerProfile not founded")
@@ -57,9 +57,9 @@ class PlayerProfileRepository implements IPlayerProfileRepository{
         }
         throw new Error("PlayerProfile not founded")
     }
-    async setHasPunishment(data: SearchByProfileIdRequest): Promise<void> {
+    async setHasPunishment(uuid: string): Promise<void> {
         const player_profile = await this.searchOne({
-            uuid: data.uuid
+            uuid
         })
         if(!player_profile){
             throw new Error("PlayerProfile not founded")

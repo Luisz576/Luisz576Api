@@ -1,10 +1,6 @@
-import { IBlockListCreateProps, IBlockListSearchProps, IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
+import { IBlockListCreateProps } from "../../domain/models/player_profile/BlocksList"
 import BlockList, { IBlockListModel } from "../../schemas/player_profile/BlockList"
-import { IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository"
-
-type BlockDTO = Omit<IBlockedPlayer, 'timestamp'> & {
-    block_list: IBlockListModel
-}
+import { BlockDTO, IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository"
 
 class BlockListRepository implements IBlockListRepository {
     async store(data: IBlockListCreateProps): Promise<IBlockListModel>{
@@ -18,12 +14,20 @@ class BlockListRepository implements IBlockListRepository {
         return await BlockList.findById(id)
     }
     async block(data: BlockDTO): Promise<void>{
-        data.block_list.block(data.player_uuid)
-        data.block_list.save()
+        const block_list = await this.getById(data.block_list_id)
+        if(!block_list){
+            throw new Error("Can't find BlockList")
+        }
+        block_list.block(data.uuid_target)
+        block_list.save()
     }
     async unblock(data: BlockDTO): Promise<void>{
-        data.block_list.unblock(data.player_uuid)
-        data.block_list.save()
+        const block_list = await this.getById(data.block_list_id)
+        if(!block_list){
+            throw new Error("Can't find BlockList")
+        }
+        block_list.unblock(data.uuid_target)
+        block_list.save()
     }
 }
 

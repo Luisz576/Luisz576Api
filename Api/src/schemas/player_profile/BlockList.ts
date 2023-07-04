@@ -10,7 +10,7 @@ const BlockListSchema = new Schema<IBlockList>({
     },
     blocked_players: {
         type: [{
-            player_profile: {
+            player_uuid: {
                 type: String,
                 required: true
             },

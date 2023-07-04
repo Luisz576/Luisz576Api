@@ -3,15 +3,15 @@ import { IPlayerProfileRepository } from "../../domain/repositories/player_profi
 import validator from "../../services/validator"
 import { PromiseEither, left, right } from "../../types/either"
 
-type UpdateConfigsAndSocialOfProfileRequest = Partial<IPlayerProfileConfigs> & {
+type UpdateConfigsAndSocialOfPlayerProfileRequest = Partial<IPlayerProfileConfigs> & {
     uuid: string
 }
 
-export class UpdateConfigsAndSocialOfProfile{
+export class UpdateConfigsAndSocialOfPlayerProfile{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: UpdateConfigsAndSocialOfProfileRequest): PromiseEither<any, null>{
+    async execute(data: UpdateConfigsAndSocialOfPlayerProfileRequest): PromiseEither<any, null>{
         try{
             // profile
             const profile = await this.playerProfileRepository.searchOne({

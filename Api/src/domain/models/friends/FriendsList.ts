@@ -5,7 +5,7 @@ export interface IFriendListCreateProps{
 export type IFriendListSearchProps = IFriendListCreateProps
 
 export interface IFriend{
-    player_profile: string
+    player_uuid: string
     timestamp?: Date
 }
 export interface IFriendList extends IFriendListCreateProps{

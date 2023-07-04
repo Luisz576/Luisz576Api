@@ -1,7 +1,8 @@
-import { IBlockList, IBlockListCreateProps, IBlockedPlayer } from "../../models/player_profile/BlocksList"
+import { IBlockList, IBlockListCreateProps } from "../../models/player_profile/BlocksList"
 
-export type BlockDTO = Omit<IBlockedPlayer, 'timestamp'> & {
-    block_list: IBlockList
+export type BlockDTO = {
+    block_list_id: string,
+    uuid_target: string
 }
 
 export interface IBlockListRepository{

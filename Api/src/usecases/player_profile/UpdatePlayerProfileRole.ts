@@ -2,24 +2,24 @@ import { IPlayerProfileRepository } from "../../domain/repositories/player_profi
 import roles from "../../domain/roles";
 import { PromiseEither, left, right } from "../../types/either";
 
-type UpdateProfileRoleRequest = {
+type UpdatePlayerProfileRoleRequest = {
     uuid: string,
     applicator_uuid: string,
     role_id: number,
 }
 
-export class UpdateProfileRole{
+export class UpdatePlayerProfileRole{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: UpdateProfileRoleRequest): PromiseEither<any, null>{
+    async execute(data: UpdatePlayerProfileRoleRequest): PromiseEither<any, null>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.uuid
             })
             if(!profile){
                 // TODO
-                throw new Error("")
+                return left("")
             }
 
             const applicator_profile = await this.playerProfileRepository.searchOne({
@@ -27,12 +27,12 @@ export class UpdateProfileRole{
             })
             if(!applicator_profile){
                 // TODO
-                throw new Error("")
+                return left("")
             }
 
             if(!roles.isAdmin(applicator_profile.role)){
                 // TODO
-                throw new Error("")
+                return left("")
             }
 
             await this.playerProfileRepository.updateRole({
