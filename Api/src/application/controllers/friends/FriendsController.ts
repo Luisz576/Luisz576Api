@@ -1,13 +1,12 @@
 import validator from '../../../services/validator'
 import { getJsonError, logError } from '../../../domain/errors/errors'
-import IResponse from '../../../domain/adapters/IResponse'
-import IRequest from '../../../domain/adapters/IRequest'
+import IHttpContext from '../../../domain/interfaces/IHttpContext'
 
 export default class FriendsController{
     constructor(
 
     ){}
-    async search(req: IRequest, res: IResponse){
+    async search(httpContext: IHttpContext){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             const profile_response = await PlayerProfileRepository.search({
@@ -34,7 +33,7 @@ export default class FriendsController{
         }
         return res.sendStatus(400)
     },
-    async remove(req: IRequest, res: IResponse){
+    async remove(httpContext: IHttpContext){
         const { uuid } = req.params
         const { friend_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){

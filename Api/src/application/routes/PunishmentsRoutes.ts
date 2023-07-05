@@ -7,10 +7,16 @@ import PardonAllPunishmentsOfPlayer from '../../usecases/punishment/PardonAllPun
 import GetAllPunishmentsOfPlayer from '../../usecases/punishment/GetAllPunishmentsOfPlayer'
 import punishmentRepository from '../../repositories/punishment/PunishmentRepository'
 import playerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
+import ExpressAdapter from '../../domain/adapters/ExpressAdapter'
 
 const routes = Router()
 
-routes.use(AuthenticatorMiddleware)
+// middleware
+const authenticatorMiddleware = new AuthenticatorMiddleware()
+routes.use((req, res, next) => {
+    const adapter = new ExpressAdapter(req, res, next)
+    return authenticatorMiddleware.auth(adapter)
+})
 
 // <Punishments>
 const punishmentsController = new PunishmentsController(
@@ -18,8 +24,17 @@ const punishmentsController = new PunishmentsController(
     new PardonAllPunishmentsOfPlayer(punishmentRepository, playerProfileRepository),
     new GetAllPunishmentsOfPlayer(punishmentRepository, playerProfileRepository)
 )
-routes.get('/:uuid', punishmentsController.search)
-routes.post('/give', punishmentsController.store)
-routes.delete('/:uuid/pardonall', punishmentsController.pardonall)
+routes.get('/:uuid', (req, res, next) => {
+    const adapter = new ExpressAdapter(req, res, next)
+    return punishmentsController.search(adapter)
+})
+routes.post('/give', (req, res, next) => {
+    const adapter = new ExpressAdapter(req, res, next)
+    return punishmentsController.store(adapter)
+})
+routes.delete('/:uuid/pardonall', (req, res, next) => {
+    const adapter = new ExpressAdapter(req, res, next)
+    return punishmentsController.pardonall(adapter)
+})
 
 export default routes

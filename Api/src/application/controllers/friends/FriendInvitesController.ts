@@ -5,16 +5,17 @@ import PlayerProfileRepository from '../../../repositories/player_profile/Player
 import FriendsListRepository from '../../../repositories/friends/FriendsListRepository'
 import CreateFriendInvite from '../../../usecases/friends/CreateFriendInvite'
 import GetAllFriendInvitesOfPlayerProfile from '../../../usecases/friends/GetAllFriendInvitesOfPlayerProfile'
-import IRequest from '../../../domain/adapters/IRequest'
-import IResponse from '../../../domain/adapters/IResponse'
+import AcceptFriendInvite from '../../../usecases/friends/AcceptFriendInvite'
+import IHttpContext from '../../../domain/interfaces/IHttpContext'
 
 export default class FriendInvitesController{
     constructor(
         private createFriendInvite: CreateFriendInvite,
-        private getAllFriendInvitesOfPlayerProfile: GetAllFriendInvitesOfPlayerProfile
+        private getAllFriendInvitesOfPlayerProfile: GetAllFriendInvitesOfPlayerProfile,
+        private acceptFriendInvite: AcceptFriendInvite
     ){}
-    async search(req: IRequest, res: IResponse){
-        const { uuid } = req.params
+    async search(httpContext: IHttpContext){
+        const { uuid } = httpContext.getRequest().params
         if(validator.validateUUID(uuid)){
             const invites_response = await this.getAllFriendInvitesOfPlayerProfile.execute({
                 uuid,
@@ -22,34 +23,34 @@ export default class FriendInvitesController{
                 is_valid: true
             })
             if(invites_response.isRight()){
-                return res.json({
+                return httpContext.getResponse().json({
                     status: 200,
                     invites: invites_response.value
                 })
             }
             logError(invites_response.value, 'FriendInvitesController', 'search', 'GetAllFriendInvitesOfPlayerProfile')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
-    async store(req: IRequest, res: IResponse){
-        const { uuid } = req.params
-        const { new_friend_uuid } = req.body
+    async store(httpContext: IHttpContext){
+        const { uuid } = httpContext.getRequest().params
+        const { new_friend_uuid } = httpContext.getRequest().body
         if(validator.validateUUID(uuid) && validator.validateUUID(new_friend_uuid)){
             const create_response = await this.createFriendInvite.execute({
                 sender_uuid: uuid,
                 receiver_uuid: new_friend_uuid
             })
             if(create_response.isRight()){
-                return res.sendStatus(200)
+                return httpContext.getResponse().sendStatus(200)
             }
             logError(create_response.value, 'FriendInvitesController', 'store', 'CreateFriendInvite')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
-    async accept(req: IRequest, res: IResponse){
-        const { uuid, friend_uuid } = req.params
+    async accept(httpContext: IHttpContext){
+        const { uuid, friend_uuid } = httpContext.getRequest().params
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             const profile_response = await PlayerProfileRepository.search({
                 uuid
@@ -77,7 +78,7 @@ export default class FriendInvitesController{
                                     const accept_response = await FriendInviteRepository.acceptInvite(validFriendInvite)
                                     if(accept_response.isLeft()){
                                         logError(accept_response.value, 'FriendInvitesController', 'accept', 'FriendInviteRepository.acceptInvite')
-                                        return res.sendStatus(500)
+                                        return httpContext.getResponse().sendStatus(500)
                                     }
                                     // insere na lista de amigos do profile que aceitou
                                     const friend_list_response = await FriendsListRepository.insertFriend({
@@ -86,7 +87,7 @@ export default class FriendInvitesController{
                                     })
                                     if(friend_list_response.isLeft()){
                                         logError(friend_list_response.value, 'FriendInvitesController', 'accept', 'FriendsListRepository.insertFriend')
-                                        return res.sendStatus(500)
+                                        return httpContext.getResponse().sendStatus(500)
                                     }
                                     // insere na lista de amigos de profile que convidou
                                     const insert_response = await FriendsListRepository.insertFriend({
@@ -94,30 +95,30 @@ export default class FriendInvitesController{
                                         player_profile_uuid: profile.uuid,
                                     })
                                     if(insert_response.isRight()){
-                                        return res.sendStatus(200)
+                                        return httpContext.getResponse().sendStatus(200)
                                     }
                                     logError(valid_friend_invite_response.value, 'FriendInvitesController', 'accept', 'FriendsListRepository.insertFriend')
-                                    return res.sendStatus(500)
+                                    return httpContext.getResponse().sendStatus(500)
                                 }
-                                return res.json(getJsonError(125));
+                                return httpContext.getResponse().json(getJsonError(125));
                             }
                             logError(valid_friend_invite_response.value, 'FriendInvitesController', 'accept', 'FriendInviteRepository.searchOne')
-                            return res.sendStatus(500)
+                            return httpContext.getResponse().sendStatus(500)
                         }
-                        return res.json(getJsonError(15, {
+                        return httpContext.getResponse().json(getJsonError(15, {
                             values: {
                                 "uuid_target": friend_uuid
                             },
                         }))
                     }
                     logError(friend_profile_response.value, 'FriendInvitesController', 'accept', 'PlayerProfile.search')
-                    return res.sendStatus(500)
+                    return httpContext.getResponse().sendStatus(500)
                 }
-                return res.json(getJsonError(10, {values: { uuid }}))
+                return httpContext.getResponse().json(getJsonError(10, {values: { uuid }}))
             }
             logError(profile_response.value, 'FriendInvitesController', 'accept', 'PlayerProfile.search')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
 }

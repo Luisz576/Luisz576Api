@@ -4,66 +4,65 @@ import { logError } from '../../../domain/errors/errors'
 import validator from '../../../services/validator'
 import UpdateConfigsAndSocialOfPlayerProfile from '../../../usecases/player_profile/UpdateConfigsAndSocialOfPlayerProfile'
 import UpdatePlayerProfileRole from '../../../usecases/player_profile/UpdatePlayerProfileRole'
-import IRequest from '../../../domain/adapters/IRequest'
-import IResponse from '../../../domain/adapters/IResponse'
+import IHttpContext from '../../../domain/interfaces/IHttpContext'
 
 export default class PlayerProfileConfigsController{
     constructor(
         private updateConfigsAndSocialOfPlayerProfile: UpdateConfigsAndSocialOfPlayerProfile,
         private updatePlayerProfileRole: UpdatePlayerProfileRole
     ){}
-    async updateSkin(req: IRequest, res: IResponse){
-        const { uuid } = req.params
-        const { skin } = req.body
+    async updateSkin(httpContext: IHttpContext){
+        const { uuid } = httpContext.getRequest().params
+        const { skin } = httpContext.getRequest().body
         if(validator.validateUUID(uuid) && validator.validateString(skin)){
             const update_response = await this.updateConfigsAndSocialOfPlayerProfile.execute({
                 uuid,
                 skin
             })
             if(update_response.isRight()){
-                return res.sendStatus(200)
+                return httpContext.getResponse().sendStatus(200)
             }
             logError(update_response.value, 'PlayerProfileConfigsController', 'updateSkin', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
-    async updateLanguage(req: IRequest, res: IResponse){
-        const { uuid } = req.params
-        const { language } = req.body
+    async updateLanguage(httpContext: IHttpContext){
+        const { uuid } = httpContext.getRequest().params
+        const { language } = httpContext.getRequest().body
         if(validator.validateUUID(uuid) && validateLanguage(language)){
             const update_response = await this.updateConfigsAndSocialOfPlayerProfile.execute({
                 uuid,
                 language
             })
             if(update_response.isRight()){
-                return res.sendStatus(200)
+                return httpContext.getResponse().sendStatus(200)
             }
             logError(update_response.value, 'PlayerProfileConfigsController', 'updateLanguage', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
-    async updateFriendInvitePreferences(req: IRequest, res: IResponse){
-        const { uuid } = req.params
-        const { friend_invites_preference } = req.body
+    async updateFriendInvitePreferences(httpContext: IHttpContext){
+        const { uuid } = httpContext.getRequest().params
+        const { friend_invites_preference } = httpContext.getRequest().body
         if(validator.validateUUID(uuid) && validator.validateBoolean(friend_invites_preference)){
             const update_response = await this.updateConfigsAndSocialOfPlayerProfile.execute({
                 uuid,
                 friend_invites_preference
             })
             if(update_response.isRight()){
-                return res.sendStatus(200)
+                return httpContext.getResponse().sendStatus(200)
             }
             logError(update_response.value, 'PlayerProfileConfigsController', 'updateFriendInvitePreferences', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
     // SOCIAL
-    async updateSocialMedia(req: IRequest, res: IResponse){
-        const { uuid } = req.params
-        const { email, discord, twitch, youtube } = req.body
+    async updateSocialMedia(httpContext: IHttpContext){
+        const { uuid } = httpContext.getRequest().params
+        const { email, discord, twitch, youtube } = httpContext.getRequest().body
         if(validator.validateUUID(uuid)){
             const update_response = await this.updateConfigsAndSocialOfPlayerProfile.execute({
                 uuid,
@@ -73,17 +72,17 @@ export default class PlayerProfileConfigsController{
                 youtube
             })
             if(update_response.isRight()){
-                return res.sendStatus(200)
+                return httpContext.getResponse().sendStatus(200)
             }
             logError(update_response.value, 'PlayerProfileConfigsController', 'updateSocialMedia', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
     // ROLE
-    async updateRole(req: IRequest, res: IResponse){
-        const { uuid } = req.params
-        const { applicator_uuid, role_id } = req.body
+    async updateRole(httpContext: IHttpContext){
+        const { uuid } = httpContext.getRequest().params
+        const { applicator_uuid, role_id } = httpContext.getRequest().body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && typeof(role_id) == 'number' && roles.isRole(role_id)){
             const update_response = await this.updatePlayerProfileRole.execute({
                 uuid,
@@ -92,11 +91,11 @@ export default class PlayerProfileConfigsController{
             })
 
             if(update_response.isRight()){
-                return res.sendStatus(200)
+                return httpContext.getResponse().sendStatus(200)
             }
             logError(update_response.value, 'PlayerProfileConfigsController', 'updateRole', 'UpdatePlayerProfileRole')
-            return res.sendStatus(500)
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
 }
