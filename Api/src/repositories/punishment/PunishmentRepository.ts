@@ -1,14 +1,9 @@
 import { IPunishmentCreateProps, IPunishmentSearchProps } from "../../domain/models/punishments/Punishment"
 import { IPunishmentRepository } from "../../domain/repositories/punishment/PunishmentRepository"
-import { IPlayerProfileModel } from "../../schemas/player_profile/PlayerProfile"
 import Punishment, { IPunishmentModel } from "../../schemas/punishment/Punishment"
 
-type CustomIPunishmentCreateProps = IPunishmentCreateProps & {
-    player_profile: IPlayerProfileModel
-}
-
 class PunishmentRepository implements IPunishmentRepository{
-    async store(data: CustomIPunishmentCreateProps): Promise<IPunishmentModel>{
+    async store(data: IPunishmentCreateProps): Promise<IPunishmentModel>{
         const punishment = await Punishment.create({
             player_uuid: data.player_uuid,
             applicator_uuid: data.applicator_uuid,
@@ -18,8 +13,6 @@ class PunishmentRepository implements IPunishmentRepository{
             comment: data.comment
         })
         if(punishment){
-            data.player_profile.punishment = true
-            await data.player_profile.save()
             return punishment
         }
         throw new Error("Can't create Punishment")
