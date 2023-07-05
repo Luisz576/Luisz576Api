@@ -7,7 +7,7 @@ type BlockPlayerProfileRequest = {
     uuid_to_block: string
 }
 
-export class BlockPlayerProfile{
+export default class BlockPlayerProfile{
     constructor(
         private blockListRepository: IBlockListRepository,
         private playerProfileRepository: IPlayerProfileRepository
@@ -23,7 +23,7 @@ export class BlockPlayerProfile{
             }
             await this.blockListRepository.block({
                 block_list_id: profile.block_list,
-                uuid_to_block: data.uuid_to_block
+                uuid_target: data.uuid_to_block
             })
             return right(null)
         }catch(err){

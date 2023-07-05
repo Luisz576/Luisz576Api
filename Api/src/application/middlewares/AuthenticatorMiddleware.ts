@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from "express"
-
 import authenticator from '../../services/authenticator'
 import { logError } from "../../domain/errors/errors"
+import IRequest from '../../domain/adapters/IRequest'
+import IResponse from '../../domain/adapters/IResponse'
+import INextFunction from '../../domain/adapters/INextFunction'
 
-export default async (req: Request, res: Response, next: NextFunction) => {
+export default async (req: IRequest, res: IResponse, next: INextFunction) => {
     const { auth_token } = req.headers
 
     if(typeof(auth_token) != 'string'){

@@ -7,7 +7,7 @@ type UnblockPlayerProfileRequest = {
     uuid_to_unblock: string
 }
 
-export class UnblockPlayerProfile{
+export default class UnblockPlayerProfile{
     constructor(
         private blockListRepository: IBlockListRepository,
         private playerProfileRepository: IPlayerProfileRepository

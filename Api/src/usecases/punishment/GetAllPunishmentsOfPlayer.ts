@@ -7,7 +7,7 @@ type GetAllPunishmentsOfPlayerRequest = {
     uuid: string
 }
 
-export class GetAllPunishmentsOfPlayer{
+export default class GetAllPunishmentsOfPlayer{
     constructor(
         private punishmentsRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository

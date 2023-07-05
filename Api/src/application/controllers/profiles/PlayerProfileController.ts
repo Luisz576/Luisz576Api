@@ -1,15 +1,11 @@
 import { Request, Response } from 'express'
 import validator from '../../../services/validator'
 import { logError } from '../../../domain/errors/errors'
-import { CreatePlayerProfile } from '../../../usecases/player_profile/CreatePlayerProfile'
-import playerProfileRepository from '../../../repositories/player_profile/PlayerProfileRepository'
-import blockListRepository from '../../../repositories/player_profile/BlockListRepository'
-import productsListRepository from '../../../repositories/player_profile/ProductsListRepository'
-import friendListRepository from '../../../repositories/friends/FriendsListRepository'
-import { GetPlayerProfileByUUID } from '../../../usecases/player_profile/GetPlayerProfileByUUID'
-import { MakePlayerProfileSession } from '../../../usecases/player_profile/MakePlayerProfileSession'
+import CreatePlayerProfile from '../../../usecases/player_profile/CreatePlayerProfile'
+import GetPlayerProfileByUUID from '../../../usecases/player_profile/GetPlayerProfileByUUID'
+import MakePlayerProfileSession from '../../../usecases/player_profile/MakePlayerProfileSession'
 
-class PlayerProfileController{
+export default class PlayerProfileController{
     constructor(
         private createPlayerProfile: CreatePlayerProfile,
         private getPlayerProfileByUUID: GetPlayerProfileByUUID,
@@ -66,11 +62,3 @@ class PlayerProfileController{
         return res.sendStatus(400)
     }
 }
-
-const playerProfileController = new PlayerProfileController(
-    new CreatePlayerProfile(playerProfileRepository, blockListRepository, friendListRepository, productsListRepository),
-    new GetPlayerProfileByUUID(playerProfileRepository),
-    new MakePlayerProfileSession(playerProfileRepository)
-)
-
-export default playerProfileController

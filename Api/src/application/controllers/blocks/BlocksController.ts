@@ -1,19 +1,18 @@
 import { logError } from '../../../domain/errors/errors'
-import { Request, Response } from 'express'
 import validator from '../../../services/validator'
-import { BlockPlayerProfile } from '../../../usecases/player_profile/BlockPlayerProfile'
-import blockListRepository from '../../../repositories/player_profile/BlockListRepository'
-import playerProfileRepository from '../../../repositories/player_profile/PlayerProfileRepository'
-import { UnblockPlayerProfile } from '../../../usecases/player_profile/UnblockPlayerProfile'
-import { GetBlockedPlayersOfPlayerProfile } from '../../../usecases/player_profile/GetBlockedPlayersOfPlayerProfile'
+import BlockPlayerProfile from '../../../usecases/player_profile/BlockPlayerProfile'
+import UnblockPlayerProfile from '../../../usecases/player_profile/UnblockPlayerProfile'
+import GetBlockedPlayersOfPlayerProfile from '../../../usecases/player_profile/GetBlockedPlayersOfPlayerProfile'
+import IRequest from '../../../domain/adapters/IRequest'
+import IResponse from '../../../domain/adapters/IResponse'
 
-class BlocksController {
+export default class BlocksController {
     constructor(
         private blockPlayerProfile: BlockPlayerProfile,
         private unblockPlayerProfile: UnblockPlayerProfile,
         private getBlockedPlayersOfPlayerProfile: GetBlockedPlayersOfPlayerProfile
     ){}
-    async search(req: Request, res: Response){
+    async search(req: IRequest, res: IResponse){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             const search_response = await this.getBlockedPlayersOfPlayerProfile.execute({
@@ -31,7 +30,7 @@ class BlocksController {
         }
         return res.sendStatus(400)
     }
-    async store(req: Request, res: Response){
+    async store(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { player_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(player_uuid)){
@@ -47,7 +46,7 @@ class BlocksController {
         }
         return res.sendStatus(400)
     }
-    async delete(req: Request, res: Response){
+    async delete(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { unblock_player } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(unblock_player)){
@@ -64,11 +63,3 @@ class BlocksController {
         return res.sendStatus(400)
     }
 }
-
-const blocksController = new BlocksController(
-    new BlockPlayerProfile(blockListRepository, playerProfileRepository),
-    new UnblockPlayerProfile(blockListRepository, playerProfileRepository),
-    new GetBlockedPlayersOfPlayerProfile(blockListRepository, playerProfileRepository)
-)
-
-export default blocksController

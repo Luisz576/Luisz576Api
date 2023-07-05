@@ -8,7 +8,7 @@ type UpdatePlayerProfileRoleRequest = {
     role_id: number,
 }
 
-export class UpdatePlayerProfileRole{
+export default class UpdatePlayerProfileRole{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}

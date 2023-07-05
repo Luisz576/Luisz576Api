@@ -5,7 +5,7 @@ type MakePlayerProfileSessionRequest = {
     uuid: string
 }
 
-export class MakePlayerProfileSession{
+export default class MakePlayerProfileSession{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}

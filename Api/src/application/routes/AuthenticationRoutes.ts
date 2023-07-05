@@ -1,9 +1,10 @@
 import {Router} from 'express'
 
-import authentication_controller from '../controllers/auth/AuthenticationController'
+import AuthenticationController from '../controllers/auth/AuthenticationController'
 
 const routes = Router()
 
+const authentication_controller = new AuthenticationController()
 // <Authentication>
 routes.post('/token', authentication_controller.store)
 

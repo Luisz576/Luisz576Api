@@ -8,7 +8,7 @@ type CreateFriendInviteRequest = {
     receiver_uuid: string
 }
 
-export class CreateFriendInvite{
+export default class CreateFriendInvite{
     constructor(
         private friendInviteRepository: IFriendInviteRepository,
         private playerProfileRepository: IPlayerProfileRepository

@@ -4,7 +4,7 @@ import { IPunishmentRepository } from "../../domain/repositories/punishment/Puni
 import roles from "../../domain/roles";
 import { PromiseEither, left, right } from "../../types/either";
 
-export class GivePunishment{
+export default class GivePunishment{
     constructor(
         private punishmentRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository
@@ -34,7 +34,7 @@ export class GivePunishment{
                 return left(new Error(""))
             }
     
-            await this.playerProfileRepository.setHasPunishment(player_profile)
+            await this.playerProfileRepository.setHasPunishment(player_profile.uuid)
             const punishment = await this.punishmentRepository.store(data)
             return right(punishment)
         }catch(err){

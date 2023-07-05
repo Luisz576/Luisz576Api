@@ -6,7 +6,7 @@ type GetPlayerProfileByUUIDRequest = {
     uuid: string
 }
 
-export class GetPlayerProfileByUUID{
+export default class GetPlayerProfileByUUID{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}

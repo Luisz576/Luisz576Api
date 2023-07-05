@@ -1,18 +1,18 @@
 import roles from '../../../domain/roles'
 import { validateLanguage } from '../../../domain/languages'
-import { Request, Response } from 'express'
 import { logError } from '../../../domain/errors/errors'
 import validator from '../../../services/validator'
-import { UpdateConfigsAndSocialOfPlayerProfile } from '../../../usecases/player_profile/UpdateConfigsAndSocialOfPlayerProfile'
-import playerProfileRepository from '../../../repositories/player_profile/PlayerProfileRepository'
-import { UpdatePlayerProfileRole } from '../../../usecases/player_profile/UpdatePlayerProfileRole'
+import UpdateConfigsAndSocialOfPlayerProfile from '../../../usecases/player_profile/UpdateConfigsAndSocialOfPlayerProfile'
+import UpdatePlayerProfileRole from '../../../usecases/player_profile/UpdatePlayerProfileRole'
+import IRequest from '../../../domain/adapters/IRequest'
+import IResponse from '../../../domain/adapters/IResponse'
 
-class PlayerProfileConfigsController{
+export default class PlayerProfileConfigsController{
     constructor(
         private updateConfigsAndSocialOfPlayerProfile: UpdateConfigsAndSocialOfPlayerProfile,
         private updatePlayerProfileRole: UpdatePlayerProfileRole
     ){}
-    async updateSkin(req: Request, res: Response){
+    async updateSkin(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { skin } = req.body
         if(validator.validateUUID(uuid) && validator.validateString(skin)){
@@ -28,7 +28,7 @@ class PlayerProfileConfigsController{
         }
         return res.sendStatus(400)
     }
-    async updateLanguage(req: Request, res: Response){
+    async updateLanguage(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { language } = req.body
         if(validator.validateUUID(uuid) && validateLanguage(language)){
@@ -44,7 +44,7 @@ class PlayerProfileConfigsController{
         }
         return res.sendStatus(400)
     }
-    async updateFriendInvitePreferences(req: Request, res: Response){
+    async updateFriendInvitePreferences(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { friend_invites_preference } = req.body
         if(validator.validateUUID(uuid) && validator.validateBoolean(friend_invites_preference)){
@@ -61,7 +61,7 @@ class PlayerProfileConfigsController{
         return res.sendStatus(400)
     }
     // SOCIAL
-    async updateSocialMedia(req: Request, res: Response){
+    async updateSocialMedia(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { email, discord, twitch, youtube } = req.body
         if(validator.validateUUID(uuid)){
@@ -81,7 +81,7 @@ class PlayerProfileConfigsController{
         return res.sendStatus(400)
     }
     // ROLE
-    async updateRole(req: Request, res: Response){
+    async updateRole(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { applicator_uuid, role_id } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(applicator_uuid) && typeof(role_id) == 'number' && roles.isRole(role_id)){
@@ -100,10 +100,3 @@ class PlayerProfileConfigsController{
         return res.sendStatus(400)
     }
 }
-
-const playerProfileConfigsController = new PlayerProfileConfigsController(
-    new UpdateConfigsAndSocialOfPlayerProfile(playerProfileRepository),
-    new UpdatePlayerProfileRole(playerProfileRepository)
-)
-
-export default playerProfileConfigsController

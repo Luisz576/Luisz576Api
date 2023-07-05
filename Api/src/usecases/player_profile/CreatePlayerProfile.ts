@@ -10,7 +10,7 @@ type CreatePlayerProfileRequest = {
     username: string
 }
 
-export class CreatePlayerProfile{
+export default class CreatePlayerProfile{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository,
         private blockListRepository: IBlockListRepository,

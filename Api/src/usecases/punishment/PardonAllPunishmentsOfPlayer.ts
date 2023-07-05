@@ -8,7 +8,7 @@ type PardonAllPunishmentsOfPlayerRequest = {
     applicator_uuid: string
 }
 
-export class PardonAllPunishmentsOfPlayer{
+export default class PardonAllPunishmentsOfPlayer{
     constructor(
         private punishmentRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository

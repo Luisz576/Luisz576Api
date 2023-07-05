@@ -7,7 +7,7 @@ type GetBlockedPlayersOfPlayerProfileResponse = {
     uuid: string
 }
 
-export class GetBlockedPlayersOfPlayerProfile{
+export default class GetBlockedPlayersOfPlayerProfile{
     constructor(
         private blockList: IBlockListRepository,
         private playerProfileRepository: IPlayerProfileRepository

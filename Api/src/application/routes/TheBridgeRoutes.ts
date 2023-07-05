@@ -8,8 +8,11 @@ const routes = Router()
 routes.use(AuthenticatorMiddleware)
 
 // <The Bridge>
-routes.post('/match', TheBridgeController.store)
-routes.get('/:uuid/profile', TheBridgeController.searchProfile)
-routes.get('/:uuid/matches', TheBridgeController.searchProfileMatches)
+const theBridgeController = new TheBridgeController(
+    
+)
+routes.post('/match', theBridgeController.store)
+routes.get('/:uuid/profile', theBridgeController.searchProfile)
+routes.get('/:uuid/matches', theBridgeController.searchProfileMatches)
 
 export default routes

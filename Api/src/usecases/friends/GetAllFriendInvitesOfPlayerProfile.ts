@@ -9,7 +9,7 @@ type GetAllFriendInvitesOfPlayerProfileRequest = {
     accepted?: boolean
 }
 
-export class GetAllFriendInvitesOfPlayerProfile{
+export default class GetAllFriendInvitesOfPlayerProfile{
     constructor(
         private friendInviteRepository: IFriendInviteRepository
     ){}

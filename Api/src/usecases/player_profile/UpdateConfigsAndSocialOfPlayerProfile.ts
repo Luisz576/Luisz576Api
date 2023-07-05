@@ -7,7 +7,7 @@ type UpdateConfigsAndSocialOfPlayerProfileRequest = Partial<IPlayerProfileConfig
     uuid: string
 }
 
-export class UpdateConfigsAndSocialOfPlayerProfile{
+export default class UpdateConfigsAndSocialOfPlayerProfile{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}

@@ -2,7 +2,7 @@ import { IProduct, IProductCreateProps } from "../../domain/models/product/Produ
 import { IProductRepository } from "../../domain/repositories/product/ProductRepository";
 import { PromiseEither, left, right } from "../../types/either";
 
-export class CreateProduct{
+export default class CreateProduct{
     constructor(
         private productsRepository: IProductRepository
     ){}

@@ -1,20 +1,19 @@
 import { getJsonError, logError } from '../../../domain/errors/errors'
-import { Request, Response } from 'express'
 import validator from '../../../services/validator'
 import FriendInviteRepository from '../../../repositories/friends/FriendInviteRepository'
 import PlayerProfileRepository from '../../../repositories/player_profile/PlayerProfileRepository'
 import FriendsListRepository from '../../../repositories/friends/FriendsListRepository'
-import { CreateFriendInvite } from '../../../usecases/friends/CreateFriendInvite'
-import friendInviteRepository from '../../../repositories/friends/FriendInviteRepository'
-import playerProfileRepository from '../../../repositories/player_profile/PlayerProfileRepository'
-import { GetAllFriendInvitesOfPlayerProfile } from '../../../usecases/friends/GetAllFriendInvitesOfPlayerProfile'
+import CreateFriendInvite from '../../../usecases/friends/CreateFriendInvite'
+import GetAllFriendInvitesOfPlayerProfile from '../../../usecases/friends/GetAllFriendInvitesOfPlayerProfile'
+import IRequest from '../../../domain/adapters/IRequest'
+import IResponse from '../../../domain/adapters/IResponse'
 
-class FriendInvitesController{
+export default class FriendInvitesController{
     constructor(
         private createFriendInvite: CreateFriendInvite,
         private getAllFriendInvitesOfPlayerProfile: GetAllFriendInvitesOfPlayerProfile
     ){}
-    async search(req: Request, res: Response){
+    async search(req: IRequest, res: IResponse){
         const { uuid } = req.params
         if(validator.validateUUID(uuid)){
             const invites_response = await this.getAllFriendInvitesOfPlayerProfile.execute({
@@ -33,7 +32,7 @@ class FriendInvitesController{
         }
         return res.sendStatus(400)
     }
-    async store(req: Request, res: Response){
+    async store(req: IRequest, res: IResponse){
         const { uuid } = req.params
         const { new_friend_uuid } = req.body
         if(validator.validateUUID(uuid) && validator.validateUUID(new_friend_uuid)){
@@ -49,7 +48,7 @@ class FriendInvitesController{
         }
         return res.sendStatus(400)
     }
-    async accept(req: Request, res: Response){
+    async accept(req: IRequest, res: IResponse){
         const { uuid, friend_uuid } = req.params
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             const profile_response = await PlayerProfileRepository.search({
@@ -122,10 +121,3 @@ class FriendInvitesController{
         return res.sendStatus(400)
     }
 }
-
-const friendInvitesController = new FriendInvitesController(
-    new CreateFriendInvite(friendInviteRepository, playerProfileRepository),
-    new GetAllFriendInvitesOfPlayerProfile(friendInviteRepository),
-)
-
-export default friendInvitesController
