@@ -3,6 +3,10 @@ interface LogErrorProps{
     error_name: string
 }
 
+// TODO atualizar
+// nos usecases retornar um tipo de LogError e ai ter enum com os tipo e deixar para erros
+// de try{}catch{} um enum_name.generic
+
 class LogError implements LogErrorProps{
     id: number
     error_name: string
