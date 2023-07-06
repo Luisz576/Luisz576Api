@@ -1,29 +1,20 @@
 import {Router} from 'express'
 
-import AuthenticatorMiddleware from '../middlewares/AuthenticatorMiddleware'
-import PunishmentsController from '../controllers/punishments/PunishmentsController'
-import GivePunishment from '../../usecases/punishment/GivePunishment'
-import PardonAllPunishmentsOfPlayer from '../../usecases/punishment/PardonAllPunishmentsOfPlayer'
-import GetAllPunishmentsOfPlayer from '../../usecases/punishment/GetAllPunishmentsOfPlayer'
-import punishmentRepository from '../../repositories/punishment/PunishmentRepository'
-import playerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
-import ExpressAdapter from '../../domain/adapters/ExpressAdapter'
+import ExpressAdapter from '../adapters/ExpressAdapter'
+import punishmentsControllerFactory from '../factories/punishments/PunishmentsControllerFactory'
+import authenticatorMiddlewareFactory from '../factories/auth/AuthenticatorMiddlewareFactory'
 
 const routes = Router()
 
 // middleware
-const authenticatorMiddleware = new AuthenticatorMiddleware()
+const authenticator_middleware = authenticatorMiddlewareFactory()
 routes.use((req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
-    return authenticatorMiddleware.auth(adapter)
+    return authenticator_middleware.auth(adapter)
 })
 
 // <Punishments>
-const punishmentsController = new PunishmentsController(
-    new GivePunishment(punishmentRepository, playerProfileRepository),
-    new PardonAllPunishmentsOfPlayer(punishmentRepository, playerProfileRepository),
-    new GetAllPunishmentsOfPlayer(punishmentRepository, playerProfileRepository)
-)
+const punishmentsController = punishmentsControllerFactory()
 routes.get('/:uuid', (req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
     return punishmentsController.search(adapter)

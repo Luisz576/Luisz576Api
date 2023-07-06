@@ -1,11 +1,6 @@
 import { IFriendListCreateProps, IFriendListSearchProps } from "../../domain/models/friends/FriendsList"
 import FriendsList, { IFriendListModel } from "../../schemas/friends/FriendsList"
-import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository"
-
-type FriendListDTO = {
-    friends_list: IFriendListModel,
-    player_profile_uuid: string
-}
+import { FriendsListDTO, IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository"
 
 class FriendsListRepository implements IFriendsListRepository{
     async store(data: IFriendListCreateProps): Promise<IFriendListModel>{
@@ -21,17 +16,24 @@ class FriendsListRepository implements IFriendsListRepository{
     async search(filter: IFriendListSearchProps): Promise<IFriendListModel | null>{
         return await FriendsList.findOne(filter)
     }
-    async insertFriend(data: FriendListDTO): Promise<void>{
-        data.friends_list.friends.push({
-            player_profile: data.player_profile_uuid,
+    async insertFriend(data: FriendsListDTO): Promise<void>{
+        const friends_list = await this.getById(data.friends_list_id)
+        if(!friends_list){
+            throw new Error("Can't find FriendsList")
+        }
+        friends_list.friends.push({
+            player_uuid: data.player_profile_uuid,
         })
-        await data.friends_list.save()
+        await friends_list.save()
     }
-    async removeFriend(data: FriendListDTO): Promise<void>{
+    async removeFriend(data: FriendsListDTO): Promise<void>{
+        const friends_list = await this.getById(data.friends_list_id)
+        if(!friends_list){
+            throw new Error("Can't find FriendsList")
+        }
         let targetIndex: number = -1
-        const friends = data.friends_list.friends
-        for(let i = 0; i < friends.length; i++){
-            if(friends[i].player_profile == data.player_profile_uuid){
+        for(let i = 0; i < friends_list.friends.length; i++){
+            if(friends_list.friends[i].player_uuid == data.player_profile_uuid){
                 targetIndex = i
                 break
             }
@@ -39,8 +41,8 @@ class FriendsListRepository implements IFriendsListRepository{
         if(targetIndex == -1){
             throw new Error("Players aren't friends (removeFriend)")
         }
-        friends.splice(targetIndex, 1)
-        await data.friends_list.save()
+        friends_list.friends.splice(targetIndex, 1)
+        await friends_list.save()
     }
 }
 

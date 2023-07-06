@@ -1,48 +1,25 @@
 import {Router} from 'express'
 
-import AuthenticatorMiddleware from '../middlewares/AuthenticatorMiddleware'
-// controllers
-import PlayerProfileController from '../controllers/profiles/PlayerProfileController'
-import PlayerProfileConfigsController from '../controllers/profiles/PlayerProfileConfigsController'
-import FriendsController from '../controllers/friends/FriendsController'
-import FriendInvitesController from '../controllers/friends/FriendInvitesController'
-import BlocksController from '../controllers/blocks/BlocksController'
-// usecases
-import BlockPlayerProfile from '../../usecases/player_profile/BlockPlayerProfile'
-import UnblockPlayerProfile from '../../usecases/player_profile/UnblockPlayerProfile'
-import GetBlockedPlayersOfPlayerProfile from '../../usecases/player_profile/GetBlockedPlayersOfPlayerProfile'
-import GetAllFriendInvitesOfPlayerProfile from '../../usecases/friends/GetAllFriendInvitesOfPlayerProfile'
-import CreateFriendInvite from '../../usecases/friends/CreateFriendInvite'
-import UpdateConfigsAndSocialOfPlayerProfile from '../../usecases/player_profile/UpdateConfigsAndSocialOfPlayerProfile'
-import UpdatePlayerProfileRole from '../../usecases/player_profile/UpdatePlayerProfileRole'
-import CreatePlayerProfile from '../../usecases/player_profile/CreatePlayerProfile'
-import GetPlayerProfileByUUID from '../../usecases/player_profile/GetPlayerProfileByUUID'
-import MakePlayerProfileSession from '../../usecases/player_profile/MakePlayerProfileSession'
-// Repositories
-import blockListRepository from '../../repositories/player_profile/BlockListRepository'
-import playerProfileRepository from '../../repositories/player_profile/PlayerProfileRepository'
-import friendInviteRepository from '../../repositories/friends/FriendInviteRepository'
-import friendListRepository from '../../repositories/friends/FriendsListRepository'
-import productsListRepository from '../../repositories/player_profile/ProductsListRepository'
-import AcceptFriendInvite from '../../usecases/friends/AcceptFriendInvite'
-import ExpressAdapter from '../../domain/adapters/ExpressAdapter'
+import ExpressAdapter from '../adapters/ExpressAdapter'
+import playerProfileControllerFactory from '../factories/profiles/PlayerProfileControllerFactory'
+import playerProfileConfigsControllerFactory from '../factories/profiles/PlayerProfileConfigsControllerFactory'
+import friendsControllerFactory from '../factories/friends/FriendsControllerFactory'
+import friendInvitesControllerFactory from '../factories/friends/FriendInvitesControllerFactory'
+import blocksControllerFactory from '../factories/blocks/BlocksControllerFactory'
+import authenticatorMiddlewareFactory from '../factories/auth/AuthenticatorMiddlewareFactory'
 
 const routes = Router()
 
 // middleware
-const authenticatorMiddleware = new AuthenticatorMiddleware()
+const authenticator_middleware = authenticatorMiddlewareFactory()
 routes.use((req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
-    return authenticatorMiddleware.auth(adapter)
+    return authenticator_middleware.auth(adapter)
 })
 
 // <PlayerProfile>
 // profile
-const playerProfileController = new PlayerProfileController(
-    new CreatePlayerProfile(playerProfileRepository, blockListRepository, friendListRepository, productsListRepository),
-    new GetPlayerProfileByUUID(playerProfileRepository),
-    new MakePlayerProfileSession(playerProfileRepository)
-)
+const playerProfileController = playerProfileControllerFactory()
 routes.get('/:uuid', (req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
     return playerProfileController.search(adapter)
@@ -57,10 +34,7 @@ routes.patch('/:uuid/session', (req, res, next) => {
 })
 
 //configs
-const playerProfileConfigsController = new PlayerProfileConfigsController(
-    new UpdateConfigsAndSocialOfPlayerProfile(playerProfileRepository),
-    new UpdatePlayerProfileRole(playerProfileRepository)
-)
+const playerProfileConfigsController = playerProfileConfigsControllerFactory()
 routes.patch('/:uuid/skin', (req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
     return playerProfileConfigsController.updateSkin(adapter)
@@ -83,9 +57,7 @@ routes.patch('/:uuid/updatesocialmedia', (req, res, next) => {
 })
 
 //friends
-const friendsController = new FriendsController(
-    
-)
+const friendsController = friendsControllerFactory()
 routes.get('/:uuid/friends', (req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
     return friendsController.search(adapter)
@@ -96,11 +68,7 @@ routes.delete('/:uuid/removefriend', (req, res, next) => {
 })
 
 //invites
-const friendInvitesController = new FriendInvitesController(
-    new CreateFriendInvite(friendInviteRepository, playerProfileRepository),
-    new GetAllFriendInvitesOfPlayerProfile(friendInviteRepository),
-    new AcceptFriendInvite()
-)
+const friendInvitesController = friendInvitesControllerFactory()
 routes.post('/:uuid/newfriend', (req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
     return friendInvitesController.store(adapter)
@@ -115,11 +83,7 @@ routes.get('/:uuid/friendinvites', (req, res, next) => {
 })
 
 //blocks
-const blocksController = new BlocksController(
-    new BlockPlayerProfile(blockListRepository, playerProfileRepository),
-    new UnblockPlayerProfile(blockListRepository, playerProfileRepository),
-    new GetBlockedPlayersOfPlayerProfile(blockListRepository, playerProfileRepository)
-)
+const blocksController = blocksControllerFactory()
 routes.get('/:uuid/blocks', (req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
     return blocksController.search(adapter)

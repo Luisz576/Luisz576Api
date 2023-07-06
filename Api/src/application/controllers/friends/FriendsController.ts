@@ -4,7 +4,7 @@ import IHttpContext from '../../../domain/interfaces/IHttpContext'
 
 export default class FriendsController{
     constructor(
-
+        
     ){}
     async search(httpContext: IHttpContext){
         const { uuid } = req.params

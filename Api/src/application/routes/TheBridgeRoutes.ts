@@ -1,22 +1,20 @@
 import {Router} from 'express'
 
-import AuthenticatorMiddleware from '../middlewares/AuthenticatorMiddleware'
-import TheBridgeController from '../controllers/games/TheBridgeController'
-import ExpressAdapter from '../../domain/adapters/ExpressAdapter'
+import ExpressAdapter from '../adapters/ExpressAdapter'
+import authenticatorMiddlewareFactory from '../factories/auth/AuthenticatorMiddlewareFactory'
+import theBridgeControllerFactory from '../factories/games/the_bridge/TheBridgeControllerFactory'
 
 const routes = Router()
 
 // middleware
-const authenticatorMiddleware = new AuthenticatorMiddleware()
+const authenticator_middleware = authenticatorMiddlewareFactory()
 routes.use((req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
-    return authenticatorMiddleware.auth(adapter)
+    return authenticator_middleware.auth(adapter)
 })
 
 // <The Bridge>
-const theBridgeController = new TheBridgeController(
-    
-)
+const theBridgeController = theBridgeControllerFactory()
 routes.post('/match', (req, res, next) => {
     const adapter = new ExpressAdapter(req, res, next)
     return theBridgeController.store(adapter)
