@@ -30,7 +30,15 @@ export default class GetBlockedPlayersOfPlayerProfile{
                 return left("")
             }
 
-            return right(block_list.blocked_players)
+            const blocks: IBlockedPlayer[] = []
+
+            for(let b of block_list.blocked_players){
+                if(b.is_blocked){
+                    blocks.push(b)
+                }
+            }
+
+            return right(blocks)
         }catch(err){
             return left(err)
         }

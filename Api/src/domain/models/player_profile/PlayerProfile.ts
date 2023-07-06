@@ -1,3 +1,4 @@
+import IEntity from "../IEntity"
 import { IFriend } from "../friends/FriendsList"
 import { IPunishment } from "../punishments/Punishment"
 import { IBlockedPlayer } from "./BlocksList"
@@ -30,7 +31,7 @@ export type IPlayerProfileSearchProps = Partial<IPlayerProfileCreateProps> & Par
 }
 
 // TODO desacoplar ID?
-export interface IPlayerProfile extends Required<IPlayerProfileSearchProps>{
+export interface IPlayerProfile extends IEntity, Required<IPlayerProfileSearchProps>{
     created_at: Date
     last_login: Date
     getFriends(): Promise<IFriend[]>

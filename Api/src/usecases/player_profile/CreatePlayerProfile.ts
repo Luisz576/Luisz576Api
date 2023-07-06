@@ -50,9 +50,9 @@ export default class CreatePlayerProfile{
             const profile = await this.playerProfileRepository.store({
                 uuid: data.uuid,
                 username: data.username,
-                block_list: ,
-                friends_list: ,
-                products_list: ,
+                block_list: block_list._id,
+                friends_list: friends_list._id,
+                products_list: products_list._id,
             })
             return right(profile)
         }catch(err){

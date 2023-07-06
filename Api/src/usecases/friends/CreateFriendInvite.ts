@@ -21,12 +21,14 @@ export default class CreateFriendInvite{
 
             if(!sender){
                 // TODO
-                return left("")
+                return left("a")
             }
+
+            console.log(data.sender_uuid, data.receiver_uuid, await sender.areFriends(data.receiver_uuid))
 
             if(await sender.areFriends(data.receiver_uuid)){
                 // TODO
-                return left("")
+                return left("b")
             }
 
             const invites = await this.friendInviteRepository.searchAll({
@@ -38,7 +40,7 @@ export default class CreateFriendInvite{
 
             for(let invite of invites){
                 if(invite.stillValid()){
-                    return left("")
+                    return left("c")
                 }else{
                     this.friendInviteRepository.expiresInvite(invite)
                 }
@@ -50,12 +52,12 @@ export default class CreateFriendInvite{
 
             if(!receiver){
                 // TODO
-                return left("")
+                return left("d")
             }
 
             if(!receiver.friend_invites_preference){
                 // TODO
-                return left("")
+                return left("e")
             }
 
             const friend_invite = await this.friendInviteRepository.create({

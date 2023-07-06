@@ -1,3 +1,5 @@
+import IEntity from "../IEntity"
+
 export interface IPunishmentCreateProps{
     player_uuid: string,
     applicator_uuid: string
@@ -12,7 +14,7 @@ export type IPunishmentSearchProps = Partial<IPunishmentCreateProps> & {
     deleted?: boolean
 }
 
-export interface IPunishment extends Required<IPunishmentSearchProps>{
+export interface IPunishment extends IEntity, Required<IPunishmentSearchProps>{
     created_at: Date
     expires(): void
     getRemainingTimeInSeconds(): number

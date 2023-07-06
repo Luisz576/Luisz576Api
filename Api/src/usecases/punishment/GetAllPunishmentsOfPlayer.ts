@@ -24,8 +24,7 @@ export default class GetAllPunishmentsOfPlayer{
             }
 
             if(!player_profile.punishment){
-                // TODO sistema de erro customizado
-                return left(new Error(""))
+                return right([])
             }
 
             const punishments = await this.punishmentsRepository.search({

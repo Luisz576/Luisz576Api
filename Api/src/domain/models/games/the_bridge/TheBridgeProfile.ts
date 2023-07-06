@@ -1,4 +1,5 @@
 import { ITheBridgeGame } from "../../../models/games/the_bridge/TheBridgeGame"
+import IEntity from "../../IEntity"
 import TheBridgeMode from "./TheBridgeMode"
 
 export interface ITheBridgeProfileCreateProps{
@@ -40,7 +41,7 @@ export type ITheBridgeProfileSearchProps= Partial<ITheBridgeProfileCreateProps> 
 }
 
 // TODO desacoplar
-export interface ITheBridgeProfile extends Required<ITheBridgeProfileSearchProps>{
+export interface ITheBridgeProfile extends IEntity, Required<ITheBridgeProfileSearchProps>{
     created_at: Date
     getMatches(mode?: TheBridgeMode): Promise<ITheBridgeGame[]>
 }

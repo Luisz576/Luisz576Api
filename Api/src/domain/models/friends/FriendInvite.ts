@@ -1,3 +1,5 @@
+import IEntity from "../IEntity"
+
 export interface IFriendInviteCreateProps{
     sender: string
     receiver: string
@@ -13,7 +15,7 @@ export interface IInviteFriendValidate{
     remainingTimeInSeconds: number
 }
 
-export interface IFriendInvite extends Required<IFriendInviteSearchProps>{
+export interface IFriendInvite extends IEntity, Required<IFriendInviteSearchProps>{
     created_at: Date
     accept(): void
     expires(): void

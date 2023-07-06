@@ -111,20 +111,17 @@ const PlayerProfileSchema = new Schema<IPlayerProfile>({
 })
 
 PlayerProfileSchema.methods.getFriends = async function(): Promise<IFriend[]> {
-    const friends_list_response = await FriendsListRepository.getById(this.friends_list)
-    if(friends_list_response.isRight()){
-        if(friends_list_response.value){
-            return friends_list_response.value.friends
-        }
-        throw new Error(`Can't find FriendList ${this.friends_list}`)
+    const friends_list = await FriendsListRepository.getById(this.friends_list)
+    if(!friends_list){
+        throw new Error(`Can't find FriendList '${this.friends_list}'`)
     }
-    throw new Error(friends_list_response.value)
+    return friends_list.friends
 }
 
 PlayerProfileSchema.methods.areFriends = async function(profileUUID: string): Promise<boolean>{
     const friends = await this.getFriends()
-    for(let i in friends){
-        if(friends[i].player_profile == profileUUID){
+    for(let f of friends){
+        if(f.player_uuid == profileUUID){
             return true
         }
     }
@@ -132,20 +129,17 @@ PlayerProfileSchema.methods.areFriends = async function(profileUUID: string): Pr
 }
 
 PlayerProfileSchema.methods.getBlocks = async function(): Promise<IBlockedPlayer[]>{
-    const block_list_response = await BlockListRepository.getById(this.block_list)
-    if(block_list_response.isRight()){
-        if(block_list_response.value){
-            return block_list_response.value.blocked_players
-        }
-        throw new Error(`Can't find BlockList (PlayerProfile '${this._id}')`)
+    const block_list = await BlockListRepository.getById(this.block_list)
+    if(!block_list){
+        throw new Error(`Can't find BlockList '${this.block_list}'`)
     }
-    throw new Error(block_list_response.value)
+    return block_list.blocked_players
 }
 
 PlayerProfileSchema.methods.isBlockedByPlayer = async function(profileUUID: string): Promise<boolean>{
     const blocked_players = await this.getBlocks()
     for(let i in blocked_players){
-        if(blocked_players[i].player_profile == profileUUID){
+        if(blocked_players[i].player_uuid == profileUUID){
             if(blocked_players[i].is_blocked){
                 return true
             }
@@ -156,28 +150,20 @@ PlayerProfileSchema.methods.isBlockedByPlayer = async function(profileUUID: stri
 
 PlayerProfileSchema.methods.getPunishments = async function(): Promise<IPunishment[]>{
     if(this.punishment){
-        const punishments_response = await PunishmentRepository.search({
+        return await PunishmentRepository.search({
             player_uuid: this.uuid
         })
-        if(punishments_response.isRight()){
-            return punishments_response.value
-        }
-        throw new Error(punishments_response.value)
     }
     return []
 }
 
 PlayerProfileSchema.methods.getValidPunishments = async function(): Promise<IPunishment[]>{
     if(this.punishment){
-        const punishments_response = await PunishmentRepository.search({
+        return await PunishmentRepository.search({
             player_uuid: this.uuid,
             deleted: false,
             is_valid: true
         })
-        if(punishments_response.isRight()){
-            return punishments_response.value
-        }
-        throw new Error('punishments_response.value')
     }
     return []
 }

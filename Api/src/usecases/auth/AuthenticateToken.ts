@@ -9,7 +9,7 @@ type AuthenticateTokenResponse = {
 export default class AuthenticateToken{
     async execute(data: AuthenticateTokenResponse){
         try{
-            if(typeof(data.token) != 'string'){
+            if(typeof(data.token) != 'string' || data.token == null){
                 return data.callback(right(false))
             }
 

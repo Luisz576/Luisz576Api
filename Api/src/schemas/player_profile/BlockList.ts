@@ -29,20 +29,20 @@ const BlockListSchema = new Schema<IBlockList>({
 
 BlockListSchema.methods.block = function(playerUUID: string) {
     for(let i in this.blocked_players){
-        if(this.blocked_players[i].player_profile == playerUUID){
+        if(this.blocked_players[i].player_uuid == playerUUID){
             this.blocked_players[i].is_blocked = true
             this.blocked_players[i].timestamp = new Date(Date.now())
             return
         }
     }
     this.blocked_players.push({
-        player_profile: playerUUID,
+        player_uuid: playerUUID,
     })
 }
 
 BlockListSchema.methods.unblock = function(playerUUID: string): boolean {
     for(let i in this.blocked_players){
-        if(this.blocked_players[i].player_profile == playerUUID){
+        if(this.blocked_players[i].player_uuid == playerUUID){
             this.blocked_players[i].is_blocked = false
             return true
         }

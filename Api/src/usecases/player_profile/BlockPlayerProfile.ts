@@ -19,7 +19,11 @@ export default class BlockPlayerProfile{
             })
             if(!profile){
                 // TODO
-                return left("")
+                return left("a")
+            }
+            if(await profile.isBlockedByPlayer(data.uuid_to_block)){
+                // TODO
+                return left("b")
             }
             await this.blockListRepository.block({
                 block_list_id: profile.block_list,

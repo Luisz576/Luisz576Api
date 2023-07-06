@@ -19,7 +19,11 @@ export default class UnblockPlayerProfile{
             })
             if(!profile){
                 // TODO
-                return left("")
+                return left("a")
+            }
+            if(!(await profile.isBlockedByPlayer(data.uuid_to_unblock))){
+                // TODO
+                return left("b")
             }
             await this.blockListRepository.unblock({
                 block_list_id: profile.block_list,

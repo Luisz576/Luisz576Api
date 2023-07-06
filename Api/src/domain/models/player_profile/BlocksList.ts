@@ -1,3 +1,5 @@
+import IEntity from "../IEntity"
+
 export interface IBlockListCreateProps{
     player_uuid: string
 }
@@ -9,7 +11,7 @@ export interface IBlockedPlayer{
     is_blocked?: boolean,
     timestamp?: Date
 }
-export interface IBlockList extends IBlockListCreateProps{
+export interface IBlockList extends IEntity, IBlockListCreateProps{
     blocked_players: IBlockedPlayer[]
     block(playerUUID: string): boolean
     unblock(playerUUID: string): boolean

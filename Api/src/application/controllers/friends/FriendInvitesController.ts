@@ -50,8 +50,8 @@ export default class FriendInvitesController{
         const { uuid, friend_uuid } = httpContext.getRequest().params
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
             const accept_response = await this.acceptFriendInvite.execute({
-                uuid,
-                friend_uuid
+                receiver_uuid: uuid,
+                sender_uuid: friend_uuid
             })
             if(accept_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)

@@ -1,3 +1,5 @@
+import IEntity from "../IEntity"
+
 export interface IProductCreateProps{
     name: string
     icon_item: string
@@ -10,6 +12,6 @@ export interface IProductCreateProps{
 
 export type IProductSearchProps = Partial<IProductCreateProps>
 
-export interface IProduct extends Required<IProductCreateProps>{
+export interface IProduct extends IEntity, Required<IProductCreateProps>{
     created_at: Date
 }

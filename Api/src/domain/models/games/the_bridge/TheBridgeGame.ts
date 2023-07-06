@@ -1,4 +1,5 @@
 import { IPlayerProfile } from "../../../models/player_profile/PlayerProfile"
+import IEntity from "../../IEntity"
 
 export interface ITheBridgePlayer {
     uuid: string
@@ -21,7 +22,7 @@ export interface ITheBridgeGameSearchProps{
 }
 
 // TODO desacoplar
-export interface ITheBridgeGame extends ITheBridgeGameCreateProps{
+export interface ITheBridgeGame extends IEntity, ITheBridgeGameCreateProps{
     timestamp: Date
     getPlayers(): Promise<IPlayerProfile[]>
 }

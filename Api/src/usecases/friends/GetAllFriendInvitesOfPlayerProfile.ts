@@ -17,7 +17,7 @@ export default class GetAllFriendInvitesOfPlayerProfile{
         try{
             const filter = {
                 receiver: data.uuid,
-                ...(validator.validateBoolean(data.is_valid) && { is_valid: data.is_valid }),
+                ...(validator.validateBoolean(data.is_valid) && { valid_invite: data.is_valid }),
                 ...(validator.validateBoolean(data.accepted) && { accepted: data.accepted })
             }
             

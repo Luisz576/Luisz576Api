@@ -1,3 +1,5 @@
+import IEntity from "../IEntity"
+
 export interface IProductsListCreateProps{
     player_uuid: string
 }
@@ -8,6 +10,6 @@ export interface IProductItem{
     product_name: string
     timestamp?: Date
 }
-export interface IProductsList extends IProductsListCreateProps{
+export interface IProductsList extends IEntity, IProductsListCreateProps{
     products: IProductItem[]
 }
