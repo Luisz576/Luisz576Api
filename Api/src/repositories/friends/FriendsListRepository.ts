@@ -46,6 +46,6 @@ class FriendsListRepository implements IFriendsListRepository{
     }
 }
 
-const friendListRepository = new FriendsListRepository()
+const friendsListRepository = new FriendsListRepository()
 
-export default friendListRepository
+export default friendsListRepository

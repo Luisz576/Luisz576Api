@@ -2,6 +2,9 @@ import IHttpContext from '../../../domain/interfaces/IHttpContext'
 import validator from '../../../services/validator'
 
 export default class TheBridgeController {
+    constructor(
+        
+    ){}
     async store(httpContext: IHttpContext){
         return httpContext.getResponse().sendStatus(501)
     }

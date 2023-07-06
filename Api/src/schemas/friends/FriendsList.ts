@@ -6,6 +6,7 @@ const FriendsListSchema = new Schema<IFriendList>({
     player_uuid: {
         type: String,
         required: true,
+        unique: true,
         immutable: true
     },
     friends: {

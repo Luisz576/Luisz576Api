@@ -1,96 +1,46 @@
 import validator from '../../../services/validator'
-import { getJsonError, logError } from '../../../domain/errors/errors'
+import { logError } from '../../../domain/errors/errors'
 import IHttpContext from '../../../domain/interfaces/IHttpContext'
+import GetAllFriends from '../../../usecases/friends/GetAllFriends'
+import RemoveFriend from '../../../usecases/friends/RemoveFriend'
 
 export default class FriendsController{
     constructor(
-        
+        private getAllFriends: GetAllFriends,
+        private removeFriend: RemoveFriend
     ){}
     async search(httpContext: IHttpContext){
-        const { uuid } = req.params
+        const { uuid } = httpContext.getRequest().params
         if(validator.validateUUID(uuid)){
-            const profile_response = await PlayerProfileRepository.search({
+            const friends_response = await this.getAllFriends.execute({
                 uuid
             })
-            if(profile_response.isRight()){
-                const profile = profile_response.value
-                if(profile){
-                    const friends_response = await profile.getFriends()
-                    if(friends_response.isRight()){
-                        return res.json({
-                            "status": 200,
-                            uuid,
-                            friends: friends_response.value
-                        })
-                    }
-                    logError(profile_response.value, 'FriendsController', 'search', 'PlayerProfile.getFriends')
-                    return res.sendStatus(500)
-                }
-                return res.json(getJsonError(10, {values: { uuid }}))
+            if(friends_response.isRight()){
+                return httpContext.getResponse().json({
+                    status: 200,
+                    uuid,
+                    friends: friends_response.value
+                })
             }
-            logError(profile_response.value, 'FriendsController', 'search', 'PlayerProfileRepository.search')
-            return res.sendStatus(500)
+            logError(friends_response.value, 'FriendsController', 'search', 'GetAllFriends')
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
-    },
+        return httpContext.getResponse().sendStatus(400)
+    }
     async remove(httpContext: IHttpContext){
-        const { uuid } = req.params
-        const { friend_uuid } = req.body
+        const { uuid } = httpContext.getRequest().params
+        const { friend_uuid } = httpContext.getRequest().body
         if(validator.validateUUID(uuid) && validator.validateUUID(friend_uuid)){
-            const profile_response = await PlayerProfileRepository.search({
-                uuid
+            const remove_friends_response = await this.removeFriend.execute({
+                player_uuid: uuid,
+                target_uuid: friend_uuid
             })
-            if(profile_response.isRight()){
-                const profile = profile_response.value
-                if(profile){
-                    const friend_profile_response = await PlayerProfileRepository.search({
-                        uuid: friend_uuid
-                    })
-                    if(friend_profile_response.isRight()){
-                        const friend_profile = friend_profile_response.value
-                        if(friend_profile){
-                            const are_friends_response = await profile.areFriends(friend_profile.uuid)
-                            if(are_friends_response.isRight()){
-                                if(are_friends_response.value){
-                                    // remove in profile
-                                    const remove_in_profile_response = await FriendsListRepository.removeFriend({
-                                        friends_list_id: friend_profile.friends_list,
-                                        player_profile_uuid: profile.uuid
-                                    })
-                                    if(remove_in_profile_response.isLeft()){
-                                        logError(remove_in_profile_response.value, 'FriendsController', 'remove', 'FriendsListRepository.removeFriend')
-                                        return res.sendStatus(500)
-                                    }
-                                    // remove in other profile
-                                    const remove_in_friend_response = await FriendsListRepository.removeFriend({
-                                        friends_list_id: profile.friends_list,
-                                        player_profile_uuid: friend_profile.uuid
-                                    })
-                                    if(remove_in_friend_response.isLeft()){
-                                        logError(remove_in_friend_response.value, 'FriendsController', 'remove', 'FriendsListRepository.removeFriend')
-                                        return res.sendStatus(500)
-                                    }
-                                    return res.sendStatus(200)
-                                }
-                                return res.json(getJsonError(117))
-                            }
-                            logError(friend_profile_response.value, 'FriendsController', 'remove', 'PlayerProfile.areFriends')
-                            return res.sendStatus(500)
-                        }
-                        return res.json(getJsonError(15, {
-                            values: {
-                                "uuid_target": friend_uuid
-                            },
-                        }))
-                    }
-                    logError(friend_profile_response.value, 'FriendsController', 'remove', 'PlayerProfileRepository.search')
-                    return res.sendStatus(500)
-                }
-                return res.json(getJsonError(10, {values: { uuid }}))
+            if(remove_friends_response.isRight()){
+                return httpContext.getResponse().sendStatus(200)
             }
-            logError(profile_response.value, 'FriendsController', 'remove', 'PlayerProfileRepository.search')
-            return res.sendStatus(500)
+            logError(remove_friends_response.value, 'FriendsController', 'remove', 'RemoveFriend')
+            return httpContext.getResponse().sendStatus(500)
         }
-        return res.sendStatus(400)
+        return httpContext.getResponse().sendStatus(400)
     }
 }
