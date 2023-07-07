@@ -5,6 +5,7 @@ import GivePunishment from '../../../usecases/punishment/GivePunishment'
 import PardonAllPunishmentsOfPlayer from '../../../usecases/punishment/PardonAllPunishmentsOfPlayer'
 import GetAllPunishmentsOfPlayer from '../../../usecases/punishment/GetAllPunishmentsOfPlayer'
 import IHttpContext from '../../../domain/interfaces/IHttpContext'
+import { ErrorType } from '../../../domain/errors/error_type'
 
 export default class PunishmentsController {
     constructor(
@@ -30,9 +31,13 @@ export default class PunishmentsController {
                     punishment: punishment_response.value
                 })
             }
-            // TODO fazer tratamento de erro personalizado
-            logError(punishment_response.value, 'PunishmentsController', 'store', 'GivePunishment')
-            return httpContext.getResponse().sendStatus(500)
+            if(punishment_response.value.id == ErrorType.generic){
+                logError(punishment_response.value, 'PunishmentsController.store', 'GivePunishment')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(punishment_response.value.toJson({
+                uuid, applicator_uuid, punishment_type, reason, duration, comment
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
