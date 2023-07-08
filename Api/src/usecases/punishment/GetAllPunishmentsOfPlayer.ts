@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type"
+import { ILogError, logErrorFactory } from "../../domain/errors/errors"
 import { IPunishment } from "../../domain/models/punishments/Punishment"
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository"
 import { IPunishmentRepository } from "../../domain/repositories/punishment/PunishmentRepository"
@@ -12,15 +14,14 @@ export default class GetAllPunishmentsOfPlayer{
         private punishmentsRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: GetAllPunishmentsOfPlayerRequest): PromiseEither<any, IPunishment[]>{
+    async execute(data: GetAllPunishmentsOfPlayerRequest): PromiseEither<ILogError, IPunishment[]>{
         try{
             const player_profile = await this.playerProfileRepository.searchOne({
                 uuid: data.uuid
             })
     
             if(!player_profile){
-                // TODO sistema de erro customizado
-                return left(new Error(""))
+                return left(logErrorFactory(ErrorType.profile_not_founded))
             }
 
             if(!player_profile.punishment){
@@ -32,7 +33,7 @@ export default class GetAllPunishmentsOfPlayer{
             });
             return right(punishments)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

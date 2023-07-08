@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type";
+import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { IPunishmentRepository } from "../../domain/repositories/punishment/PunishmentRepository";
 import roles from "../../domain/roles";
@@ -13,20 +15,18 @@ export default class PardonAllPunishmentsOfPlayer{
         private punishmentRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: PardonAllPunishmentsOfPlayerRequest): PromiseEither<any, null>{
+    async execute(data: PardonAllPunishmentsOfPlayerRequest): PromiseEither<ILogError, null>{
         try{
             const player_profile = await this.playerProfileRepository.searchOne({
                 uuid: data.player_uuid
             })
     
             if(!player_profile){
-                // TODO sistema de erro customizado
-                return left(new Error(""))
+                return left(logErrorFactory(ErrorType.profile_not_founded))
             }
 
             if(!player_profile.punishment){
-                // TODO sistema de erro customizado
-                return left(new Error(""))
+                return right(null)
             }
     
             const applicator_profile = await this.playerProfileRepository.searchOne({
@@ -34,19 +34,17 @@ export default class PardonAllPunishmentsOfPlayer{
             })
     
             if(!applicator_profile){
-                // TODO sistema de erro customizado
-                return left(new Error(""))
+                return left(logErrorFactory(ErrorType.target_profile_not_found))
             }
     
             if(!roles.isAdmin(applicator_profile.role)){
-                // TODO sistema de erro customizado
-                return left(new Error(""))
+                return left(logErrorFactory(ErrorType.applicator_isnt_an_adm))
             }
 
             await this.punishmentRepository.pardonAllOfPlayer(data.player_uuid)
             return right(null)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

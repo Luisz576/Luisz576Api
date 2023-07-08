@@ -54,9 +54,13 @@ export default class PunishmentsController {
                     punishments: punishments_response.value
                 })
             }
-            // TODO fazer tratamento de erro personalizado
-            logError(punishments_response.value, 'PunishmentsController', 'search', 'GetAllPunishmentsOfPlayer')
-            return httpContext.getResponse().sendStatus(500)
+            if(punishments_response.value.id == ErrorType.generic){
+                logError(punishments_response.value, 'PunishmentsController.search', 'GetAllPunishmentsOfPlayer')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(punishments_response.value.toJson({
+                uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -71,9 +75,13 @@ export default class PunishmentsController {
             if(pardon_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            // TODO fazer tratamento de erro personalizado
-            logError(pardon_response.value, 'PunishmentsController', 'pardonall', 'PardonAllPunishmentsOfPlayer')
-            return httpContext.getResponse().sendStatus(500)
+            if(pardon_response.value.id == ErrorType.generic){
+                logError(pardon_response.value, 'PunishmentsController.pardonall', 'PardonAllPunishmentsOfPlayer')
+                return httpContext.getResponse().sendStatus(500) 
+            }
+            return httpContext.getResponse().json(pardon_response.value.toJson({
+                uuid, applicator_uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
