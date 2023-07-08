@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type";
+import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { PromiseEither, left, right } from "../../types/either";
@@ -12,18 +14,16 @@ export default class BlockPlayerProfile{
         private blockListRepository: IBlockListRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: BlockPlayerProfileRequest): PromiseEither<any, null>{
+    async execute(data: BlockPlayerProfileRequest): PromiseEither<ILogError, null>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.uuid
             })
             if(!profile){
-                // TODO
-                return left("a")
+                return left(logErrorFactory(ErrorType.profile_not_founded))
             }
             if(await profile.isBlockedByPlayer(data.uuid_to_block)){
-                // TODO
-                return left("b")
+                return left(logErrorFactory(ErrorType.player_is_already_blocked))
             }
             await this.blockListRepository.block({
                 block_list_id: profile.block_list,
@@ -31,7 +31,7 @@ export default class BlockPlayerProfile{
             })
             return right(null)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

@@ -4,6 +4,7 @@ import BlockPlayerProfile from '../../../usecases/player_profile/BlockPlayerProf
 import UnblockPlayerProfile from '../../../usecases/player_profile/UnblockPlayerProfile'
 import GetBlockedPlayersOfPlayerProfile from '../../../usecases/player_profile/GetBlockedPlayersOfPlayerProfile'
 import IHttpContext from '../../../domain/interfaces/IHttpContext'
+import { ErrorType } from '../../../domain/errors/error_type'
 
 export default class BlocksController {
     constructor(
@@ -24,8 +25,13 @@ export default class BlocksController {
                     blocked_players: search_response.value
                 })
             }
-            logError(search_response.value, 'BlocksController', 'search', '')
-            return httpContext.getResponse().sendStatus(500)
+            if(search_response.value.id == ErrorType.generic){
+                logError(search_response.value, 'BlocksController.search', 'GetBlockedPlayersOfPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(search_response.value.toJson({
+                uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -40,8 +46,14 @@ export default class BlocksController {
             if(block_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(block_response.value, 'BlocksController', 'store', 'BlockPlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(block_response.value.id == ErrorType.generic){
+                logError(block_response.value, 'BlocksController.store', 'BlockPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(block_response.value.toJson({
+                uuid,
+                player_uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -56,8 +68,14 @@ export default class BlocksController {
             if(unblock_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(unblock_response.value, 'BlocksController', 'delete', 'UnblockPlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(unblock_response.value.id == ErrorType.generic){
+                logError(unblock_response.value, 'BlocksController.delete', 'UnblockPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(unblock_response.value.toJson({
+                uuid,
+                unblock_player
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
