@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type";
+import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IPlayerProfile } from "../../domain/models/player_profile/PlayerProfile";
 import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository";
 import { IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository";
@@ -17,22 +19,20 @@ export default class CreatePlayerProfile{
         private friendListRepository: IFriendsListRepository,
         private productListRepository: IProductsListRepository
     ){}
-    async execute(data: CreatePlayerProfileRequest): PromiseEither<any, IPlayerProfile>{
+    async execute(data: CreatePlayerProfileRequest): PromiseEither<ILogError, IPlayerProfile>{
         try{
             // player exists
             // uuid
             if(await this.playerProfileRepository.searchOne({
                 uuid: data.uuid
             })){
-                // TODO
-                return left("")
+                return left(logErrorFactory(ErrorType.profile_exists))
             }
             // username
             if(await this.playerProfileRepository.searchOne({
                 username: data.username
             })){
-                // TODO
-                return left("")
+                return left(logErrorFactory(ErrorType.profile_exists))
             }
             // create block_list
             const block_list = await this.blockListRepository.store({
@@ -56,7 +56,7 @@ export default class CreatePlayerProfile{
             })
             return right(profile)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

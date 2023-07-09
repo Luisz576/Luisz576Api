@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type";
+import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IFriendInvite } from "../../domain/models/friends/FriendInvite";
 import { IFriendInviteRepository } from "../../domain/repositories/friends/FriendInviteRepository";
 import validator from "../../services/validator";
@@ -13,7 +15,7 @@ export default class GetAllFriendInvitesOfPlayerProfile{
     constructor(
         private friendInviteRepository: IFriendInviteRepository
     ){}
-    async execute(data: GetAllFriendInvitesOfPlayerProfileRequest): PromiseEither<any, IFriendInvite[]>{
+    async execute(data: GetAllFriendInvitesOfPlayerProfileRequest): PromiseEither<ILogError, IFriendInvite[]>{
         try{
             const filter = {
                 receiver: data.uuid,
@@ -24,7 +26,7 @@ export default class GetAllFriendInvitesOfPlayerProfile{
             const invites = await this.friendInviteRepository.searchAll(filter)
             return right(invites)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

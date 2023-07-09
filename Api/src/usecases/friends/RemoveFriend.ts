@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type";
+import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { PromiseEither, left, right } from "../../types/either";
@@ -12,20 +14,18 @@ export default class RemoveFriend{
         private friendsListRepository: IFriendsListRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: RemoveFriendRequest): PromiseEither<any, null>{
+    async execute(data: RemoveFriendRequest): PromiseEither<ILogError, null>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.player_uuid
             })
 
             if(!profile){
-                //TODO
-                return left("")
+                return left(logErrorFactory(ErrorType.profile_not_founded))
             }
 
             if(!(await profile.areFriends(data.target_uuid))){
-                //TODO
-                return left("")
+                return left(logErrorFactory(ErrorType.players_arent_friends))
             }
 
             const target_profile = await this.playerProfileRepository.searchOne({
@@ -33,8 +33,7 @@ export default class RemoveFriend{
             })
 
             if(!target_profile){
-                //TODO
-                return left("")
+                return left(logErrorFactory(ErrorType.target_profile_not_found))
             }
 
             await this.friendsListRepository.removeFriend({
@@ -49,7 +48,7 @@ export default class RemoveFriend{
 
             return right(null)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

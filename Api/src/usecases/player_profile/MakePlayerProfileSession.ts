@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type"
+import { ILogError, logErrorFactory } from "../../domain/errors/errors"
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository"
 import { PromiseEither, left, right } from "../../types/either"
 
@@ -9,12 +11,12 @@ export default class MakePlayerProfileSession{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: MakePlayerProfileSessionRequest): PromiseEither<any, null>{
+    async execute(data: MakePlayerProfileSessionRequest): PromiseEither<ILogError, null>{
         try{
             await this.playerProfileRepository.session(data.uuid)
             return right(null)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

@@ -4,6 +4,7 @@ import CreateFriendInvite from '../../../usecases/friends/CreateFriendInvite'
 import GetAllFriendInvitesOfPlayerProfile from '../../../usecases/friends/GetAllFriendInvitesOfPlayerProfile'
 import AcceptFriendInvite from '../../../usecases/friends/AcceptFriendInvite'
 import IHttpContext from '../../../domain/interfaces/IHttpContext'
+import { ErrorType } from '../../../domain/errors/error_type'
 
 export default class FriendInvitesController{
     constructor(
@@ -25,8 +26,13 @@ export default class FriendInvitesController{
                     invites: invites_response.value
                 })
             }
-            logError(invites_response.value, 'FriendInvitesController', 'search', 'GetAllFriendInvitesOfPlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(invites_response.value.id == ErrorType.generic){
+                logError(invites_response.value, 'FriendInvitesController.search', 'GetAllFriendInvitesOfPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(invites_response.value.toJson({
+                uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -41,8 +47,14 @@ export default class FriendInvitesController{
             if(create_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(create_response.value, 'FriendInvitesController', 'store', 'CreateFriendInvite')
-            return httpContext.getResponse().sendStatus(500)
+            if(create_response.value.id == ErrorType.generic){
+                logError(create_response.value, 'FriendInvitesController.store', 'CreateFriendInvite')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(create_response.value.toJson({
+                uuid,
+                new_friend_uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -56,8 +68,14 @@ export default class FriendInvitesController{
             if(accept_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(accept_response.value, 'FriendInvitesController', 'accept', 'AcceptFriendInvite')
-            return httpContext.getResponse().sendStatus(500)
+            if(accept_response.value.id == ErrorType.generic){
+                logError(accept_response.value, 'FriendInvitesController.accept', 'AcceptFriendInvite')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(accept_response.value.toJson({
+                uuid,
+                friend_uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }

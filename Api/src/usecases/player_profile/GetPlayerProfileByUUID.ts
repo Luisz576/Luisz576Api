@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type";
+import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IPlayerProfile } from "../../domain/models/player_profile/PlayerProfile";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { PromiseEither, left, right } from "../../types/either";
@@ -10,7 +12,7 @@ export default class GetPlayerProfileByUUID{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: GetPlayerProfileByUUIDRequest): PromiseEither<any, IPlayerProfile>{
+    async execute(data: GetPlayerProfileByUUIDRequest): PromiseEither<ILogError, IPlayerProfile>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.uuid
@@ -18,10 +20,9 @@ export default class GetPlayerProfileByUUID{
             if(profile){
                 return right(profile)
             }
-            // TODO erro customizado
-            return left("")
+            return left(logErrorFactory(ErrorType.profile_not_founded))
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

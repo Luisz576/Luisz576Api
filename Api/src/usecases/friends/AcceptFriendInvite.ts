@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type";
+import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IFriendInviteRepository } from "../../domain/repositories/friends/FriendInviteRepository";
 import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
@@ -14,27 +16,24 @@ export default class AcceptFriendInvite{
         private friendsListRepository: IFriendsListRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: AcceptFriendInviteRequest): PromiseEither<any, null>{
+    async execute(data: AcceptFriendInviteRequest): PromiseEither<ILogError, null>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.sender_uuid
             })
             if(!profile){
-                // TODO
-                return left("a")
+                return left(logErrorFactory(ErrorType.profile_not_founded))
             }
 
             if(await profile.areFriends(data.receiver_uuid)){
-                // TODO
-                return left("b")
+                return left(logErrorFactory(ErrorType.players_are_already_friends))
             }
 
             const friend_profile = await this.playerProfileRepository.searchOne({
                 uuid: data.receiver_uuid
             })
             if(!friend_profile){
-                // TODO
-                return left("c")
+                return left(logErrorFactory(ErrorType.target_profile_not_found))
             }
 
             const invite = await this.friendInviteRepository.searchOne({
@@ -44,8 +43,7 @@ export default class AcceptFriendInvite{
                 valid_invite: true
             })
             if(!invite){
-                // TODO
-                return left("d")
+                return left(logErrorFactory(ErrorType.no_valid_friend_invite_found))
             }
 
             await this.friendInviteRepository.acceptInvite(invite)
@@ -60,7 +58,7 @@ export default class AcceptFriendInvite{
 
             return right(null)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

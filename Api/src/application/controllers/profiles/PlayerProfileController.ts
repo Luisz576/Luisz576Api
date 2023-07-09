@@ -4,6 +4,7 @@ import CreatePlayerProfile from '../../../usecases/player_profile/CreatePlayerPr
 import GetPlayerProfileByUUID from '../../../usecases/player_profile/GetPlayerProfileByUUID'
 import MakePlayerProfileSession from '../../../usecases/player_profile/MakePlayerProfileSession'
 import IHttpContext from '../../../domain/interfaces/IHttpContext'
+import { ErrorType } from '../../../domain/errors/error_type'
 
 export default class PlayerProfileController{
     constructor(
@@ -24,8 +25,14 @@ export default class PlayerProfileController{
                     profile: profile_response.value
                 })
             }
-            logError(profile_response.value, 'PlayerProfileController', 'store', 'CreatePlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(profile_response.value.id == ErrorType.generic){
+                logError(profile_response.value, 'PlayerProfileController.store', 'CreatePlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(profile_response.value.toJson({
+                uuid,
+                username
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -42,8 +49,13 @@ export default class PlayerProfileController{
                     profile: profile_response.value
                 })
             }
-            logError(profile_response.value, 'PlayerProfileController', 'search', 'GetPlayerProfileByUUID')
-            return httpContext.getResponse().sendStatus(500)
+            if(profile_response.value.id == ErrorType.generic){
+                logError(profile_response.value, 'PlayerProfileController.search', 'GetPlayerProfileByUUID')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(profile_response.value.toJson({
+                uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -56,8 +68,13 @@ export default class PlayerProfileController{
             if(session_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(session_response.value, 'PlayerProfileController', 'session', 'MakePlayerSession')
-            return httpContext.getResponse().sendStatus(500)
+            if(session_response.value.id == ErrorType.generic){
+                logError(session_response.value, 'PlayerProfileController.session', 'MakePlayerSession')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(session_response.value.toJson({
+                uuid,
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }

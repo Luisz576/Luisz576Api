@@ -1,5 +1,6 @@
 export enum ErrorType{
     generic = 1,
+    profile_exists = 5,
     profile_not_founded = 10,
     target_profile_not_found = 15,
     incompatible_friend_invite_prefference = 110,

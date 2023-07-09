@@ -1,3 +1,5 @@
+import { ErrorType } from "../../domain/errors/error_type"
+import { ILogError, logErrorFactory } from "../../domain/errors/errors"
 import { IPlayerProfileConfigs } from "../../domain/models/player_profile/PlayerProfile"
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository"
 import validator from "../../services/validator"
@@ -11,7 +13,7 @@ export default class UpdateConfigsAndSocialOfPlayerProfile{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: UpdateConfigsAndSocialOfPlayerProfileRequest): PromiseEither<any, null>{
+    async execute(data: UpdateConfigsAndSocialOfPlayerProfileRequest): PromiseEither<ILogError, null>{
         try{
             // profile
             const profile = await this.playerProfileRepository.searchOne({
@@ -19,7 +21,7 @@ export default class UpdateConfigsAndSocialOfPlayerProfile{
             })
             if(!profile){
                 // TODO
-                return left("")
+                return left(logErrorFactory(ErrorType.profile_not_founded))
             }
 
             // filter
@@ -40,7 +42,7 @@ export default class UpdateConfigsAndSocialOfPlayerProfile{
             await this.playerProfileRepository.updateConfigsAndSocial(data.uuid, filter)
             return right(null)
         }catch(err){
-            return left(err)
+            return left(logErrorFactory(ErrorType.generic, err))
         }
     }
 }

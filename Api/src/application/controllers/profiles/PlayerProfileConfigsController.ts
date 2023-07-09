@@ -5,6 +5,7 @@ import validator from '../../../services/validator'
 import UpdateConfigsAndSocialOfPlayerProfile from '../../../usecases/player_profile/UpdateConfigsAndSocialOfPlayerProfile'
 import UpdatePlayerProfileRole from '../../../usecases/player_profile/UpdatePlayerProfileRole'
 import IHttpContext from '../../../domain/interfaces/IHttpContext'
+import { ErrorType } from '../../../domain/errors/error_type'
 
 export default class PlayerProfileConfigsController{
     constructor(
@@ -22,8 +23,14 @@ export default class PlayerProfileConfigsController{
             if(update_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(update_response.value, 'PlayerProfileConfigsController', 'updateSkin', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(update_response.value.id == ErrorType.generic){
+                logError(update_response.value, 'PlayerProfileConfigsController.updateSkin', 'UpdateConfigsAndSocialOfPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(update_response.value.toJson({
+                uuid,
+                skin
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -38,8 +45,14 @@ export default class PlayerProfileConfigsController{
             if(update_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(update_response.value, 'PlayerProfileConfigsController', 'updateLanguage', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(update_response.value.id == ErrorType.generic){
+                logError(update_response.value, 'PlayerProfileConfigsController.updateLanguage', 'UpdateConfigsAndSocialOfPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(update_response.value.toJson({
+                uuid,
+                language
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -54,8 +67,14 @@ export default class PlayerProfileConfigsController{
             if(update_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(update_response.value, 'PlayerProfileConfigsController', 'updateFriendInvitePreferences', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(update_response.value.id == ErrorType.generic){
+                logError(update_response.value, 'PlayerProfileConfigsController.updateFriendInvitePreferences', 'UpdateConfigsAndSocialOfPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(update_response.value.toJson({
+                uuid,
+                friend_invites_preference
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -74,8 +93,17 @@ export default class PlayerProfileConfigsController{
             if(update_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(update_response.value, 'PlayerProfileConfigsController', 'updateSocialMedia', 'UpdateConfigsAndSocialOfPlayerProfile')
-            return httpContext.getResponse().sendStatus(500)
+            if(update_response.value.id == ErrorType.generic){
+                logError(update_response.value, 'PlayerProfileConfigsController.updateSocialMedia', 'UpdateConfigsAndSocialOfPlayerProfile')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(update_response.value.toJson({
+                uuid,
+                email,
+                discord,
+                twitch,
+                youtube
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -93,8 +121,15 @@ export default class PlayerProfileConfigsController{
             if(update_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(update_response.value, 'PlayerProfileConfigsController', 'updateRole', 'UpdatePlayerProfileRole')
-            return httpContext.getResponse().sendStatus(500)
+            if(update_response.value.id == ErrorType.generic){
+                logError(update_response.value, 'PlayerProfileConfigsController.updateRole', 'UpdatePlayerProfileRole')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(update_response.value.toJson({
+                uuid,
+                applicator_uuid,
+                role_id
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }

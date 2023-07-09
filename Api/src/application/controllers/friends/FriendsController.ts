@@ -3,6 +3,7 @@ import { logError } from '../../../domain/errors/errors'
 import IHttpContext from '../../../domain/interfaces/IHttpContext'
 import GetAllFriends from '../../../usecases/friends/GetAllFriends'
 import RemoveFriend from '../../../usecases/friends/RemoveFriend'
+import { ErrorType } from '../../../domain/errors/error_type'
 
 export default class FriendsController{
     constructor(
@@ -22,8 +23,13 @@ export default class FriendsController{
                     friends: friends_response.value
                 })
             }
-            logError(friends_response.value, 'FriendsController', 'search', 'GetAllFriends')
-            return httpContext.getResponse().sendStatus(500)
+            if(friends_response.value.id == ErrorType.generic){
+                logError(friends_response.value, 'FriendsController.search', 'GetAllFriends')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(friends_response.value.toJson({
+                uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
@@ -38,8 +44,14 @@ export default class FriendsController{
             if(remove_friends_response.isRight()){
                 return httpContext.getResponse().sendStatus(200)
             }
-            logError(remove_friends_response.value, 'FriendsController', 'remove', 'RemoveFriend')
-            return httpContext.getResponse().sendStatus(500)
+            if(remove_friends_response.value.id == ErrorType.generic){
+                logError(remove_friends_response.value, 'FriendsController.remove', 'RemoveFriend')
+                return httpContext.getResponse().sendStatus(500)
+            }
+            return httpContext.getResponse().json(remove_friends_response.value.toJson({
+                uuid,
+                friend_uuid
+            }))
         }
         return httpContext.getResponse().sendStatus(400)
     }
