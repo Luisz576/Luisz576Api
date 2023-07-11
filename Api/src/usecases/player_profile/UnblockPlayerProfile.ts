@@ -2,7 +2,7 @@ import { ErrorType } from "../../domain/errors/error_type";
 import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 type UnblockPlayerProfileRequest = {
     uuid: string,
@@ -14,7 +14,7 @@ export default class UnblockPlayerProfile{
         private blockListRepository: IBlockListRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: UnblockPlayerProfileRequest): PromiseEither<ILogError, null>{
+    async execute(data: UnblockPlayerProfileRequest): Promise<Either<ILogError, null>>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.uuid

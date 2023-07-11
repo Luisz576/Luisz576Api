@@ -18,7 +18,7 @@ export default class AuthenticatorMiddleware{
                         }
                         return httpContext.getResponse().sendStatus(401)
                     }
-                    logError(authentication_response.value, 'AuthenticationMiddleware', 'auth', 'AuthenticateToken') 
+                    logError(authentication_response.value, 'AuthenticationMiddleware.auth', 'AuthenticateToken') 
                     return httpContext.getResponse().sendStatus(500)
                 }
             })

@@ -1,18 +1,18 @@
 package com.luisz.luisz576api.domain.playerprofile.enums;
 
-public enum Punishment {
+public enum PunishmentType {
     MUTE(1),
     TEMPORARY_BAN(2),
     BAN(3);
 
     public final int ID;
-    Punishment(int id){
+    PunishmentType(int id){
         this.ID = id;
     }
 
-    public static Punishment getById(int id){
-        Punishment[] values = values();
-        for(Punishment punishment : values){
+    public static PunishmentType getById(int id){
+        PunishmentType[] values = values();
+        for(PunishmentType punishment : values){
             if(punishment.ID == id){
                 return punishment;
             }

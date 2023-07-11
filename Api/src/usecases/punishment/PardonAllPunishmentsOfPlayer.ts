@@ -3,7 +3,7 @@ import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { IPunishmentRepository } from "../../domain/repositories/punishment/PunishmentRepository";
 import roles from "../../domain/roles";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 type PardonAllPunishmentsOfPlayerRequest = {
     player_uuid: string,
@@ -15,7 +15,7 @@ export default class PardonAllPunishmentsOfPlayer{
         private punishmentRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: PardonAllPunishmentsOfPlayerRequest): PromiseEither<ILogError, null>{
+    async execute(data: PardonAllPunishmentsOfPlayerRequest): Promise<Either<ILogError, null>>{
         try{
             const player_profile = await this.playerProfileRepository.searchOne({
                 uuid: data.player_uuid

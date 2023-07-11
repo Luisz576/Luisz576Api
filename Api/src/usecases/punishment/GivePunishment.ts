@@ -4,14 +4,14 @@ import { IPunishment, IPunishmentCreateProps } from "../../domain/models/punishm
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { IPunishmentRepository } from "../../domain/repositories/punishment/PunishmentRepository";
 import roles from "../../domain/roles";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 export default class GivePunishment{
     constructor(
         private punishmentRepository: IPunishmentRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: IPunishmentCreateProps): PromiseEither<ILogError, IPunishment>{
+    async execute(data: IPunishmentCreateProps): Promise<Either<ILogError, IPunishment>>{
         try{
             const player_profile = await this.playerProfileRepository.searchOne({
                 uuid: data.player_uuid

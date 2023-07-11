@@ -3,7 +3,7 @@ import { ILogError, logErrorFactory } from "../../domain/errors/errors"
 import { IPlayerProfileConfigs } from "../../domain/models/player_profile/PlayerProfile"
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository"
 import validator from "../../services/validator"
-import { PromiseEither, left, right } from "../../types/either"
+import { Either, left, right } from "../../types/either"
 
 type UpdateConfigsAndSocialOfPlayerProfileRequest = Partial<IPlayerProfileConfigs> & {
     uuid: string
@@ -13,7 +13,7 @@ export default class UpdateConfigsAndSocialOfPlayerProfile{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: UpdateConfigsAndSocialOfPlayerProfileRequest): PromiseEither<ILogError, null>{
+    async execute(data: UpdateConfigsAndSocialOfPlayerProfileRequest): Promise<Either<ILogError, null>>{
         try{
             // profile
             const profile = await this.playerProfileRepository.searchOne({

@@ -3,7 +3,7 @@ import { ILogError, logErrorFactory } from "../../domain/errors/errors"
 import { IBlockedPlayer } from "../../domain/models/player_profile/BlocksList"
 import { IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository"
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository"
-import { PromiseEither, left, right } from "../../types/either"
+import { Either, left, right } from "../../types/either"
 
 type GetBlockedPlayersOfPlayerProfileResponse = {
     uuid: string
@@ -14,7 +14,7 @@ export default class GetBlockedPlayersOfPlayerProfile{
         private blockList: IBlockListRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: GetBlockedPlayersOfPlayerProfileResponse): PromiseEither<ILogError, IBlockedPlayer[]>{
+    async execute(data: GetBlockedPlayersOfPlayerProfileResponse): Promise<Either<ILogError, IBlockedPlayer[]>>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.uuid

@@ -3,7 +3,7 @@ import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IFriendInviteRepository } from "../../domain/repositories/friends/FriendInviteRepository";
 import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 type AcceptFriendInviteRequest = {
     sender_uuid: string,
@@ -16,7 +16,7 @@ export default class AcceptFriendInvite{
         private friendsListRepository: IFriendsListRepository,
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: AcceptFriendInviteRequest): PromiseEither<ILogError, null>{
+    async execute(data: AcceptFriendInviteRequest): Promise<Either<ILogError, null>>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.sender_uuid

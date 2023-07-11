@@ -1,5 +1,4 @@
 export type Either<L, R> = Left<L, R> | Right<L, R>
-export type PromiseEither<L, R> = Promise<Either<L, R>>
 
 class Left<L, R>{
     value: L

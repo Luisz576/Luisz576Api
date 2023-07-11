@@ -5,7 +5,7 @@ import { IFriendsListRepository } from "../../domain/repositories/friends/Friend
 import { IBlockListRepository } from "../../domain/repositories/player_profile/BlocksListRepository";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import { IProductsListRepository } from "../../domain/repositories/player_profile/ProductListRepository";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 type CreatePlayerProfileRequest = {
     uuid: string,
@@ -19,7 +19,7 @@ export default class CreatePlayerProfile{
         private friendListRepository: IFriendsListRepository,
         private productListRepository: IProductsListRepository
     ){}
-    async execute(data: CreatePlayerProfileRequest): PromiseEither<ILogError, IPlayerProfile>{
+    async execute(data: CreatePlayerProfileRequest): Promise<Either<ILogError, IPlayerProfile>>{
         try{
             // player exists
             // uuid

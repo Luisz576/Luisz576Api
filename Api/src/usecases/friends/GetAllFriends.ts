@@ -2,7 +2,7 @@ import { ErrorType } from "../../domain/errors/error_type";
 import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IFriend } from "../../domain/models/friends/FriendsList";
 import { IFriendsListRepository } from "../../domain/repositories/friends/FriendsListRepository";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 type GetAllFriendsRequest = {
     uuid: string
@@ -12,7 +12,7 @@ export default class GetAllFriends{
     constructor(
         private friendsListRepository: IFriendsListRepository,
     ){}
-    async execute(data: GetAllFriendsRequest): PromiseEither<ILogError, IFriend[]>{
+    async execute(data: GetAllFriendsRequest): Promise<Either<ILogError, IFriend[]>>{
         try{
             const friends_list = await this.friendsListRepository.search({
                 player_uuid: data.uuid

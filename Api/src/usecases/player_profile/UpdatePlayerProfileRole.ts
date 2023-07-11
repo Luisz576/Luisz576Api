@@ -2,7 +2,7 @@ import { ErrorType } from "../../domain/errors/error_type";
 import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IPlayerProfileRepository } from "../../domain/repositories/player_profile/PlayerProfileRepository";
 import roles from "../../domain/roles";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 type UpdatePlayerProfileRoleRequest = {
     uuid: string,
@@ -14,7 +14,7 @@ export default class UpdatePlayerProfileRole{
     constructor(
         private playerProfileRepository: IPlayerProfileRepository
     ){}
-    async execute(data: UpdatePlayerProfileRoleRequest): PromiseEither<ILogError, null>{
+    async execute(data: UpdatePlayerProfileRoleRequest): Promise<Either<ILogError, null>>{
         try{
             const profile = await this.playerProfileRepository.searchOne({
                 uuid: data.uuid

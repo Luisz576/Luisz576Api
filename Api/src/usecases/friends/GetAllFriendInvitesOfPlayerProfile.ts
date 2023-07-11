@@ -3,7 +3,7 @@ import { ILogError, logErrorFactory } from "../../domain/errors/errors";
 import { IFriendInvite } from "../../domain/models/friends/FriendInvite";
 import { IFriendInviteRepository } from "../../domain/repositories/friends/FriendInviteRepository";
 import validator from "../../services/validator";
-import { PromiseEither, left, right } from "../../types/either";
+import { Either, left, right } from "../../types/either";
 
 type GetAllFriendInvitesOfPlayerProfileRequest = {
     uuid: string,
@@ -15,7 +15,7 @@ export default class GetAllFriendInvitesOfPlayerProfile{
     constructor(
         private friendInviteRepository: IFriendInviteRepository
     ){}
-    async execute(data: GetAllFriendInvitesOfPlayerProfileRequest): PromiseEither<ILogError, IFriendInvite[]>{
+    async execute(data: GetAllFriendInvitesOfPlayerProfileRequest): Promise<Either<ILogError, IFriendInvite[]>>{
         try{
             const filter = {
                 receiver: data.uuid,
