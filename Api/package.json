@@ -5,7 +5,8 @@
   "main": "./src/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app",
-    "build": "tsc"
+    "build": "tsc",
+    "noderun": "node ./build/app"
   },
   "repository": "git+https://github.com/Luisz576/Luisz576Api.git",
   "keywords": [

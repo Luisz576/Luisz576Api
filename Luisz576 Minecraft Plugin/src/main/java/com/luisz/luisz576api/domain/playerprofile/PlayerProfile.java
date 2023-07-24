@@ -1,6 +1,6 @@
 package com.luisz.luisz576api.domain.playerprofile;
 
-import com.luisz.luisz576api.domain.playerprofile.enums.Language;
+import com.luisz.lapi.common.language.Language;
 import com.luisz.luisz576api.domain.playerprofile.enums.Role;
 import lombok.AllArgsConstructor;
 

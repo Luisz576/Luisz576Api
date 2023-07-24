@@ -1,5 +1,8 @@
 package com.luisz.luisz576api.domain.playerprofile.enums;
 
+import com.luisz.lapi.common.language.Language;
+import com.luisz.luisz576api.domain.playerprofile.language.LanguageGetter;
+
 import javax.annotation.Nullable;
 
 public enum Role {
@@ -20,7 +23,7 @@ public enum Role {
     }
 
     public String getName(int languageId){
-        return getName(Language.getById(languageId));
+        return getName(LanguageGetter.getById(languageId));
     }
     public String getName(@Nullable Language language){
         if(language == null){

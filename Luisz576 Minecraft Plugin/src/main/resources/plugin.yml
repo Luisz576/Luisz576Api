@@ -1,4 +1,4 @@
-main: com.luisz.luisz576.Main
+main: com.luisz.luisz576api.Main
 version: 1.0
 name: Luisz576Api
 api-version: 1.16

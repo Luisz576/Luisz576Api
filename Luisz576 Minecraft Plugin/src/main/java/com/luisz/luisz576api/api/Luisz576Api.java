@@ -6,6 +6,7 @@ import com.luisz.luisz576api.domain.api.builder.IApiBuilder;
 import com.luisz.luisz576api.api.exceptions.ApiAlreadySetupedException;
 import com.luisz.luisz576api.api.exceptions.ApiNotInitializedException;
 import com.luisz.luisz576api.api.exceptions.ApiNotLoadedException;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -21,7 +22,7 @@ public class Luisz576Api {
         return api != null;
     }
 
-    public static <T extends IApiBuilder<?>> void _setup(LPlugin plugin, Class<T> connectionBuilder) throws ApiNotLoadedException, ApiAlreadySetupedException {
+    public static <T extends IApiBuilder<?>> void _setup(JavaPlugin plugin, Class<T> connectionBuilder) throws ApiNotLoadedException, ApiAlreadySetupedException {
         if(isSetuped()){
             throw new ApiAlreadySetupedException();
         }
